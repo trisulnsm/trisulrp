@@ -7,7 +7,7 @@
 require 'openssl'
 require 'socket'
 require 'time'
-require './trp.pb'
+require 'trp.pb'
 
 module TRPLib
 
