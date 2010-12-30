@@ -16,7 +16,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/vivekrajan/trisulrp"
   gem.license = "MIT"
   gem.summary = %Q{trisul trp}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{This gem deals about the trisul remote protocol}
   gem.email = "vivek_rajagopal@yahoo.com"
   gem.authors = ["vivek"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
