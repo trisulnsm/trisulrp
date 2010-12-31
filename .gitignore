@@ -40,3 +40,7 @@ pkg
 #
 # For vim:
 #*.swp
+
+#Gemfile lock
+Gemfile.lock
+
