@@ -44,3 +44,8 @@ pkg
 #Gemfile lock
 Gemfile.lock
 
+#ignore gitignore
+.gitignore
+
+
+
