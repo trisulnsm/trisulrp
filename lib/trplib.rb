@@ -327,7 +327,4 @@ def print_session_tracker_response(resp_in)
        
 	end	
 
-
-
-
 end

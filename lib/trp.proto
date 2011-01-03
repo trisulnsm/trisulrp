@@ -4,7 +4,7 @@
 //
 package TRP;
 
-message Timestamp{
+message Timestamp  {
   required int64            tv_sec=1;
   required int64            tv_usec=2 [default=0];
 }
@@ -42,6 +42,15 @@ message SessionID {
 	required int64			session_id=2;
 }
 
+message AlertID {
+	required int64			slice_id=1;
+	required int64			alert_id=2;
+}
+
+message ResourceID {
+	required int64			slice_id=1;
+	required int64			resource_id=2;
+}
 message CounterGroupDetails {
     required string 		guid=1;
     required string 		name=2;
@@ -107,6 +116,14 @@ message Message {
                     SERVER_STATS_RESPONSE=39;     						   			
 					SESSION_GROUP_REQUEST=40;
 					SESSION_GROUP_RESPONSE=41;
+					ALERT_ITEM_REQUEST=42;
+					ALERT_ITEM_RESPONSE=43;
+					ALERT_GROUP_REQUEST=44;
+					ALERT_GROUP_RESPONSE=45;
+					RESOURCE_ITEM_REQUEST=46;
+					RESOURCE_ITEM_RESPONSE=47;
+					RESOURCE_GROUP_REQUEST=48;
+					RESOURCE_GROUP_RESPONSE=49;
 	}
 
 	required Command	trp_command=1;
@@ -144,7 +161,14 @@ message Message {
 	optional ServerStatsResponse server_stats_response=38;
 	optional SessionGroupRequest session_group_request=39;
 	optional SessionGroupResponse session_group_response=40;
-
+	optional AlertItemRequest alert_item_request=41;
+	optional AlertItemResponse alert_item_response=42;
+	optional AlertGroupRequest alert_group_request=43;
+	optional AlertGroupResponse alert_group_response=44;
+	optional ResourceItemRequest resource_item_request=45;
+	optional ResourceItemResponse resource_item_response=46;
+	optional ResourceGroupRequest resource_group_request=47;
+	optional ResourceGroupResponse resource_group_response=48;
 }
 
 ///////////////////////////////
@@ -460,3 +484,102 @@ message ServerStatsResponse{
 	required TimeInterval 	time_interval=13;
 }
 
+/////////////////////////////////////
+// AlertItemRequest
+message AlertItemRequest{
+	optional int64 			context=1;            
+	required string 		alert_group=2;
+	optional AlertID		alert_id=3;
+}
+////////////////////////////////////
+// AlertItemResponse
+message AlertItemResponse{
+	optional int64 			context=1;            
+	required string 		alert_group=2;
+	optional int64 			sensor_id=3;
+	required Timestamp	 	time=4;
+	optional string 		source_ip=5;
+	optional string	 		source_port=6;
+	optional string 		destination_ip=7;
+	optional string 		destination_port=8;
+	required string 		sigid=9;
+	required string 		classification=10;
+	required string 		priority=11;
+	required Timestamp 		dispatch_time=12;
+	required string 		aux_message1=13;
+	required string 		aux_message2=14;
+}
+
+////////////////////////////////////
+// AlertGroupQueryRequest
+message AlertGroupRequest {
+	optional int64 			context=1;            
+	required string 		alert_group=2;
+	required TimeInterval	time_interval=3;
+	optional int64 			maxitems=5 [default=10];
+	optional string 		source_ip=6;
+	optional string	 		source_port=7;
+	optional string 		destination_ip=8;
+	optional string 		destination_port=9;
+	optional string 		sigid=10;
+	optional string 		classification=11;
+	optional string 		priority=12;
+	optional string 		aux_message1=13;
+	optional string 		aux_message2=14;
+}
+
+/////////////////////////////////////
+// AlertGroupResponse 
+message AlertGroupResponse {
+	optional int64 			context=1;
+	required string 		alert_group=2;
+	repeated AlertID		alerts=3;
+}
+
+/////////////////////////////////////
+// ResourceRequest - mutliple 
+message ResourceItemRequest{
+	optional int64 			context=1;            
+	required string 		resource_group=2;
+	repeated ResourceID		resource_ids=3;
+}
+////////////////////////////////////
+// ResourceItemResponse
+message ResourceItemResponse{
+	optional int64 			context=1;            
+	required string 		resource_group=2;
+	message Item {
+		required Timestamp	 	time=1;
+		required ResourceID		resource_id=2;
+		optional string 		source_ip=3;
+		optional string	 		source_port=4;
+		optional string 		destination_ip=5;
+		optional string 		destination_port=6;
+		optional string 		uri=7;
+		optional string 		userlabel=8;
+	}
+	repeated Item			items=3;
+}
+
+////////////////////////////////////
+// ResourceGroupRequest
+message ResourceGroupRequest {
+	optional int64 			context=1;            
+	required string 		resource_group=2;
+	required TimeInterval	time_interval=3;
+	optional int64 			maxitems=4 [default=10];
+	optional string 		source_ip=5;
+	optional string	 		source_port=6;
+	optional string 		destination_ip=7;
+	optional string 		destination_port=8;
+	optional string 		uri_pattern=9;
+	optional string 		userlabel_pattern=10;
+}
+
+/////////////////////////////////////
+// ResourceGroupResponse  
+message ResourceGroupResponse {
+	optional int64 			context=1;
+	required string 		resource_group=2;
+	repeated ResourceID		resources=3;
+}

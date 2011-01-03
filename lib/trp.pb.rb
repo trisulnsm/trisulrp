@@ -15,6 +15,8 @@ module TRP
   class KeyStats < ::ProtocolBuffers::Message; end
   class KeyDetails < ::ProtocolBuffers::Message; end
   class SessionID < ::ProtocolBuffers::Message; end
+  class AlertID < ::ProtocolBuffers::Message; end
+  class ResourceID < ::ProtocolBuffers::Message; end
   class CounterGroupDetails < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
@@ -51,6 +53,14 @@ module TRP
   class SessionGroupResponse < ::ProtocolBuffers::Message; end
   class ServerStatsRequest < ::ProtocolBuffers::Message; end
   class ServerStatsResponse < ::ProtocolBuffers::Message; end
+  class AlertItemRequest < ::ProtocolBuffers::Message; end
+  class AlertItemResponse < ::ProtocolBuffers::Message; end
+  class AlertGroupRequest < ::ProtocolBuffers::Message; end
+  class AlertGroupResponse < ::ProtocolBuffers::Message; end
+  class ResourceItemRequest < ::ProtocolBuffers::Message; end
+  class ResourceItemResponse < ::ProtocolBuffers::Message; end
+  class ResourceGroupRequest < ::ProtocolBuffers::Message; end
+  class ResourceGroupResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -125,6 +135,20 @@ module TRP
     gen_methods! # new fields ignored after this point
   end
 
+  class AlertID < ::ProtocolBuffers::Message
+    required :int64, :slice_id, 1
+    required :int64, :alert_id, 2
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class ResourceID < ::ProtocolBuffers::Message
+    required :int64, :slice_id, 1
+    required :int64, :resource_id, 2
+
+    gen_methods! # new fields ignored after this point
+  end
+
   class CounterGroupDetails < ::ProtocolBuffers::Message
     required :string, :guid, 1
     required :string, :name, 2
@@ -180,6 +204,14 @@ module TRP
       SERVER_STATS_RESPONSE = 39
       SESSION_GROUP_REQUEST = 40
       SESSION_GROUP_RESPONSE = 41
+      ALERT_ITEM_REQUEST = 42
+      ALERT_ITEM_RESPONSE = 43
+      ALERT_GROUP_REQUEST = 44
+      ALERT_GROUP_RESPONSE = 45
+      RESOURCE_ITEM_REQUEST = 46
+      RESOURCE_ITEM_RESPONSE = 47
+      RESOURCE_GROUP_REQUEST = 48
+      RESOURCE_GROUP_RESPONSE = 49
     end
 
     required ::TRP::Message::Command, :trp_command, 1
@@ -217,6 +249,14 @@ module TRP
     optional ::TRP::ServerStatsResponse, :server_stats_response, 38
     optional ::TRP::SessionGroupRequest, :session_group_request, 39
     optional ::TRP::SessionGroupResponse, :session_group_response, 40
+    optional ::TRP::AlertItemRequest, :alert_item_request, 41
+    optional ::TRP::AlertItemResponse, :alert_item_response, 42
+    optional ::TRP::AlertGroupRequest, :alert_group_request, 43
+    optional ::TRP::AlertGroupResponse, :alert_group_response, 44
+    optional ::TRP::ResourceItemRequest, :resource_item_request, 45
+    optional ::TRP::ResourceItemResponse, :resource_item_response, 46
+    optional ::TRP::ResourceGroupRequest, :resource_group_request, 47
+    optional ::TRP::ResourceGroupResponse, :resource_group_response, 48
 
     gen_methods! # new fields ignored after this point
   end
@@ -534,6 +574,115 @@ module TRP
     required :double, :drop_percent_cap, 11
     required :double, :drop_percent_trisul, 12
     required ::TRP::TimeInterval, :time_interval, 13
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class AlertItemRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :alert_group, 2
+    optional ::TRP::AlertID, :alert_id, 3
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class AlertItemResponse < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :alert_group, 2
+    optional :int64, :sensor_id, 3
+    required ::TRP::Timestamp, :time, 4
+    optional :string, :source_ip, 5
+    optional :string, :source_port, 6
+    optional :string, :destination_ip, 7
+    optional :string, :destination_port, 8
+    required :string, :sigid, 9
+    required :string, :classification, 10
+    required :string, :priority, 11
+    required ::TRP::Timestamp, :dispatch_time, 12
+    required :string, :aux_message1, 13
+    required :string, :aux_message2, 14
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class AlertGroupRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :alert_group, 2
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :int64, :maxitems, 5, :default => 10
+    optional :string, :source_ip, 6
+    optional :string, :source_port, 7
+    optional :string, :destination_ip, 8
+    optional :string, :destination_port, 9
+    optional :string, :sigid, 10
+    optional :string, :classification, 11
+    optional :string, :priority, 12
+    optional :string, :aux_message1, 13
+    optional :string, :aux_message2, 14
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class AlertGroupResponse < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :alert_group, 2
+    repeated ::TRP::AlertID, :alerts, 3
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class ResourceItemRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :resource_group, 2
+    repeated ::TRP::ResourceID, :resource_ids, 3
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class ResourceItemResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class Item < ::ProtocolBuffers::Message; end
+
+    # nested messages
+    class Item < ::ProtocolBuffers::Message
+      required ::TRP::Timestamp, :time, 1
+      required ::TRP::ResourceID, :resource_id, 2
+      optional :string, :source_ip, 3
+      optional :string, :source_port, 4
+      optional :string, :destination_ip, 5
+      optional :string, :destination_port, 6
+      optional :string, :uri, 7
+      optional :string, :userlabel, 8
+
+      gen_methods! # new fields ignored after this point
+    end
+
+    optional :int64, :context, 1
+    required :string, :resource_group, 2
+    repeated ::TRP::ResourceItemResponse::Item, :items, 3
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class ResourceGroupRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :resource_group, 2
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :int64, :maxitems, 4, :default => 10
+    optional :string, :source_ip, 5
+    optional :string, :source_port, 6
+    optional :string, :destination_ip, 7
+    optional :string, :destination_port, 8
+    optional :string, :uri_pattern, 9
+    optional :string, :userlabel_pattern, 10
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class ResourceGroupResponse < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    required :string, :resource_group, 2
+    repeated ::TRP::ResourceID, :resources, 3
 
     gen_methods! # new fields ignored after this point
   end
