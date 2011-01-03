@@ -47,3 +47,5 @@ Gemfile.lock
 #ignore gitignore
 .gitignore
 
+#ignore svn 
+.svn
