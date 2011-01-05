@@ -1,6 +1,6 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
-// (c) 2010, Unleash Networks
+// (c) 2010-11, Unleash Networks
 //
 package TRP;
 
@@ -124,6 +124,8 @@ message Message {
 					RESOURCE_ITEM_RESPONSE=47;
 					RESOURCE_GROUP_REQUEST=48;
 					RESOURCE_GROUP_RESPONSE=49;
+					KEY_LOOKUP_REQUEST=50;
+					KEY_LOOKUP_RESPONSE=51;
 	}
 
 	required Command	trp_command=1;
@@ -169,6 +171,8 @@ message Message {
 	optional ResourceItemResponse resource_item_response=46;
 	optional ResourceGroupRequest resource_group_request=47;
 	optional ResourceGroupResponse resource_group_response=48;
+	optional KeyLookupRequest key_lookup_request=49;
+	optional KeyLookupResponse key_lookup_response=50;
 }
 
 ///////////////////////////////
@@ -277,7 +281,8 @@ message FilteredDatagramResponse{
 	required TimeInterval 	time_interval=3;                
 	required int64 			num_datagrams=4;               
 	required int64 			num_bytes=5;      
-	required string			contents=6;
+	required string			sha1=6;
+	required bytes			contents=7;
 }
 
 //////////////////////////////////////////
@@ -298,7 +303,7 @@ message ControlledContextResponse{
 ///////////////////////////////////////
 // SearchkeysRequest
 message SearchKeysRequest{
-	optional int64 			context=1;                    
+	optional int64 			context=1[default=0];                    
 	required string 		counter_group=2;        
 	required string 		pattern=3;        
 	required int64 			maxitems=4;
@@ -315,7 +320,7 @@ message SearchKeysResponse{
 /////////////////////////////////////
 /// CounterGroupInfoRequest
 message CounterGroupInfoRequest{
-	optional int64 		   context=1;
+	optional int64 		   context=1[default=0];
     optional string 	   counter_group=2;
 }
 
@@ -329,34 +334,39 @@ message CounterGroupInfoResponse{
 /////////////////////////////////////
 // SessionItemRequest
 message SessionItemRequest{
-	optional int64 			context=1;            
-	required string 		session_group=2;
-	optional string 		session_key=3;
-	optional SessionID		session_id=4;
+	optional int64 			context=1[default=0];            
+	optional string 		session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+	repeated string 		session_keys=3;
+	repeated SessionID		session_ids=4;
 }
 
 ////////////////////////////////////
 // SessionItemResponse
 message SessionItemResponse{
-	optional int64 			context=1;            
+	optional int64 			context=1[default=0];            
 	required string 		session_group=2;
-	optional string 		session_key=3;
-	optional SessionID		session_id=4;
-	optional string 		user_label=5;
-	required TimeInterval 	time_interval=6;
-	required int64 			state=7;
-	required int64 			az_bytes=8;
-	required int64 			za_bytes=9;
-	required KeyDetails     key1A=10;
-	required KeyDetails     key2A=11;
-	required KeyDetails     key1Z=12;
-	required KeyDetails     key2Z=13;
+
+	message Item {
+		optional string 		session_key=1;
+		optional SessionID		session_id=2;
+		optional string 		user_label=3;
+		required TimeInterval 	time_interval=4;
+		required int64 			state=5;
+		required int64 			az_bytes=6;
+		required int64 			za_bytes=7;
+		required KeyDetails     key1A=8;
+		required KeyDetails     key2A=9;
+		required KeyDetails     key1Z=10;
+		required KeyDetails     key2Z=11;
+	}
+
+	repeated Item			items=3;
 }
 
 //////////////////////////////////////////
 // BulkCounterItemRequest
 message BulkCounterItemRequest{
-	optional int64 			context=1;
+	optional int64 			context=1[default=0];
 	required string 		counter_group=2;
 	required int64 			meter=3;
 	required TimeInterval 	time_interval=4;
@@ -373,7 +383,7 @@ message BulkCounterItemResponse{
 ///////////////////////////////////////////
 /// TopperSnapshotRequest
 message TopperSnapshotRequest{
-	optional int64 			context=1;
+	optional int64 			context=1[default=0];
 	required string 		counter_group=2;
 	required int64 			meter=3;
 	required TimeInterval 	Time=4;
@@ -397,7 +407,7 @@ message TopperSnapshotResponse{
 /// UpdatekeysRequest
 /// Response = OKResponse or ErrorResponse
 message UpdateKeyRequest{
-	optional int64 			context=1;
+	optional int64 			context=1[default=0];
 	required string 		counter_group=2;
 	required string 		key=4;
 	required string 		label=5;
@@ -407,12 +417,12 @@ message UpdateKeyRequest{
 ///////////////////////////////////
 // KeySessionActivityrequest
 message KeySessionActivityRequest{
-	optional int64 			context=1;
-	required string 		session_group=2;
+	optional int64 			context=1[default=0];
+	optional string 		session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
 	required string 		key=3;
-	required int64 			maxitems=4;
-	required int64 			volume_filter=5;
-	required int64 			duration_filter=6;
+	optional int64 			maxitems=4[default=100];
+	optional int64 			volume_filter=5[default=0];
+	optional int64 			duration_filter=6[default=0];
 	required TimeInterval 	time_interval=7;
 }
 
@@ -427,8 +437,8 @@ message KeySessionActivityResponse{
 /////////////////////////////////////
 // SessionTrackerRequest
 message SessionTrackerRequest {
-	optional int64 			context=1;
-	required string 		session_group=2;
+	optional int64 			context=1[default=0];
+	optional string 		session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
 	required int64 			tracker_id=3 [default=1];
 	optional int64 			maxitems=4 [default=100];
 	required TimeInterval 	time_interval=5;
@@ -445,8 +455,8 @@ message SessionTrackerResponse{
 ///////////////////////////////////
 // SessionGroupRequest
 message SessionGroupRequest {
-	optional int64 			context=1;
-	required string 		session_group=2;
+	optional int64 			context=1[default=0];
+	optional string 		session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
 	optional int64 			tracker_id=3;
 	optional string 		key_filter=4;
 	optional int64			maxitems=5 [default=100];
@@ -487,33 +497,36 @@ message ServerStatsResponse{
 /////////////////////////////////////
 // AlertItemRequest
 message AlertItemRequest{
-	optional int64 			context=1;            
+	optional int64 			context=1[default=0];            
 	required string 		alert_group=2;
-	optional AlertID		alert_id=3;
+	repeated AlertID		alert_ids=3;
 }
 ////////////////////////////////////
 // AlertItemResponse
 message AlertItemResponse{
 	optional int64 			context=1;            
 	required string 		alert_group=2;
-	optional int64 			sensor_id=3;
-	required Timestamp	 	time=4;
-	optional string 		source_ip=5;
-	optional string	 		source_port=6;
-	optional string 		destination_ip=7;
-	optional string 		destination_port=8;
-	required string 		sigid=9;
-	required string 		classification=10;
-	required string 		priority=11;
-	required Timestamp 		dispatch_time=12;
-	required string 		aux_message1=13;
-	required string 		aux_message2=14;
+	message Item {
+		optional int64 			sensor_id=1;
+		required Timestamp	 	time=2;
+		optional string 		source_ip=3;
+		optional string	 		source_port=4;
+		optional string 		destination_ip=5;
+		optional string 		destination_port=6;
+		required string 		sigid=7;
+		required string 		classification=8;
+		required string 		priority=9;
+		required Timestamp 		dispatch_time=10;
+		required string 		aux_message1=11;
+		required string 		aux_message2=12;
+	}
+	repeated Item 			items=3;
 }
 
 ////////////////////////////////////
 // AlertGroupQueryRequest
 message AlertGroupRequest {
-	optional int64 			context=1;            
+	optional int64 			context=1[default=0];            
 	required string 		alert_group=2;
 	required TimeInterval	time_interval=3;
 	optional int64 			maxitems=5 [default=10];
@@ -539,7 +552,7 @@ message AlertGroupResponse {
 /////////////////////////////////////
 // ResourceRequest - mutliple 
 message ResourceItemRequest{
-	optional int64 			context=1;            
+	optional int64 			context=1[default=0];            
 	required string 		resource_group=2;
 	repeated ResourceID		resource_ids=3;
 }
@@ -564,7 +577,7 @@ message ResourceItemResponse{
 ////////////////////////////////////
 // ResourceGroupRequest
 message ResourceGroupRequest {
-	optional int64 			context=1;            
+	optional int64 			context=1[default=0];            
 	required string 		resource_group=2;
 	required TimeInterval	time_interval=3;
 	optional int64 			maxitems=4 [default=10];
@@ -583,3 +596,25 @@ message ResourceGroupResponse {
 	required string 		resource_group=2;
 	repeated ResourceID		resources=3;
 }
+
+
+
+/////////////////////////////////////////////
+// KeyLookup - mutliple keys from a single CG
+message KeyLookupRequest {
+	optional int64 			context=1[default=0];            
+	required string 		counter_group=2;
+	repeated string			keys=3;
+}
+
+
+/////////////////////////////////////////////
+// KeyLookup 
+message KeyLookupResponse {
+	optional int64 			context=1;            
+	required string 		counter_group=2;
+	repeated KeyDetails		key_details=3;
+}
+
+
+

@@ -21,6 +21,7 @@ module TRPLib
 		inbuf = trp_socket.read(4)
 		buflenarr=inbuf.unpack("N*")
 		datalen=buflenarr[0]
+		p "Length = #{datalen}"
 		dataarray=trp_socket.read(datalen)
 		resp =TRP::Message.new
 		resp.parse dataarray
@@ -40,6 +41,36 @@ module TRPLib
 	end
 
 
+  # returns an array of [Time_from, Time_to] representing time window available on Trisul
+  def get_available_time(conn)
+		from_tm=to_tm=nil
+		req=TRPLib::mk_counter_group_info_request("{393B5EBC-AB41-4387-8F31-8077DB917336}")
+		TRPLib::get_trp_response(conn,req) do |resp|
+			from_tm =  Time.at(resp.counter_group_info_response.group_details[0].time_interval.from.tv_sec)
+			to_tm =  Time.at(resp.counter_group_info_response.group_details[0].time_interval.to.tv_sec)
+		end
+		return [from_tm,to_tm]
+  end
+
+  # returns a hash of key => label
+  def get_labels_for_keys(conn, cgguid, key_arr)
+	req = TRP::Message.new(:trp_command => TRP::Message::Command::KEY_LOOKUP_REQUEST)
+	req.key_lookup_request = TRP::KeyLookupRequest.new(:counter_group  => cgguid, :keys => key_arr.uniq )
+	h = key_arr.inject({}) { |m,i| m.store(i,i); m }
+	TRPLib::get_trp_response(conn,req) do |resp|
+			resp.key_lookup_response.key_details.each { |d| h.store(d.key,d.label) }
+	end
+	return h
+  end
+
+
+  # fill up time_interval 
+  def mk_time_interval(tmarr)
+     tint=TRP::TimeInterval.new
+     tint.from=TRP::Timestamp.new(:tv_sec => tmarr[0].tv_sec, :tv_usec => 0)
+     tint.to=TRP::Timestamp.new(:tv_sec => tmarr[1].tv_sec, :tv_usec => 0)
+	 return tint
+  end
 
   # creates a counter item request message by filling in the
   # protobuf 
@@ -325,6 +356,36 @@ def print_session_tracker_response(resp_in)
 	p "Context = #{ resp.context}"
 	p "Session Group = " + resp.session_group
        
-	end	
+end	
+
+  # creates a resource item request 
+  # gets details 
+def mk_resource_item_request(slice_id,resource_id_array)
+     msg =TRP::Message.new(:trp_command => TRP::Message::Command::RESOURCE_ITEM_REQUEST)
+     msg.resource_item_request =TRP::ResourceItemRequest.new( :context => 0, 
+	 					:resource_group => "{4EF9DEB9-4332-4867-A667-6A30C5900E9E}") 
+	 resource_id_array.each do |ai|
+			 msg.resource_item_request.resource_ids << TRP::ResourceID.new(:slice_id => slice_id,
+																		   :resource_id => ai)
+	 end
+     return msg
+ end
+
+ # prints a neat table of resource id respnse 
+ def print_resource_item_response(resp_in)
+  resp=resp_in.resource_item_response
+
+	resp.items.each do |item|
+    		print "#{Time.at(item.time.tv_sec)} "
+			print "#{item.source_ip}".ljust(28)
+			print "#{item.source_port}".ljust(11)
+			print "#{item.destination_ip}".ljust(28)
+			print "#{item.destination_port}".ljust(11)
+			print "#{item.uri}".rjust(10)
+			print "\n"
+	end 
+ 
+ end
+  
 
 end
