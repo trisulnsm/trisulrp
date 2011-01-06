@@ -49,3 +49,6 @@ Gemfile.lock
 
 #ignore svn 
 .svn
+test/Demo_Client_Clear.key
+test/t.pcap
+#
