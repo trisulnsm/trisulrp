@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{trisulrp}
-  s.version = "1.2.3"
+  s.version = "1.2.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
-  s.date = %q{2011-01-03}
+  s.date = %q{2011-01-06}
   s.description = %q{This gem deals about the trisul remote protocol}
   s.email = %q{vivek_rajagopal@yahoo.com}
   s.extra_rdoc_files = [
@@ -25,12 +25,18 @@ Gem::Specification.new do |s|
     "VERSION",
     "examples/strp.rb",
     "lib/trisulrp.rb",
-    "lib/trp.pb.rb",
-    "lib/trp.proto",
-    "lib/trplib.rb",
+    "lib/trisulrp/guids.rb",
+    "lib/trisulrp/keys.rb",
+    "lib/trisulrp/protocol.rb",
+    "lib/trisulrp/trp.pb.rb",
+    "lib/trisulrp/trp.proto",
     "test/Demo_Client.crt",
     "test/Demo_Client.key",
     "test/helper.rb",
+    "test/test_alerts.rb",
+    "test/test_cap.rb",
+    "test/test_key_flows.rb",
+    "test/test_resources.rb",
     "test/test_trisulrp.rb",
     "trisulrp.gemspec"
   ]
@@ -42,6 +48,10 @@ Gem::Specification.new do |s|
   s.test_files = [
     "examples/strp.rb",
     "test/helper.rb",
+    "test/test_alerts.rb",
+    "test/test_cap.rb",
+    "test/test_key_flows.rb",
+    "test/test_resources.rb",
     "test/test_trisulrp.rb"
   ]
 
