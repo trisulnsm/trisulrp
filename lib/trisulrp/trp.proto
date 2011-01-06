@@ -76,7 +76,7 @@ enum  PcapFormat {
 }
 
 message Message {
-	enum Command {  HELLO_REQUEST=1; 
+	enum Command {                  HELLO_REQUEST=1; 
 					HELLO_RESPONSE=2;
 					OK_RESPONSE=3;
 					ERROR_RESPONSE=5;
@@ -105,7 +105,7 @@ message Message {
 					CGMONITOR_REQUEST=28;                             
 					CGMONITOR_RESPONSE=29;                            
 					TOPPER_SNAPSHOT_REQUEST=30;                       
-              		TOPPER_SNAPSHOT_RESPONSE=31;                      
+              		                TOPPER_SNAPSHOT_RESPONSE=31;                      
 					UPDATE_KEY_REQUEST=32;                            
 					UPDATE_KEY_RESPONSE=33;                           
 					KEY_SESS_ACTIVITY_REQUEST=34;                     
@@ -113,7 +113,7 @@ message Message {
 					RING_STATS_REQUEST=36;			
 					RING_STATS_RESPONSE=37;	    				
  					SERVER_STATS_REQUEST=38;      				
-                    SERVER_STATS_RESPONSE=39;     						   			
+                                        SERVER_STATS_RESPONSE=39;     						   			
 					SESSION_GROUP_REQUEST=40;
 					SESSION_GROUP_RESPONSE=41;
 					ALERT_ITEM_REQUEST=42;
