@@ -1,6 +1,15 @@
 = trisulrp
 
-Description goes here.
+Trisul Remote Protocol 
+This gem allows you to script advanced network security analysis tasks via Ruby.
+
+Key Features :
+* Analysis done remotely (at Trisul server)
+* All communications over TLS
+* Strong authentication using Client Certificates
+* Easy to use 
+
+
 
 == Contributing to trisulrp
  
