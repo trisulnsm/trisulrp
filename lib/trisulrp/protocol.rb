@@ -133,11 +133,11 @@ module TrisulRP::Protocol
     when TRP::Message::Command::KEY_LOOKUP_REQUEST
       req.key_lookup_request = TRP::KeyLookupRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
-			req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
-		when TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST
+	  req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
+	when TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST
       req.key_session_activity_request = TRP::KeySessionActivityRequest.new(params)
   	else
-			raise "Unknown TRP command ID"
+		raise "Unknown TRP command ID"
     end
     return req
   end
