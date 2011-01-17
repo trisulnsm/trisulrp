@@ -1,13 +1,17 @@
 = trisulrp
 
-Trisul Remote Protocol 
-This gem allows you to script advanced network security analysis tasks via Ruby.
+== Trisul Remote Protocol 
+
+This gem allows you to automate incident response or network forensics tasks on the Trisul Network Metering and Forensics platform.
+
+
 
 Key Features :
 * Analysis done remotely (at Trisul server)
 * All communications over TLS
 * Strong authentication using Client Certificates
 * Easy to use 
+* Can do everything from getting statistics, flows, and pcaps
 
 
 
@@ -23,6 +27,5 @@ Key Features :
 
 == Copyright
 
-Copyright (c) 2010 vivek. See LICENSE.txt for
-further details.
+Copyright (c) 2010-11 Unleash Networks. See LICENSE.txt for further details.
 
