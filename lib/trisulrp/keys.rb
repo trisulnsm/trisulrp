@@ -206,10 +206,13 @@ end
 #
 # <code>
 #
-# make_readable("C0.A8.0C.A0") => "192.168.12.160"
-# make_readable("p-0016") => "Port-22"
+#   make_readable("C0.A8.0C.A0") => "192.168.12.160"
+#
+#   make_readable("p-0016") => "Port-22"
 #
 # </code>
+#
+#
 #
 # Also see TrisulRP::Protocol::get_labels_for_keys to obtain a text name for the key
 #
@@ -239,11 +242,13 @@ end
 #
 # Used to convert a human form key into a Trisul Key format suitable for use with TRP requests
 #
+#
 # <code>
 #
-# make_key("192.168.1.1") => "C0.A8.01.01"
+#   make_key("192.168.1.1") => "C0.A8.01.01"
 #
 # </code>
+#
 #
 # Also see the inverse of this method make_readable 
 #
