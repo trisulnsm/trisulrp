@@ -275,11 +275,12 @@ module TRP
 
   class HelloResponse < ::ProtocolBuffers::Message
     required :string, :trisul_id, 1
-    required :string, :connection_id, 2
-    required :string, :version_string, 3
-    required ::TRP::Timestamp, :connection_start_time, 4
-    required ::TRP::Timestamp, :connection_up_time, 5
-    required ::TRP::AuthLevel, :current_auth_level, 6
+    required :string, :trisul_description, 2
+    required :string, :connection_id, 3
+    required :string, :version_string, 4
+    required ::TRP::Timestamp, :connection_start_time, 5
+    required ::TRP::Timestamp, :connection_up_time, 6
+    required ::TRP::AuthLevel, :current_auth_level, 7
 
     gen_methods! # new fields ignored after this point
   end

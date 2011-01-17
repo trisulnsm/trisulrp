@@ -66,12 +66,12 @@ module TrisulRP::Protocol
 	def get_response(conn,trp_request)
 		outbuf=""
 		outbuf=trp_request.serialize_to_string
-		trp_socket.write([outbuf.length].pack("N*"))
-		trp_socket.write(outbuf)
-		inbuf = trp_socket.read(4)
+		conn.write([outbuf.length].pack("N*"))
+		conn.write(outbuf)
+		inbuf = conn.read(4)
 		buflenarr=inbuf.unpack("N*")
 		datalen=buflenarr[0]
-		dataarray=trp_socket.read(datalen)
+		dataarray=conn.read(datalen)
 		resp =TRP::Message.new
 		resp.parse dataarray
 		raise resp.error_response if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE

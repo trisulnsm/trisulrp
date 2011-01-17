@@ -197,4 +197,67 @@ class ASNumber
     end
 end
 
+# convert a trisul key format into a human readable key 
+# [keyform]  the key form
+#
+# ==== Typical use 
+#
+# Used to convert an IP / Port or any other trisul key into a readable form
+#
+# <code>
+#
+# make_readable("C0.A8.0C.A0") => "192.168.12.160"
+# make_readable("p-0016") => "Port-22"
+#
+# </code>
+#
+# Also see TrisulRP::Protocol::get_labels_for_keys to obtain a text name for the key
+#
+# Also see the inverse of this method make_key which convert a readable string into a key 
+# suitable for use in TRP request messages. 
+#
+# If key type cannot be accurately guessed it returns the input 
+#
+def make_readable(keyform)
+	[ TrisulRP::Keys::Port,
+	  TrisulRP::Keys::Host,
+	  TrisulRP::Keys::HostInterface,
+	  TrisulRP::Keys::Subnet,
+	  TrisulRP::Keys::ASNumber
+	].each do |kls|
+		return kls.xform(keyform) if kls.is_key_form?(keyform)
+	end
+	return keyform
+end
+
+
+# convert a key in human form into trisul key format
+#
+# [humanform]  the human  form of the key 
+#
+# ==== Typical use 
+#
+# Used to convert a human form key into a Trisul Key format suitable for use with TRP requests
+#
+# <code>
+#
+# make_key("192.168.1.1") => "C0.A8.01.01"
+#
+# </code>
+#
+# Also see the inverse of this method make_readable 
+#
+#
+def make_key(readable)
+    [ TrisulRP::Keys::Port,
+      TrisulRP::Keys::Host,
+	  TrisulRP::Keys::HostInterface,
+	  TrisulRP::Keys::Subnet,
+	  TrisulRP::Keys::ASNumber
+	].each do |kls|
+		return kls.invert_xform(readable) if kls.is_human_form?(readable) 
+	end
+	return readable
+end
+
 end
