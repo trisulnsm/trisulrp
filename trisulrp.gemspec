@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{trisulrp}
-  s.version = "1.2.5"
+  s.version = "1.2.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
@@ -50,6 +50,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_alerts.rb",
     "test/test_cap.rb",
+    "test/test_key.rb",
     "test/test_key_flows.rb",
     "test/test_resources.rb",
     "test/test_trisulrp.rb"
