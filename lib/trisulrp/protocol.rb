@@ -247,6 +247,8 @@ module TrisulRP::Protocol
 		  req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
 		when TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST
 		  req.key_session_activity_request = TRP::KeySessionActivityRequest.new(params)
+		when TRP::Message::Command::GREP_REQUEST
+		  req.grep_request  = TRP::GrepRequest.new(params)
 		else
 			raise "Unknown TRP command ID"
 		end

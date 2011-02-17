@@ -126,6 +126,8 @@ message Message {
                     RESOURCE_GROUP_RESPONSE=49;
                     KEY_LOOKUP_REQUEST=50;
                     KEY_LOOKUP_RESPONSE=51;
+					GREP_REQUEST=60;
+					GREP_RESPONSE=61;
     }
 
     required Command    trp_command=1;
@@ -173,6 +175,8 @@ message Message {
     optional ResourceGroupResponse resource_group_response=48;
     optional KeyLookupRequest key_lookup_request=49;
     optional KeyLookupResponse key_lookup_response=50;
+    optional GrepRequest  grep_request=51;
+    optional GrepResponse  grep_response=52;
 }
 
 ///////////////////////////////
@@ -615,5 +619,23 @@ message KeyLookupResponse {
     optional int64          context=1;            
     required string         counter_group=2;
     repeated KeyDetails     key_details=3;
+}
+
+////////////////////////////////////
+// GrepRequest
+message GrepRequest {
+    optional int64          context=1[default=0];            
+    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+    required TimeInterval   time_interval=3;
+    optional int64          maxitems=4 [default=500];
+    required string         pattern=5;
+}
+
+/////////////////////////////////////
+// GrepResponse  
+message GrepResponse  {
+    optional int64          context=1;
+    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+    repeated SessionID      sessions=3;
 }
 

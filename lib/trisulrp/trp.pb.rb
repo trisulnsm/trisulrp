@@ -63,6 +63,8 @@ module TRP
   class ResourceGroupResponse < ::ProtocolBuffers::Message; end
   class KeyLookupRequest < ::ProtocolBuffers::Message; end
   class KeyLookupResponse < ::ProtocolBuffers::Message; end
+  class GrepRequest < ::ProtocolBuffers::Message; end
+  class GrepResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -216,6 +218,8 @@ module TRP
       RESOURCE_GROUP_RESPONSE = 49
       KEY_LOOKUP_REQUEST = 50
       KEY_LOOKUP_RESPONSE = 51
+      GREP_REQUEST = 60
+      GREP_RESPONSE = 61
     end
 
     required ::TRP::Message::Command, :trp_command, 1
@@ -263,6 +267,8 @@ module TRP
     optional ::TRP::ResourceGroupResponse, :resource_group_response, 48
     optional ::TRP::KeyLookupRequest, :key_lookup_request, 49
     optional ::TRP::KeyLookupResponse, :key_lookup_response, 50
+    optional ::TRP::GrepRequest, :grep_request, 51
+    optional ::TRP::GrepResponse, :grep_response, 52
 
     gen_methods! # new fields ignored after this point
   end
@@ -727,6 +733,24 @@ module TRP
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :key_details, 3
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class GrepRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1, :default => 0
+    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :int64, :maxitems, 4, :default => 500
+    required :string, :pattern, 5
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class GrepResponse < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
+    repeated ::TRP::SessionID, :sessions, 3
 
     gen_methods! # new fields ignored after this point
   end
