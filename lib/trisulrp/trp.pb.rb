@@ -370,11 +370,48 @@ module TRP
   end
 
   class FilteredDatagramRequest < ::ProtocolBuffers::Message
+    # forward declarations
+    class ByFilterExpr < ::ProtocolBuffers::Message; end
+    class BySession < ::ProtocolBuffers::Message; end
+    class ByAlert < ::ProtocolBuffers::Message; end
+    class ByResource < ::ProtocolBuffers::Message; end
+
+    # nested messages
+    class ByFilterExpr < ::ProtocolBuffers::Message
+      required ::TRP::TimeInterval, :time_interval, 1
+      required :string, :filter_expression, 2
+
+      gen_methods! # new fields ignored after this point
+    end
+
+    class BySession < ::ProtocolBuffers::Message
+      optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
+      required ::TRP::SessionID, :session_id, 2
+
+      gen_methods! # new fields ignored after this point
+    end
+
+    class ByAlert < ::ProtocolBuffers::Message
+      optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
+      required ::TRP::AlertID, :alert_id, 2
+
+      gen_methods! # new fields ignored after this point
+    end
+
+    class ByResource < ::ProtocolBuffers::Message
+      required :string, :resource_group, 1
+      required ::TRP::ResourceID, :resource_id, 2
+
+      gen_methods! # new fields ignored after this point
+    end
+
     optional :int64, :max_packets, 1, :default => 0
     optional :int64, :max_bytes, 2, :default => 0
     optional ::TRP::CompressionType, :compress_type, 3, :default => ::TRP::CompressionType::UNCOMPRESSED
-    required ::TRP::TimeInterval, :time_interval, 4
-    required :string, :filter_expression, 5
+    optional ::TRP::FilteredDatagramRequest::ByFilterExpr, :filter_expression, 4
+    optional ::TRP::FilteredDatagramRequest::BySession, :session, 5
+    optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
+    optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
 
     gen_methods! # new fields ignored after this point
   end
@@ -741,7 +778,7 @@ module TRP
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required ::TRP::TimeInterval, :time_interval, 3
-    optional :int64, :maxitems, 4, :default => 500
+    optional :int64, :maxitems, 4, :default => 50
     required :string, :pattern, 5
 
     gen_methods! # new fields ignored after this point

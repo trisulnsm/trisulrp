@@ -197,72 +197,111 @@ class ASNumber
     end
 end
 
-# convert a trisul key format into a human readable key 
-# [keyform]  the key form
-#
-# ==== Typical use 
-#
-# Used to convert an IP / Port or any other trisul key into a readable form
-#
-# <code>
-#
-#   make_readable("C0.A8.0C.A0") => "192.168.12.160"
-#
-#   make_readable("p-0016") => "Port-22"
-#
-# </code>
-#
-#
-#
-# Also see TrisulRP::Protocol::get_labels_for_keys to obtain a text name for the key
-#
-# Also see the inverse of this method make_key which convert a readable string into a key 
-# suitable for use in TRP request messages. 
-#
-# If key type cannot be accurately guessed it returns the input 
-#
-def make_readable(keyform)
-	[ TrisulRP::Keys::Port,
-	  TrisulRP::Keys::Host,
-	  TrisulRP::Keys::HostInterface,
-	  TrisulRP::Keys::Subnet,
-	  TrisulRP::Keys::ASNumber
-	].each do |kls|
-		return kls.xform(keyform) if kls.is_key_form?(keyform)
+	# convert a trisul key format into a human readable key 
+	# [keyform]  the key form
+	#
+	# ==== Typical use 
+	#
+	# Used to convert an IP / Port or any other trisul key into a readable form
+	#
+	# <code>
+	#
+	#   make_readable("C0.A8.0C.A0") => "192.168.12.160"
+	#
+	#   make_readable("p-0016") => "Port-22"
+	#
+	# </code>
+	#
+	#
+	#
+	# Also see TrisulRP::Protocol::get_labels_for_keys to obtain a text name for the key
+	#
+	# Also see the inverse of this method make_key which convert a readable string into a key 
+	# suitable for use in TRP request messages. 
+	#
+	# If key type cannot be accurately guessed it returns the input 
+	#
+	def make_readable(keyform)
+		[ TrisulRP::Keys::Port,
+		  TrisulRP::Keys::Host,
+		  TrisulRP::Keys::HostInterface,
+		  TrisulRP::Keys::Subnet,
+		  TrisulRP::Keys::ASNumber
+		].each do |kls|
+			return kls.xform(keyform) if kls.is_key_form?(keyform)
+		end
+		return keyform
 	end
-	return keyform
-end
 
 
-# convert a key in human form into trisul key format
-#
-# [humanform]  the human  form of the key 
-#
-# ==== Typical use 
-#
-# Used to convert a human form key into a Trisul Key format suitable for use with TRP requests
-#
-#
-# <code>
-#
-#   make_key("192.168.1.1") => "C0.A8.01.01"
-#
-# </code>
-#
-#
-# Also see the inverse of this method make_readable 
-#
-#
-def make_key(readable)
-    [ TrisulRP::Keys::Port,
-      TrisulRP::Keys::Host,
-	  TrisulRP::Keys::HostInterface,
-	  TrisulRP::Keys::Subnet,
-	  TrisulRP::Keys::ASNumber
-	].each do |kls|
-		return kls.invert_xform(readable) if kls.is_human_form?(readable) 
+	# convert a key in human form into trisul key format
+	#
+	# [humanform]  the human  form of the key 
+	#
+	# ==== Typical use 
+	#
+	# Used to convert a human form key into a Trisul Key format suitable for use with TRP requests
+	#
+	#
+	# <code>
+	#
+	#   make_key("192.168.1.1") => "C0.A8.01.01"
+	#
+	# </code>
+	#
+	#
+	# Also see the inverse of this method make_readable 
+	#
+	#
+	def make_key(readable)
+		[ TrisulRP::Keys::Port,
+		  TrisulRP::Keys::Host,
+		  TrisulRP::Keys::HostInterface,
+		  TrisulRP::Keys::Subnet,
+		  TrisulRP::Keys::ASNumber
+		].each do |kls|
+			return kls.invert_xform(readable) if kls.is_human_form?(readable) 
+		end
+		return readable
 	end
-	return readable
-end
+
+
+    # convert a set of keys into labels
+	#
+	# This method accepts an array of keys (which are references to counter items in Trisul) and sends
+	# a key lookup request to Trisul.  Trisul responds with labels for those keys that had labels. Finally a 
+	# ready to use map is constructed and returned to the caller.
+	#
+	# [conn]    a TRP connection opened earlier via connect(..) 
+	# [cgguid]  a counter group id. See TrisulRP::Guids for a list of common guids 
+	# [key_arr] an array of keys, possibly obtained as a result of an earlier command
+	#
+	# ==== Returns
+	# a hash of Key => Label. All keys in the incoming array will have a hash entry. If Trisul could not
+	# find a label for a key, it will store the key itself as the hash value.
+	#
+	# ==== Typical usage 
+	#
+	# You use this method as a bulk resolving mechanism. 
+	# <code>
+	#
+	#  host_keys = ["0A.0A.18.E0", "B1.01.8F.01",...]
+    #  host_names   = TrisulRP::Protocol.get_labels_for_keys(conn,
+	#                       TrisulRP::Guids::CG_HOSTS, host_keys)
+	#
+	#  host_names["0A.0A.18.E0"] = "demo.trisul.org"   # ok 
+	#  host_names["B1.01.8F.01"] = "B1.01.8F.01"       # no label for this key
+	#
+	# </code>
+	#
+	def get_labels_for_keys(conn, cgguid, key_arr)
+		req = mk_request(TRP::Message::Command::KEY_LOOKUP_REQUEST,
+		  :counter_group  => cgguid, :keys => key_arr.uniq )
+		h = key_arr.inject({}) { |m,i| m.store(i,make_readable(i)); m }
+		get_response(conn,req) do |resp|
+				resp.key_lookup_response.key_details.each { |d| h.store(d.key,d.label) }
+		end
+		return h
+	  end
 
 end

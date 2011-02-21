@@ -1,4 +1,4 @@
-# = Trisul Remote Protocol helper  functions
+# = Trisul Remote Protocol functions
 # 
 # dependency = ruby_protobuf
 #
@@ -110,45 +110,6 @@ module TrisulRP::Protocol
 		end
 		return [from_tm,to_tm]
   	end
-
-    # convert a set of keys into labels
-	#
-	# This method accepts an array of keys (which are references to counter items in Trisul) and sends
-	# a key lookup request to Trisul.  Trisul responds with labels for those keys that had labels. Finally a 
-	# ready to use map is constructed and returned to the caller.
-	#
-	# [conn]    a TRP connection opened earlier via connect(..) 
-	# [cgguid]  a counter group id. See TrisulRP::Guids for a list of common guids 
-	# [key_arr] an array of keys, possibly obtained as a result of an earlier command
-	#
-	# ==== Returns
-	# a hash of Key => Label. All keys in the incoming array will have a hash entry. If Trisul could not
-	# find a label for a key, it will store the key itself as the hash value.
-	#
-	# ==== Typical usage 
-	#
-	# You use this method as a bulk resolving mechanism. 
-	# <code>
-	#
-	#  host_keys = ["0A.0A.18.E0", "B1.01.8F.01",...]
-    #  host_names   = TrisulRP::Protocol.get_labels_for_keys(conn,
-	#                       TrisulRP::Guids::CG_HOSTS, host_keys)
-	#
-	#  host_names["0A.0A.18.E0"] = "demo.trisul.org"   # ok 
-	#  host_names["B1.01.8F.01"] = "B1.01.8F.01"       # no label for this key
-	#
-	# </code>
-	#
-	def get_labels_for_keys(conn, cgguid, key_arr)
-		req = mk_request(TRP::Message::Command::KEY_LOOKUP_REQUEST,
-		  :counter_group  => cgguid, :keys => key_arr.uniq )
-		h = key_arr.inject({}) { |m,i| m.store(i,i); m }
-		get_response(conn,req) do |resp|
-				resp.key_lookup_response.key_details.each { |d| h.store(d.key,d.label) }
-		end
-		return h
-	  end
-
      # Helper to create a TRP TimeInterval object
 	 #
 	 # [tmarr]	An array of two Time objects representing a window
@@ -198,7 +159,7 @@ module TrisulRP::Protocol
 	 # </code>
 	 #
 	 #
-     def mk_request(cmd_id,params)
+     def mk_request(cmd_id,params={})
 		req = TRP::Message.new(:trp_command => cmd_id)
 		case cmd_id
 		when TRP::Message::Command::HELLO_REQUEST
@@ -212,7 +173,7 @@ module TrisulRP::Protocol
 		when TRP::Message::Command::CONTROLLED_COUNTER_GROUP_REQUEST
 		  req.controlled_counter_group_request = TRP::ControlledCounterGroupRequest.new(params)
 		when TRP::Message::Command::FILTERED_DATAGRAMS_REQUEST
-		  req.filtered_datagrams_request = TRP::FilteredDatagramsRequest.new(params)
+		  req.filtered_datagram_request = TRP::FilteredDatagramRequest.new(params)
 		when TRP::Message::Command::CONTROLLED_CONTEXT_REQUEST
 		  req.controlled_context_request = TRP::ControlledContextRequest.new(params)
 		when TRP::Message::Command::SEARCH_KEYS_REQUEST

@@ -4,23 +4,23 @@
 require 'rubygems'
 require './helper'
 include TrisulRP::Protocol
-require guidmap
 
 class TestTrisulrp < Test::Unit::TestCase
 
 
-	# demonstrates getting all HTTP requests getting a *DLL 
+	# demonstrates getting all DNS resources for smtp (string contains smtp)
 	def test_query_resources
 
     target_ip = "0A.02.C7.EB"  # 10.2.199.235"
 
-    TrisulRP::Protocol.connect_trp("127.0.0.1", 12001,"Demo_Client.crt","Demo_Client.key") do |conn|
+    TrisulRP::Protocol.connect("127.0.0.1", 12001,"Demo_Client.crt","Demo_Client.key") do |conn|
   
       tm_arr = TrisulRP::Protocol. get_available_time(conn)
+
       req = TrisulRP::Protocol.mk_request(TRP::Message::Command::RESOURCE_GROUP_REQUEST,
         :context => 0,
-        :resource_group => TrisulRP::Guids::RG_URL,
-        :uri_pattern => "dll",:maxitems  => 1000,                                                                                                                   :time_interval => mk_time_interval(tm_arr))
+        :resource_group => TrisulRP::Guids::RG_DNS,
+        :uri_pattern => "smtp",:maxitems  => 1000,                                                                                                                   :time_interval => mk_time_interval(tm_arr))
 
       TrisulRP::Protocol.get_response(conn,req) do |resp|
 
@@ -30,7 +30,7 @@ class TestTrisulrp < Test::Unit::TestCase
         end
 
         follow_up = TrisulRP::Protocol.mk_request( TRP::Message::Command::RESOURCE_ITEM_REQUEST,
-          :context => 0, :resource_group => TrisulRP::Guids::RG_URL,
+          :context => 0, :resource_group => TrisulRP::Guids::RG_DNS,
           :resource_ids => resource_ids)
 
         TrisulRP::Protocol.get_response(conn,follow_up) do | resp2 |

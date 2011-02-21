@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
-// (c) 2010-11, Unleash Networks
-// $Rev: 3442 $
+// (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
+// $Rev: 3535 $
 package TRP;
 
 message Timestamp  {
@@ -274,8 +274,35 @@ message FilteredDatagramRequest{
     optional int64          max_packets=1[default=0];                
     optional int64          max_bytes=2[default=0];                   
     optional CompressionType compress_type=3[default=UNCOMPRESSED];              
-    required TimeInterval   time_interval=4;                   
-    required string         filter_expression=5;
+
+	// by trisul filter format expr
+	message ByFilterExpr {
+		required TimeInterval   time_interval=1;                   
+		required string         filter_expression=2;
+	}
+	optional ByFilterExpr 	filter_expression=4;
+
+	// by session
+	message BySession   {
+    	optional string         session_group=1[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+		required SessionID		session_id=2;
+	}
+	optional BySession			session=5;
+
+
+	// by alert
+	message ByAlert     {
+		optional string			alert_group=1[default="{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"];
+		required AlertID		alert_id=2;
+	}
+	optional ByAlert			alert=6;
+
+	// by resource
+	message ByResource  {
+		required string			resource_group=1;
+		required ResourceID		resource_id=2;
+	}
+	optional ByResource			resource=7;
 }
 
 /////////////////////////////////////
@@ -627,7 +654,7 @@ message GrepRequest {
     optional int64          context=1[default=0];            
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
     required TimeInterval   time_interval=3;
-    optional int64          maxitems=4 [default=500];
+    optional int64          maxitems=4 [default=50];
     required string         pattern=5;
 }
 

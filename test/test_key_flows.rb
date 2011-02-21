@@ -15,7 +15,7 @@ class TestTrisulrp < Test::Unit::TestCase
   def teardown
   end
 
-  def atest_flows_for_host
+  def test_flows_for_host
 
     target_key =  "0A.01.3C.BB"
 	
@@ -36,7 +36,7 @@ class TestTrisulrp < Test::Unit::TestCase
   def test_flows_for_appname
 
     target  =  "ssh"
-	target_key =  mk_trisul_key(CG_APP,target)
+	target_key =  mk_trisul_key(@conn,CG_APP,target)
 	
     tmarr  = TrisulRP::Protocol.get_available_time(@conn)
 
