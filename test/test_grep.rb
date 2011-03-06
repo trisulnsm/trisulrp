@@ -22,7 +22,7 @@ class TestTrisulrp < Test::Unit::TestCase
 
     TrisulRP::Protocol.get_response(conn,req) do |resp|
 
-		print_session_details(conn,resp.grep_response.sessions)
+		print_session_details(conn,resp.sessions)
 
     end
 

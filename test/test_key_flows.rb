@@ -26,7 +26,7 @@ class TestTrisulrp < Test::Unit::TestCase
 										  :time_interval => mk_time_interval(tmarr))
 
     TrisulRP::Protocol.get_response(@conn,req) do |resp|
-		print_session_details(@conn,resp.key_session_activity_response.sessions)
+		print_session_details(@conn,resp.sessions)
     end
 
   end
@@ -45,7 +45,7 @@ class TestTrisulrp < Test::Unit::TestCase
 										  :time_interval => mk_time_interval(tmarr))
 
     TrisulRP::Protocol.get_response(@conn,req) do |resp|
-		print_session_details(@conn,resp.key_session_activity_response.sessions)
+		print_session_details(@conn,resp.sessions)
     end
 
   end

@@ -25,7 +25,7 @@ class TestTrisulrp < Test::Unit::TestCase
       TrisulRP::Protocol.get_response(conn,req) do |resp|
 
 	     	# matching resource ids
-        resource_ids = resp.resource_group_response.resources.collect do   |res|
+        resource_ids = resp.resources.collect do   |res|
           TRP::ResourceID.new(:slice_id => res.slice_id, :resource_id => res.resource_id)
         end
 
@@ -33,8 +33,7 @@ class TestTrisulrp < Test::Unit::TestCase
           :context => 0, :resource_group => TrisulRP::Guids::RG_DNS,
           :resource_ids => resource_ids)
 
-        TrisulRP::Protocol.get_response(conn,follow_up) do | resp2 |
-          resp=resp2.resource_item_response
+        TrisulRP::Protocol.get_response(conn,follow_up) do | resp |
           resp.items.each do |item|
             print "#{Time.at(item.time.tv_sec)} "
             print "#{item.source_ip}".ljust(28)

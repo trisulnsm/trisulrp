@@ -75,8 +75,8 @@ module TrisulRP::Protocol
 		resp =TRP::Message.new
 		resp.parse dataarray
 		raise resp.error_response if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
-		yield resp if block_given?
-		return resp
+		yield unwrap_response(resp) if block_given?
+		return unwrap_response(resp)
 	end
 
 
@@ -105,8 +105,8 @@ module TrisulRP::Protocol
 		req=mk_request(TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST,
       							:counter_group => TrisulRP::Guids::CG_AGGREGATE)
 		get_response(conn,req) do |resp|
-			from_tm =  Time.at(resp.counter_group_info_response.group_details[0].time_interval.from.tv_sec)
-			to_tm =  Time.at(resp.counter_group_info_response.group_details[0].time_interval.to.tv_sec)
+			from_tm =  Time.at(resp.group_details[0].time_interval.from.tv_sec)
+			to_tm =  Time.at(resp.group_details[0].time_interval.to.tv_sec)
 		end
 		return [from_tm,to_tm]
   	end
@@ -179,7 +179,7 @@ module TrisulRP::Protocol
 		when TRP::Message::Command::SEARCH_KEYS_REQUEST
 		  req.search_keys_request = TRP::SearchKeysRequest.new(params)
 		when TRP::Message::Command::BULK_COUNTER_ITEM_REQUEST
-		  req.bulk_counter_item_request = TRP::BulkItemRequest.new(params)
+		  req.bulk_counter_item_request = TRP::BulkCounterItemRequest.new(params)
 		when TRP::Message::Command:: CGMONITOR_REQUEST
 		  req.cgmonitor_request = TRP::CgmonitorRequest.new(params)
 		when TRP::Message::Command::TOPPER_SNAPSHOT_REQUEST
@@ -214,6 +214,97 @@ module TrisulRP::Protocol
 			raise "Unknown TRP command ID"
 		end
 		return req
+	end
+
+     # Helper to unwrap a response
+	 #
+	 # All protobuf messages used in TRP have a wrapper containing a command_id which identifies
+	 # the type of encapsulated message. This sometimes gets in the way because you have to write
+	 # stuff like
+	 #
+	 # <code>
+	 #
+	 #     response.counter_group_response.blah_blah 
+	 #
+	 #     instead of 
+	 #
+	 #     response.blah_blah
+	 #
+	 # </code>
+	 #
+	 # Read the TRP documentation wiki for a description of each command. 
+	 #
+	 # [resp]	The response 
+	 #
+	 # ==== Typical usage
+	 #
+	 # <code>
+	 #
+	 #  # create a new command of type KeySessionActivityRequest
+     #  req = TrisulRP::Protocol.get_response(...) do |resp|
+	 #  		
+	 #  		# here resp points to the inner response without the wrapper 
+	 #  		# this allows you to write resp.xyz instead of resp.hello_response.xyz 
+	 #
+	 #
+	 #  end
+	 #
+	 # </code>
+	 #
+	 #
+     def unwrap_response(resp)
+		case resp.trp_command
+		when TRP::Message::Command::HELLO_RESPONSE
+			resp.hello_response
+		when TRP::Message::Command::COUNTER_GROUP_RESPONSE
+			resp.counter_group_response
+		when TRP::Message::Command::COUNTER_ITEM_RESPONSE
+			resp.counter_item_response
+		when TRP::Message::Command::OK_RESPONSE
+			resp.ok_response
+		when TRP::Message::Command::CONTROLLED_COUNTER_GROUP_RESPONSE
+			resp.controlled_counter_group_response
+		when TRP::Message::Command::FILTERED_DATAGRAMS_RESPONSE
+			resp.filtered_datagram_response
+		when TRP::Message::Command::CONTROLLED_CONTEXT_RESPONSE
+			resp.controlled_context_response
+		when TRP::Message::Command::SEARCH_KEYS_RESPONSE
+			resp.search_keys_response
+		when TRP::Message::Command::BULK_COUNTER_ITEM_RESPONSE
+		  	resp.bulk_counter_item_response 
+		when TRP::Message::Command:: CGMONITOR_RESPONSE
+		  	resp.cgmonitor_response 
+		when TRP::Message::Command::TOPPER_SNAPSHOT_RESPONSE
+			resp.topper_snapshot_response
+		when TRP::Message::Command::UPDATE_KEY_RESPONSE
+			resp.update_key_response 
+		when TRP::Message::Command::RING_STATS_RESPONSE
+		  	resp.ring_stats_response 
+		when TRP::Message::Command::SERVER_STATS_RESPONSE
+		  	resp.server_stats_response 
+		when TRP::Message::Command::SESSION_ITEM_RESPONSE
+		  	resp.session_item_response 
+		when TRP::Message::Command::SESSION_GROUP_RESPONSE
+		  	resp.session_group_response 
+		when TRP::Message::Command::ALERT_ITEM_RESPONSE
+		  	resp.alert_item_response 
+		when TRP::Message::Command::ALERT_GROUP_RESPONSE
+		  	resp.alert_group_response 
+		when TRP::Message::Command::RESOURCE_ITEM_RESPONSE
+		  	resp.resource_item_response 
+		when TRP::Message::Command::RESOURCE_GROUP_RESPONSE
+		  	resp.resource_group_response 
+		when TRP::Message::Command::KEY_LOOKUP_RESPONSE
+		  	resp.key_lookup_response 
+		when TRP::Message::Command::COUNTER_GROUP_INFO_RESPONSE
+		  	resp.counter_group_info_response 
+		when TRP::Message::Command::KEY_SESS_ACTIVITY_RESPONSE
+		  	resp.key_session_activity_response 
+		when TRP::Message::Command::GREP_RESPONSE
+		  	resp.grep_response  
+		else
+			raise "Unknown TRP command ID"
+		end
 	end
 
 end

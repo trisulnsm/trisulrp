@@ -35,7 +35,7 @@ module TrisulRP::Utils
 												  :session_ids => all_sids)
 
         TrisulRP::Protocol.get_response(conn,follow_up) do |resp|
-          resp.session_item_response.items.each do |item|
+          resp.items.each do |item|
             print "#{item.session_id.slice_id},#{item.session_id.session_id} "
             print "#{Time.at(item.time_interval.from.tv_sec)} "
             print "#{item.time_interval.to.tv_sec-item.time_interval.from.tv_sec} ".rjust(8)
@@ -72,8 +72,8 @@ module TrisulRP::Utils
 
     	resp = TrisulRP::Protocol.get_response(conn,req)
 
-		if resp.search_keys_response.found_keys.size > 0 
-			resp.search_keys_response.found_keys[0].key
+		if resp.found_keys.size > 0 
+			resp.found_keys[0].key
 		else
 			str
 		end
@@ -106,8 +106,7 @@ module TrisulRP::Utils
 
 
 
-	TrisulRP::Protocol.get_response(conn,follow_up) do | resp2 |
-         resp=resp2.alert_item_response
+	TrisulRP::Protocol.get_response(conn,follow_up) do | resp |
          resolv_candidates = resp.items.collect { |item| [item.source_ip, item.source_port, item.destination_ip, item.destination_port,item.sigid]  }
          resolv_arr = resolv_candidates.transpose
          sip_names   = TrisulRP::Keys.get_labels_for_keys(conn,TrisulRP::Guids::CG_HOST, resolv_arr[0])

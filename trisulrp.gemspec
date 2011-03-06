@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{trisulrp}
-  s.version = "1.2.7"
+  s.version = "1.2.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
-  s.date = %q{2011-02-17}
+  s.date = %q{2011-02-22}
   s.description = %q{This gem deals about the trisul remote protocol}
   s.email = %q{vivek_rajagopal@yahoo.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/trisulrp/protocol.rb",
     "lib/trisulrp/trp.pb.rb",
     "lib/trisulrp/trp.proto",
+    "lib/trisulrp/utils.rb",
     "test/Demo_Client.crt",
     "test/Demo_Client.key",
     "test/helper.rb",

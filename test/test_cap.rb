@@ -26,8 +26,7 @@ class TestCap < Test::Unit::TestCase
 									:filter_expression  => expr)
 					)
 
-    TrisulRP::Protocol.get_response(conn,req) do |resp|
-          fdr=resp.filtered_datagram_response
+    TrisulRP::Protocol.get_response(conn,req) do |fdr|
           p "Number of bytes = #{fdr.num_bytes}\n"
           p "Number of pkts  = #{fdr.num_datagrams}\n"
           p "Hash            = #{fdr.sha1}\n"
@@ -52,8 +51,7 @@ class TestCap < Test::Unit::TestCase
 									:session_id  => target_sess)
 					)
 
-    TrisulRP::Protocol.get_response(conn,req) do |resp|
-          fdr=resp.filtered_datagram_response
+    TrisulRP::Protocol.get_response(conn,req) do |fdr|
           p "Number of bytes = #{fdr.num_bytes}\n"
           p "Number of pkts  = #{fdr.num_datagrams}\n"
           p "Hash            = #{fdr.sha1}\n"
@@ -78,8 +76,7 @@ class TestCap < Test::Unit::TestCase
 									:alert_id  => target_alert)
 					)
 
-    TrisulRP::Protocol.get_response(conn,req) do |resp|
-          fdr=resp.filtered_datagram_response
+    TrisulRP::Protocol.get_response(conn,req) do |fdr|
           p "Number of bytes = #{fdr.num_bytes}\n"
           p "Number of pkts  = #{fdr.num_datagrams}\n"
           p "Hash            = #{fdr.sha1}\n"
@@ -105,8 +102,7 @@ class TestCap < Test::Unit::TestCase
 									:resource_id  => target)
 					)
 
-    TrisulRP::Protocol.get_response(conn,req) do |resp|
-          fdr=resp.filtered_datagram_response
+    TrisulRP::Protocol.get_response(conn,req) do |fdr|
           p "Number of bytes = #{fdr.num_bytes}\n"
           p "Number of pkts  = #{fdr.num_datagrams}\n"
           p "Hash            = #{fdr.sha1}\n"

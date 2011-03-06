@@ -24,7 +24,7 @@ class TestTrisulrp < Test::Unit::TestCase
 										:time_interval => mk_time_interval(tm_arr))
 
       TrisulRP::Protocol.get_response(conn,req) do |resp|
-	  	print_alert_details(conn,resp.alert_group_response.alerts)
+	  	print_alert_details(conn,resp.alerts)
       end
     end
   end
