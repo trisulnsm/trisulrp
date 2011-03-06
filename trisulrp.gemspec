@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
-  s.date = %q{2011-02-22}
+  s.date = %q{2011-03-06}
   s.description = %q{This gem deals about the trisul remote protocol}
   s.email = %q{vivek_rajagopal@yahoo.com}
   s.extra_rdoc_files = [
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
     "lib/trisulrp/utils.rb",
     "test/Demo_Client.crt",
     "test/Demo_Client.key",
+    "test/cginfo.rb",
     "test/helper.rb",
     "test/test_alerts.rb",
     "test/test_cap.rb",
@@ -50,6 +51,7 @@ Gem::Specification.new do |s|
   s.summary = %q{trisul trp}
   s.test_files = [
     "examples/strp.rb",
+    "test/cginfo.rb",
     "test/helper.rb",
     "test/test_alerts.rb",
     "test/test_cap.rb",
