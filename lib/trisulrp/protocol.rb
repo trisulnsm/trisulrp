@@ -206,6 +206,8 @@ module TrisulRP::Protocol
 		  req.key_lookup_request = TRP::KeyLookupRequest.new(params)
 		when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
 		  req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
+		when TRP::Message::Command::SESSION_TRACKER_REQUEST
+		  req.session_tracker_request = TRP::SessionTrackerRequest.new(params)
 		when TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST
 		  req.key_session_activity_request = TRP::KeySessionActivityRequest.new(params)
 		when TRP::Message::Command::GREP_REQUEST
@@ -298,6 +300,8 @@ module TrisulRP::Protocol
 		  	resp.key_lookup_response 
 		when TRP::Message::Command::COUNTER_GROUP_INFO_RESPONSE
 		  	resp.counter_group_info_response 
+		when TRP::Message::Command::SESSION_TRACKER_RESPONSE
+		  	resp.session_tracker_response 
 		when TRP::Message::Command::KEY_SESS_ACTIVITY_RESPONSE
 		  	resp.key_session_activity_response 
 		when TRP::Message::Command::GREP_RESPONSE
