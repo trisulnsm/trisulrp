@@ -299,7 +299,7 @@ end
 		  :counter_group  => cgguid, :keys => key_arr.uniq )
 		h = key_arr.inject({}) { |m,i| m.store(i,make_readable(i)); m }
 		get_response(conn,req) do |resp|
-				resp.key_lookup_response.key_details.each { |d| h.store(d.key,d.label) }
+				resp.key_details.each { |d| h.store(d.key,d.label) }
 		end
 		return h
 	  end
