@@ -3,9 +3,6 @@
 
 require 'protocol_buffers'
 
-# Reload support
-Object.__send__(:remove_const, :TRP) if defined?(TRP)
-
 module TRP
   # forward declarations
   class Timestamp < ::ProtocolBuffers::Message; end
@@ -655,16 +652,17 @@ module TRP
     class Item < ::ProtocolBuffers::Message
       optional :int64, :sensor_id, 1
       required ::TRP::Timestamp, :time, 2
-      optional :string, :source_ip, 3
-      optional :string, :source_port, 4
-      optional :string, :destination_ip, 5
-      optional :string, :destination_port, 6
-      required :string, :sigid, 7
-      required :string, :classification, 8
-      required :string, :priority, 9
-      required ::TRP::Timestamp, :dispatch_time, 10
-      required :string, :aux_message1, 11
-      required :string, :aux_message2, 12
+      required ::TRP::AlertID, :alert_id, 3
+      optional :string, :source_ip, 4
+      optional :string, :source_port, 5
+      optional :string, :destination_ip, 6
+      optional :string, :destination_port, 7
+      required :string, :sigid, 8
+      required :string, :classification, 9
+      required :string, :priority, 10
+      required ::TRP::Timestamp, :dispatch_time, 11
+      required :string, :aux_message1, 12
+      required :string, :aux_message2, 13
 
       gen_methods! # new fields ignored after this point
     end
