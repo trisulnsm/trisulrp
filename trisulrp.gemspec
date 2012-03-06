@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{trisulrp}
-  s.version = "1.2.10"
+  s.version = "1.4.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
-  s.date = %q{2011-03-06}
+  s.date = %q{2012-03-06}
   s.description = %q{This gem deals about the trisul remote protocol}
   s.email = %q{vivek_rajagopal@yahoo.com}
   s.extra_rdoc_files = [
@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_alerts.rb",
     "test/test_cap.rb",
+    "test/test_cg.rb",
     "test/test_grep.rb",
     "test/test_key.rb",
     "test/test_key_flows.rb",
@@ -55,6 +56,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_alerts.rb",
     "test/test_cap.rb",
+    "test/test_cg.rb",
     "test/test_grep.rb",
     "test/test_key.rb",
     "test/test_key_flows.rb",
@@ -67,14 +69,14 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<ruby-protocol-buffers>, [">= 0.8.5"])
+      s.add_runtime_dependency(%q<ruby-protocol-buffers>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_runtime_dependency(%q<ruby-protocol-buffers>, [">= 0.8.5"])
     else
-      s.add_dependency(%q<ruby-protocol-buffers>, [">= 0.8.5"])
+      s.add_dependency(%q<ruby-protocol-buffers>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -82,7 +84,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ruby-protocol-buffers>, [">= 0.8.5"])
     end
   else
-    s.add_dependency(%q<ruby-protocol-buffers>, [">= 0.8.5"])
+    s.add_dependency(%q<ruby-protocol-buffers>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
