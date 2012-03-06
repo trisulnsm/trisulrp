@@ -100,7 +100,7 @@ module TRP
 
   class StatsTuple < ::ProtocolBuffers::Message
     required ::TRP::Timestamp, :ts, 1
-    required :double, :val, 2
+    required :int64, :val, 2
 
     gen_methods! # new fields ignored after this point
   end
@@ -125,6 +125,7 @@ module TRP
     required :string, :key, 1
     optional :string, :label, 2
     optional :string, :description, 3
+    optional :int64, :metric, 4
 
     gen_methods! # new fields ignored after this point
   end

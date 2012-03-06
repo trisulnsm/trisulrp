@@ -27,5 +27,5 @@ Key Features :
 
 == Copyright
 
-Copyright (c) 2010-11 Unleash Networks. See LICENSE.txt for further details.
+Copyright (c) 2010-12 Unleash Networks. See LICENSE.txt for further details.
 
