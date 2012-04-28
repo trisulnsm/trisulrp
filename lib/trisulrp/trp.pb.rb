@@ -23,10 +23,10 @@ module TRP
   class ReleaseContextRequest < ::ProtocolBuffers::Message; end
   class CounterItemRequest < ::ProtocolBuffers::Message; end
   class CounterItemResponse < ::ProtocolBuffers::Message; end
+  class BulkCounterItemRequest < ::ProtocolBuffers::Message; end
+  class BulkCounterItemResponse < ::ProtocolBuffers::Message; end
   class CounterGroupRequest < ::ProtocolBuffers::Message; end
   class CounterGroupResponse < ::ProtocolBuffers::Message; end
-  class ControlledCounterGroupRequest < ::ProtocolBuffers::Message; end
-  class ControlledCounterGroupResponse < ::ProtocolBuffers::Message; end
   class FilteredDatagramRequest < ::ProtocolBuffers::Message; end
   class FilteredDatagramResponse < ::ProtocolBuffers::Message; end
   class ControlledContextRequest < ::ProtocolBuffers::Message; end
@@ -37,8 +37,6 @@ module TRP
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message; end
   class SessionItemRequest < ::ProtocolBuffers::Message; end
   class SessionItemResponse < ::ProtocolBuffers::Message; end
-  class BulkCounterItemRequest < ::ProtocolBuffers::Message; end
-  class BulkCounterItemResponse < ::ProtocolBuffers::Message; end
   class TopperSnapshotRequest < ::ProtocolBuffers::Message; end
   class TopperSnapshotResponse < ::ProtocolBuffers::Message; end
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
@@ -156,6 +154,7 @@ module TRP
     required :string, :name, 2
     optional :int64, :bucket_size, 3
     optional ::TRP::TimeInterval, :time_interval, 4
+    optional :int64, :topper_bucket_size, 5
 
     gen_methods! # new fields ignored after this point
   end
@@ -230,8 +229,6 @@ module TRP
     optional ::TRP::CounterItemRequest, :counter_item_request, 8
     optional ::TRP::CounterItemResponse, :counter_item_response, 9
     optional ::TRP::ReleaseContextRequest, :release_context_request, 11
-    optional ::TRP::ControlledCounterGroupRequest, :controlled_counter_group_request, 12
-    optional ::TRP::ControlledCounterGroupResponse, :controlled_counter_group_response, 13
     optional ::TRP::FilteredDatagramRequest, :filtered_datagram_request, 14
     optional ::TRP::FilteredDatagramResponse, :filtered_datagram_response, 15
     optional ::TRP::ControlledContextRequest, :controlled_context_request, 16
@@ -326,6 +323,22 @@ module TRP
     gen_methods! # new fields ignored after this point
   end
 
+  class BulkCounterItemRequest < ::ProtocolBuffers::Message
+    optional :int64, :context, 1, :default => 0
+    required :string, :counter_group, 2
+    required :int64, :meter, 3
+    required ::TRP::TimeInterval, :time_interval, 4
+    repeated :string, :keys, 5
+
+    gen_methods! # new fields ignored after this point
+  end
+
+  class BulkCounterItemResponse < ::ProtocolBuffers::Message
+    repeated ::TRP::KeyStats, :stats, 1
+
+    gen_methods! # new fields ignored after this point
+  end
+
   class CounterGroupRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
@@ -343,26 +356,6 @@ module TRP
     required :string, :counter_group, 2
     required :int64, :meter, 3
     repeated ::TRP::KeyDetails, :keys, 6
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  class ControlledCounterGroupRequest < ::ProtocolBuffers::Message
-    required :string, :dynamic_group_id, 1
-    required :string, :counter_group, 2
-    required :int64, :meter, 3
-    required :int64, :maxitems, 4
-    required :int64, :bucket_ms, 5
-    required :int64, :top_nsize, 6
-    required ::TRP::TimeInterval, :time_interval, 7
-    required :string, :control_counter_id, 9
-    required :string, :control_key, 10
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  class ControlledCounterGroupResponse < ::ProtocolBuffers::Message
-    required :string, :dynamic_group_id, 1
 
     gen_methods! # new fields ignored after this point
   end
@@ -505,23 +498,6 @@ module TRP
     optional :int64, :context, 1, :default => 0
     required :string, :session_group, 2
     repeated ::TRP::SessionItemResponse::Item, :items, 3
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  class BulkCounterItemRequest < ::ProtocolBuffers::Message
-    optional :int64, :context, 1, :default => 0
-    required :string, :counter_group, 2
-    required :int64, :meter, 3
-    required ::TRP::TimeInterval, :time_interval, 4
-    repeated :string, :keys, 5
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  class BulkCounterItemResponse < ::ProtocolBuffers::Message
-    repeated ::TRP::KeyStats, :stats, 1
-    repeated ::TRP::KeyDetails, :details, 2
 
     gen_methods! # new fields ignored after this point
   end

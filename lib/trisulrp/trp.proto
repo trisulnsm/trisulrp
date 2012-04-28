@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 3576 $
+// $Rev: 4886 $
 package TRP;
 
 message Timestamp  {
@@ -57,6 +57,7 @@ message CounterGroupDetails {
     required string         name=2;
     optional int64          bucket_size=3;
     optional TimeInterval   time_interval=4;
+    optional int64          topper_bucket_size=5;
 }
 
 enum AuthLevel {
@@ -141,8 +142,6 @@ message Message {
     optional CounterItemRequest counter_item_request=8;
     optional CounterItemResponse counter_item_response=9;
     optional ReleaseContextRequest release_context_request=11; 
-    optional ControlledCounterGroupRequest controlled_counter_group_request=12; 
-    optional ControlledCounterGroupResponse controlled_counter_group_response=13; 
     optional FilteredDatagramRequest filtered_datagram_request=14;
     optional FilteredDatagramResponse filtered_datagram_response=15;
     optional ControlledContextRequest controlled_context_request=16;
@@ -231,6 +230,23 @@ message CounterItemResponse{
     required KeyStats       stats=1;
 }
 
+
+//////////////////////////////////////////
+// BulkCounterItemRequest
+message BulkCounterItemRequest{
+    optional int64          context=1[default=0];
+    required string         counter_group=2;
+    required int64          meter=3;
+    required TimeInterval   time_interval=4;
+    repeated string         keys=5;
+}
+
+//////////////////////////////////////////
+// BulkCounterItemResponse
+message BulkCounterItemResponse{
+    repeated KeyStats       stats=1;
+}
+
 ///////////////////////////////
 // CounterGroupRequest 
 message CounterGroupRequest{
@@ -244,28 +260,12 @@ message CounterGroupRequest{
 }
 
 ///////////////////////////////
-// CounterItemRequest 
+// CounterGroupResponse  
 message  CounterGroupResponse{
     required int64          context=1;
     required string         counter_group=2;
     required int64          meter=3;
     repeated KeyDetails     keys=6;
-}
-
-message ControlledCounterGroupRequest{
-    required string         dynamic_group_id=1;                 
-    required string         counter_group=2;                
-    required int64          meter=3;
-    required int64          maxitems=4;                               
-    required int64          bucket_ms=5;                              
-    required int64          top_nsize=6;                            
-    required TimeInterval   time_interval=7;                   
-    required string         control_counter_id=9;               
-    required string         control_key=10;   
-}
-
-message ControlledCounterGroupResponse{
-    required string         dynamic_group_id=1;
 }
 
 
@@ -395,24 +395,6 @@ message SessionItemResponse{
 
     repeated Item           items=3;
 }
-
-//////////////////////////////////////////
-// BulkCounterItemRequest
-message BulkCounterItemRequest{
-    optional int64          context=1[default=0];
-    required string         counter_group=2;
-    required int64          meter=3;
-    required TimeInterval   time_interval=4;
-    repeated string         keys=5;
-}
-
-//////////////////////////////////////////
-// BulkCounterItemResponse
-message BulkCounterItemResponse{
-    repeated KeyStats       stats=1;
-    repeated KeyDetails     details=2;
-}
-
 ///////////////////////////////////////////
 /// TopperSnapshotRequest
 message TopperSnapshotRequest{
