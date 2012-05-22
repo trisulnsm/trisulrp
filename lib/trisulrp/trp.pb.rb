@@ -538,10 +538,11 @@ module TRP
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required :string, :key, 3
-    optional :int64, :maxitems, 4, :default => 100
-    optional :int64, :volume_filter, 5, :default => 0
-    optional :int64, :duration_filter, 6, :default => 0
-    required ::TRP::TimeInterval, :time_interval, 7
+    optional :string, :key2, 4
+    optional :int64, :maxitems, 5, :default => 100
+    optional :int64, :volume_filter, 6, :default => 0
+    optional :int64, :duration_filter, 7, :default => 0
+    required ::TRP::TimeInterval, :time_interval, 8
 
     gen_methods! # new fields ignored after this point
   end
