@@ -52,6 +52,19 @@ module TrisulRP::Utils
 
 	# Make key
 	#
+	# Convert an item into Trisul Key format. 
+	#
+	# Example 
+	#
+	# == Pass a hostname 
+	# mk_trisul_key(conn,GUID_HOSTS,"www.trisul.org") => "D0.D1.01.EA"
+	# mk_trisul_key(conn,GUID_APPS,"https") => "p-01BB"
+	#
+	# == Pass a IP 
+	# mk_trisul_key(conn,GUID_HOSTS,"192.168.1.5") => "C0.A8.01.05"
+	# mk_trisul_key(conn,GUID_APPS,"Port-443") => "p-01BB"
+	#
+	#
 	# [conn]           active TRP connection opened earlier 
 	# [guid]           counter group id (eg hosts, apps, countries)
 	# [str]			   eg a resolved name (eg a host like www.blue.net)
@@ -75,7 +88,7 @@ module TrisulRP::Utils
 		if resp.found_keys.size > 0 
 			resp.found_keys[0].key
 		else
-			str
+			TrisulRP::Keys::make_key(str)
 		end
   end
 
