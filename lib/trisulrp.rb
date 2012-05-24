@@ -4,8 +4,8 @@ $:.unshift(File.dirname(__FILE__)) unless
 # =TrisulRP - Trisul Remote Protocol 
 # #
 # # 
-# # Author:: Vivek Rajagopalan
-# # Date:: 30 Dec 2010
+# # Author:: Vivek Rajagopalan for trisul.org 
+# # Date:: 30 Dec 2011
 module TrisulRP
 end
 
@@ -15,3 +15,9 @@ require 'trisulrp/guids.rb'
 require 'trisulrp/keys.rb'
 require 'trisulrp/protocol.rb'
 require 'trisulrp/utils.rb'
+
+include TrisulRP::Protocol
+include TrisulRP::Guids
+include TrisulRP::Utils
+include TrisulRP::Keys
+
