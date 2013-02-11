@@ -310,9 +310,10 @@ module TRP
   class CounterItemRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
-    required :int64, :meter, 3, :default => 0
+    optional :int64, :meter, 3
     required :string, :key, 4
     required ::TRP::TimeInterval, :time_interval, 5
+    optional :int64, :volumes_only, 6, :default => 0
 
     gen_methods! # new fields ignored after this point
   end

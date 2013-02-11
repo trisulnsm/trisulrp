@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 4886 $
+// $Rev: 4914 $
 package TRP;
 
 message Timestamp  {
@@ -219,9 +219,10 @@ message ReleaseContextRequest{
 message CounterItemRequest{
     optional int64          context=1 [default=0];
     required string         counter_group=2;
-    required int64          meter=3 [default=0];
+    optional int64          meter=3;
     required string         key=4;
     required TimeInterval   time_interval=5;
+	optional int64			volumes_only=6 [default=0];
 }
 
 ///////////////////////////////
