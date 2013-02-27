@@ -645,6 +645,7 @@ module TRP
     optional :int64, :context, 1
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated ::TRP::SessionID, :sessions, 3
+    repeated :string, :hints, 4
   end
 
 end
