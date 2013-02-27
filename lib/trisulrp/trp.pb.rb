@@ -85,29 +85,21 @@ module TRP
   class Timestamp < ::ProtocolBuffers::Message
     required :int64, :tv_sec, 1
     required :int64, :tv_usec, 2, :default => 0
-
-    gen_methods! # new fields ignored after this point
   end
 
   class TimeInterval < ::ProtocolBuffers::Message
     required ::TRP::Timestamp, :from, 1
     required ::TRP::Timestamp, :to, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class StatsTuple < ::ProtocolBuffers::Message
     required ::TRP::Timestamp, :ts, 1
     required :int64, :val, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class MeterValues < ::ProtocolBuffers::Message
     required :int32, :meter, 1
     repeated ::TRP::StatsTuple, :values, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeyStats < ::ProtocolBuffers::Message
@@ -115,8 +107,6 @@ module TRP
     required :string, :counter_group, 2
     required :string, :key, 3
     repeated ::TRP::MeterValues, :meters, 4
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeyDetails < ::ProtocolBuffers::Message
@@ -124,29 +114,21 @@ module TRP
     optional :string, :label, 2
     optional :string, :description, 3
     optional :int64, :metric, 4
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionID < ::ProtocolBuffers::Message
     required :int64, :slice_id, 1
     required :int64, :session_id, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class AlertID < ::ProtocolBuffers::Message
     required :int64, :slice_id, 1
     required :int64, :alert_id, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ResourceID < ::ProtocolBuffers::Message
     required :int64, :slice_id, 1
     required :int64, :resource_id, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterGroupDetails < ::ProtocolBuffers::Message
@@ -155,8 +137,6 @@ module TRP
     optional :int64, :bucket_size, 3
     optional ::TRP::TimeInterval, :time_interval, 4
     optional :int64, :topper_bucket_size, 5
-
-    gen_methods! # new fields ignored after this point
   end
 
   class Message < ::ProtocolBuffers::Message
@@ -264,14 +244,10 @@ module TRP
     optional ::TRP::KeyLookupResponse, :key_lookup_response, 50
     optional ::TRP::GrepRequest, :grep_request, 51
     optional ::TRP::GrepResponse, :grep_response, 52
-
-    gen_methods! # new fields ignored after this point
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
     required :string, :station_id, 1
-
-    gen_methods! # new fields ignored after this point
   end
 
   class HelloResponse < ::ProtocolBuffers::Message
@@ -282,29 +258,21 @@ module TRP
     required ::TRP::Timestamp, :connection_start_time, 5
     required ::TRP::Timestamp, :connection_up_time, 6
     required ::TRP::AuthLevel, :current_auth_level, 7
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ErrorResponse < ::ProtocolBuffers::Message
     required :int64, :original_command, 1
     required :int64, :error_code, 2
     required :string, :error_message, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class OKResponse < ::ProtocolBuffers::Message
     required :int64, :original_command, 1
     optional :string, :message, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ReleaseContextRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterItemRequest < ::ProtocolBuffers::Message
@@ -314,14 +282,10 @@ module TRP
     required :string, :key, 4
     required ::TRP::TimeInterval, :time_interval, 5
     optional :int64, :volumes_only, 6, :default => 0
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterItemResponse < ::ProtocolBuffers::Message
     required ::TRP::KeyStats, :stats, 1
-
-    gen_methods! # new fields ignored after this point
   end
 
   class BulkCounterItemRequest < ::ProtocolBuffers::Message
@@ -330,14 +294,10 @@ module TRP
     required :int64, :meter, 3
     required ::TRP::TimeInterval, :time_interval, 4
     repeated :string, :keys, 5
-
-    gen_methods! # new fields ignored after this point
   end
 
   class BulkCounterItemResponse < ::ProtocolBuffers::Message
     repeated ::TRP::KeyStats, :stats, 1
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterGroupRequest < ::ProtocolBuffers::Message
@@ -348,8 +308,6 @@ module TRP
     optional ::TRP::TimeInterval, :time_interval, 5
     optional ::TRP::Timestamp, :time_instant, 6
     optional :int64, :flags, 7
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterGroupResponse < ::ProtocolBuffers::Message
@@ -357,8 +315,6 @@ module TRP
     required :string, :counter_group, 2
     required :int64, :meter, 3
     repeated ::TRP::KeyDetails, :keys, 6
-
-    gen_methods! # new fields ignored after this point
   end
 
   class FilteredDatagramRequest < ::ProtocolBuffers::Message
@@ -372,29 +328,21 @@ module TRP
     class ByFilterExpr < ::ProtocolBuffers::Message
       required ::TRP::TimeInterval, :time_interval, 1
       required :string, :filter_expression, 2
-
-      gen_methods! # new fields ignored after this point
     end
 
     class BySession < ::ProtocolBuffers::Message
       optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
       required ::TRP::SessionID, :session_id, 2
-
-      gen_methods! # new fields ignored after this point
     end
 
     class ByAlert < ::ProtocolBuffers::Message
       optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
       required ::TRP::AlertID, :alert_id, 2
-
-      gen_methods! # new fields ignored after this point
     end
 
     class ByResource < ::ProtocolBuffers::Message
       required :string, :resource_group, 1
       required ::TRP::ResourceID, :resource_id, 2
-
-      gen_methods! # new fields ignored after this point
     end
 
     optional :int64, :max_packets, 1, :default => 0
@@ -404,8 +352,6 @@ module TRP
     optional ::TRP::FilteredDatagramRequest::BySession, :session, 5
     optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
     optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
-
-    gen_methods! # new fields ignored after this point
   end
 
   class FilteredDatagramResponse < ::ProtocolBuffers::Message
@@ -416,23 +362,17 @@ module TRP
     required :int64, :num_bytes, 5
     required :string, :sha1, 6
     required :bytes, :contents, 7
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ControlledContextRequest < ::ProtocolBuffers::Message
     required ::TRP::TimeInterval, :time_interval, 1
     required :string, :filter_expression, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ControlledContextResponse < ::ProtocolBuffers::Message
     required :int64, :context, 1
     optional :string, :context_db, 2
     required ::TRP::TimeInterval, :time_interval, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SearchKeysRequest < ::ProtocolBuffers::Message
@@ -440,30 +380,22 @@ module TRP
     required :string, :counter_group, 2
     required :string, :pattern, 3
     required :int64, :maxitems, 4
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SearchKeysResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :found_keys, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     optional :string, :counter_group, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     repeated ::TRP::CounterGroupDetails, :group_details, 2
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionItemRequest < ::ProtocolBuffers::Message
@@ -471,8 +403,6 @@ module TRP
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated :string, :session_keys, 3
     repeated ::TRP::SessionID, :session_ids, 4
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionItemResponse < ::ProtocolBuffers::Message
@@ -492,15 +422,11 @@ module TRP
       required ::TRP::KeyDetails, :key2A, 9
       required ::TRP::KeyDetails, :key1Z, 10
       required ::TRP::KeyDetails, :key2Z, 11
-
-      gen_methods! # new fields ignored after this point
     end
 
     optional :int64, :context, 1, :default => 0
     required :string, :session_group, 2
     repeated ::TRP::SessionItemResponse::Item, :items, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class TopperSnapshotRequest < ::ProtocolBuffers::Message
@@ -509,8 +435,6 @@ module TRP
     required :int64, :meter, 3
     required ::TRP::TimeInterval, :Time, 4
     required :int64, :maxitems, 5
-
-    gen_methods! # new fields ignored after this point
   end
 
   class TopperSnapshotResponse < ::ProtocolBuffers::Message
@@ -521,8 +445,6 @@ module TRP
     required :int64, :window_secs, 5
     required :string, :keys, 6
     required :string, :labels, 7
-
-    gen_methods! # new fields ignored after this point
   end
 
   class UpdateKeyRequest < ::ProtocolBuffers::Message
@@ -531,8 +453,6 @@ module TRP
     required :string, :key, 4
     required :string, :label, 5
     optional :string, :description, 6
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeySessionActivityRequest < ::ProtocolBuffers::Message
@@ -544,16 +464,12 @@ module TRP
     optional :int64, :volume_filter, 6, :default => 0
     optional :int64, :duration_filter, 7, :default => 0
     required ::TRP::TimeInterval, :time_interval, 8
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeySessionActivityResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionID, :sessions, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionTrackerRequest < ::ProtocolBuffers::Message
@@ -562,16 +478,12 @@ module TRP
     required :int64, :tracker_id, 3, :default => 1
     optional :int64, :maxitems, 4, :default => 100
     required ::TRP::TimeInterval, :time_interval, 5
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionTrackerResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionID, :sessions, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionGroupRequest < ::ProtocolBuffers::Message
@@ -580,22 +492,16 @@ module TRP
     optional :int64, :tracker_id, 3
     optional :string, :key_filter, 4
     optional :int64, :maxitems, 5, :default => 100
-
-    gen_methods! # new fields ignored after this point
   end
 
   class SessionGroupResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated :string, :session_keys, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ServerStatsRequest < ::ProtocolBuffers::Message
     required :int64, :param, 1
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ServerStatsResponse < ::ProtocolBuffers::Message
@@ -611,16 +517,12 @@ module TRP
     required :double, :drop_percent_cap, 11
     required :double, :drop_percent_trisul, 12
     required ::TRP::TimeInterval, :time_interval, 13
-
-    gen_methods! # new fields ignored after this point
   end
 
   class AlertItemRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     repeated ::TRP::AlertID, :alert_ids, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class AlertItemResponse < ::ProtocolBuffers::Message
@@ -642,15 +544,11 @@ module TRP
       required ::TRP::Timestamp, :dispatch_time, 11
       required :string, :aux_message1, 12
       required :string, :aux_message2, 13
-
-      gen_methods! # new fields ignored after this point
     end
 
     optional :int64, :context, 1
     required :string, :alert_group, 2
     repeated ::TRP::AlertItemResponse::Item, :items, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class AlertGroupRequest < ::ProtocolBuffers::Message
@@ -667,24 +565,18 @@ module TRP
     optional :string, :priority, 12
     optional :string, :aux_message1, 13
     optional :string, :aux_message2, 14
-
-    gen_methods! # new fields ignored after this point
   end
 
   class AlertGroupResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :alert_group, 2
     repeated ::TRP::AlertID, :alerts, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ResourceItemRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     required :string, :resource_group, 2
     repeated ::TRP::ResourceID, :resource_ids, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ResourceItemResponse < ::ProtocolBuffers::Message
@@ -701,15 +593,11 @@ module TRP
       optional :string, :destination_port, 6
       optional :string, :uri, 7
       optional :string, :userlabel, 8
-
-      gen_methods! # new fields ignored after this point
     end
 
     optional :int64, :context, 1
     required :string, :resource_group, 2
     repeated ::TRP::ResourceItemResponse::Item, :items, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class ResourceGroupRequest < ::ProtocolBuffers::Message
@@ -723,32 +611,25 @@ module TRP
     optional :string, :destination_port, 8
     optional :string, :uri_pattern, 9
     optional :string, :userlabel_pattern, 10
-
-    gen_methods! # new fields ignored after this point
+    repeated :string, :uri_list, 11
   end
 
   class ResourceGroupResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :resource_group, 2
     repeated ::TRP::ResourceID, :resources, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeyLookupRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     repeated :string, :keys, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class KeyLookupResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :key_details, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
   class GrepRequest < ::ProtocolBuffers::Message
@@ -756,17 +637,14 @@ module TRP
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required ::TRP::TimeInterval, :time_interval, 3
     optional :int64, :maxitems, 4, :default => 50
-    required :string, :pattern, 5
-
-    gen_methods! # new fields ignored after this point
+    optional :string, :pattern, 5
+    repeated :string, :md5list, 6
   end
 
   class GrepResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated ::TRP::SessionID, :sessions, 3
-
-    gen_methods! # new fields ignored after this point
   end
 
 end
