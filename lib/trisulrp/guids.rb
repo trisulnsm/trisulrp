@@ -29,6 +29,10 @@ module  TrisulRP::Guids
   CG_VSAT		           = "{A8776788-B8E3-4108-AD24-0E3927D9364B}" # Traffic per VSAT	
   CG_VLANSTATS		       = "{0EC72E9E-3AD2-43FD-8173-74693EEA08D0}" # Per VLAN Activity Monitor	
   CG_HOSTSIPV6		       = "{6CD742B1-C1CA-4708-BE78-0FCA2EB01A86}" # Stats for each IPv6 Host	
+  CG_TLSORG			       = "{432D7552-0363-4640-9CC5-23E4CA8410EA}" # TLS Organization
+  CG_TLSCIPHER			   = "{5B64A573-623F-4F5B-8865-78C62BF466A7}" # TLS Ciphersuite
+  CG_TLSCA			       = "{15856A98-7F87-46D7-84D2-18DD549F8A6F}" # TLS Cert Authority 
+  
 
   AG_IDS                   = "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}" # Track IDS Alerts
   AG_BLACKLIST             = "{5E97C3A3-41DB-4E34-92C3-87C904FAB83E}" # Blacklist used for Badfellas and Malware
@@ -37,6 +41,7 @@ module  TrisulRP::Guids
 
   RG_URL                   = "{4EF9DEB9-4332-4867-A667-6A30C5900E9E}" # URL Resources
   RG_DNS                   = "{D1E27FF0-6D66-4E57-BB91-99F76BB2143E}" # DNS Resources
+  RG_SSLCERTS              = "{5AEE3F0B-9304-44BE-BBD0-0467052CF468}" # SSLCerts Resources
 
   SG_TCP                   = "{99A78737-4B41-4387-8F31-8077DB917336}" # TCP Sessions
   	
