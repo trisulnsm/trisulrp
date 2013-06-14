@@ -212,6 +212,8 @@ module TrisulRP::Protocol
 		  req.key_session_activity_request = TRP::KeySessionActivityRequest.new(params)
 		when TRP::Message::Command::GREP_REQUEST
 		  req.grep_request  = TRP::GrepRequest.new(params)
+		when TRP::Message::Command::KEYSPACE_REQUEST
+		  req.keyspace_request  = TRP::KeySpaceRequest.new(params)
 		else
 			raise "Unknown TRP command ID"
 		end
@@ -306,6 +308,8 @@ module TrisulRP::Protocol
 		  	resp.key_session_activity_response 
 		when TRP::Message::Command::GREP_RESPONSE
 		  	resp.grep_response  
+		when TRP::Message::Command::KEYSPACE_RESPONSE
+		  	resp.keyspace_response  
 		else
 			raise "Unknown TRP command ID"
 		end
