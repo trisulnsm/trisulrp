@@ -2,8 +2,7 @@
 
 == Trisul Remote Protocol 
 
-This gem allows you to automate incident response or network forensics tasks on the Trisul Network Metering and Forensics platform.
-
+This gem allows you to automate incident response or network forensics tasks on the Trisul Network Analytics platform.
 
 
 Key Features :
@@ -13,6 +12,11 @@ Key Features :
 * Easy to use 
 * Can do everything from getting statistics, flows, and pcaps
 
+== Links
+
+* TRP Documentation and Tutorials  http://trisul.org/docs/trp/index.html
+* Getting started tutorial http://trisul.org/docs/trp/trpgemsteps.html
+* Github repo of sample scripts  https://github.com/vivekrajan/trisul-scripts
 
 
 == Contributing to trisulrp
