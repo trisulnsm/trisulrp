@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 5540 $
+// $Rev: 5595 $
 package TRP;
 
 message Timestamp  {
@@ -130,6 +130,8 @@ message Message {
                     KEY_LOOKUP_RESPONSE=51;
 					GREP_REQUEST=60;
 					GREP_RESPONSE=61;
+					KEYSPACE_REQUEST=70;
+					KEYSPACE_RESPONSE=71;
     }
 
     required Command    trp_command=1;
@@ -177,6 +179,8 @@ message Message {
     optional KeyLookupResponse key_lookup_response=50;
     optional GrepRequest  grep_request=51;
     optional GrepResponse  grep_response=52;
+    optional KeySpaceRequest  keyspace_request=53;
+    optional KeySpaceResponse  keyspace_response=54;
 }
 
 ///////////////////////////////
@@ -614,7 +618,6 @@ message ResourceGroupResponse {
     optional int64          context=1;
     required string         resource_group=2;
     repeated ResourceID     resources=3;
-	repeated string         hints=4;
 }
 
 
@@ -654,5 +657,30 @@ message GrepResponse  {
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
     repeated SessionID      sessions=3;
     repeated string         hints=4;
+}
+
+
+////////////////////////////////////
+// KeySpaceRequest
+message KeySpaceRequest {
+    optional int64          context=1[default=0];            
+    required string         counter_group=2;
+    required TimeInterval   time_interval=3;
+    optional int64          maxitems=4 [default=100];
+
+	message KeySpace {
+		required string 	from=1;
+		required string 	to=2;
+	}
+
+	repeated KeySpace       spaces=5;
+}
+
+/////////////////////////////////////
+// KeySpaceResponse  
+message KeySpaceResponse  {
+    optional int64          context=1;
+    optional string         counter_group=2;
+    repeated string         hits=3;
 }
 

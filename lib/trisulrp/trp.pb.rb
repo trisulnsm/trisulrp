@@ -60,6 +60,8 @@ module TRP
   class KeyLookupResponse < ::ProtocolBuffers::Message; end
   class GrepRequest < ::ProtocolBuffers::Message; end
   class GrepResponse < ::ProtocolBuffers::Message; end
+  class KeySpaceRequest < ::ProtocolBuffers::Message; end
+  class KeySpaceResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -197,6 +199,8 @@ module TRP
       KEY_LOOKUP_RESPONSE = 51
       GREP_REQUEST = 60
       GREP_RESPONSE = 61
+      KEYSPACE_REQUEST = 70
+      KEYSPACE_RESPONSE = 71
     end
 
     required ::TRP::Message::Command, :trp_command, 1
@@ -244,6 +248,8 @@ module TRP
     optional ::TRP::KeyLookupResponse, :key_lookup_response, 50
     optional ::TRP::GrepRequest, :grep_request, 51
     optional ::TRP::GrepResponse, :grep_response, 52
+    optional ::TRP::KeySpaceRequest, :keyspace_request, 53
+    optional ::TRP::KeySpaceResponse, :keyspace_response, 54
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -646,6 +652,29 @@ module TRP
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated ::TRP::SessionID, :sessions, 3
     repeated :string, :hints, 4
+  end
+
+  class KeySpaceRequest < ::ProtocolBuffers::Message
+    # forward declarations
+    class KeySpace < ::ProtocolBuffers::Message; end
+
+    # nested messages
+    class KeySpace < ::ProtocolBuffers::Message
+      required :string, :from, 1
+      required :string, :to, 2
+    end
+
+    optional :int64, :context, 1, :default => 0
+    required :string, :counter_group, 2
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :int64, :maxitems, 4, :default => 100
+    repeated ::TRP::KeySpaceRequest::KeySpace, :spaces, 5
+  end
+
+  class KeySpaceResponse < ::ProtocolBuffers::Message
+    optional :int64, :context, 1
+    optional :string, :counter_group, 2
+    repeated :string, :hits, 3
   end
 
 end
