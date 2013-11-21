@@ -84,9 +84,15 @@ module TRP
     UNSNIFF = 2
   end
 
+  module PcapDisposition
+    include ::ProtocolBuffers::Enum
+    DOWNLOAD = 1
+    SAVE_ON_SERVER = 2
+  end
+
   class Timestamp < ::ProtocolBuffers::Message
     required :int64, :tv_sec, 1
-    required :int64, :tv_usec, 2, :default => 0
+    optional :int64, :tv_usec, 2, :default => 0
   end
 
   class TimeInterval < ::ProtocolBuffers::Message
@@ -358,6 +364,7 @@ module TRP
     optional ::TRP::FilteredDatagramRequest::BySession, :session, 5
     optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
     optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
+    optional ::TRP::PcapDisposition, :disposition, 8, :default => ::TRP::PcapDisposition::DOWNLOAD
   end
 
   class FilteredDatagramResponse < ::ProtocolBuffers::Message
@@ -368,6 +375,8 @@ module TRP
     required :int64, :num_bytes, 5
     required :string, :sha1, 6
     required :bytes, :contents, 7
+    required ::TRP::PcapDisposition, :disposition, 8
+    optional :string, :path, 9
   end
 
   class ControlledContextRequest < ::ProtocolBuffers::Message

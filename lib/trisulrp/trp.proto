@@ -1,12 +1,12 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 5595 $
+// $Rev: 5966 $
 package TRP;
 
 message Timestamp  {
   required int64            tv_sec=1;
-  required int64            tv_usec=2 [default=0];
+  optional int64            tv_usec=2 [default=0];
 }
 
 message TimeInterval  {
@@ -75,6 +75,11 @@ enum CompressionType {
 enum  PcapFormat {
     LIBPCAP=1;
     UNSNIFF=2;
+}
+
+enum PcapDisposition {
+	DOWNLOAD=1;
+	SAVE_ON_SERVER=2;
 }
 
 message Message {
@@ -309,6 +314,8 @@ message FilteredDatagramRequest{
 		required ResourceID		resource_id=2;
 	}
 	optional ByResource			resource=7;
+
+    optional PcapDisposition    disposition=8[default=DOWNLOAD];              
 }
 
 /////////////////////////////////////
@@ -321,6 +328,8 @@ message FilteredDatagramResponse{
     required int64          num_bytes=5;      
     required string         sha1=6;
     required bytes          contents=7;
+	required PcapDisposition disposition=8;
+	optional string			path=9;
 }
 
 //////////////////////////////////////////
