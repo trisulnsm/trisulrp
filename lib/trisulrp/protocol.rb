@@ -38,6 +38,10 @@ module TrisulRP::Protocol
   # * Trisul is not running in trp mode (see the docs for runmode)
   # * Using the wrong port ( check netstat to verify trisul remote protocol port - typically 12001)
   # * The Access Control List does not permit connections from client IP
+  # * The server certificate expired
+  # * The client certificate expired
+  # * The client does not have permissions to connect with that cert 
+  # * The private key password is wrong 
   #
   def connect(server,port,client_cert_file,client_key_file)
     tcp_sock=TCPSocket.open(server,port)
@@ -49,6 +53,42 @@ module TrisulRP::Protocol
     yield ssl_sock if block_given?
     return ssl_sock
   end
+
+  # Establish a *NONSECURE PLAINTEXT* connection to a Trisul instance 
+  #
+  # We highly recommend  you to use the TLS connect(..) method, but if
+  # you must use plaintext use this version. This is purposely named
+  # connect_nonsecure(..) to drive home the point that there is no
+  # authentication using client certs, or no encryption. 
+  #
+  # You can still use the ACL (Access Control List) to control who connects
+  #
+  #
+  # [server]  IP Address or hostname 
+  # [port]    TRP port, typically 12001 (see trisulConfig.xml)
+  #
+  #
+  # ==== Returns
+  # ==== Yields
+  # a connection object that can be used in subsequent calls 
+  #
+  # ==== On error
+  # If a connection cannot be established, an exception is thrown which can point 
+  # to the actual cause. The most common causes are  
+  #
+  # * Trisul is not running 
+  # * Trisul is not running in trp mode (see the docs for runmode)
+  # * Using the wrong port ( check netstat to verify trisul remote protocol port - typically 12001)
+  # * The Access Control List does not permit connections from client IP
+  #
+  def connect_nonsecure(server,port)
+
+    tcp_sock=TCPSocket.open(server,port)
+    yield tcp_sock if block_given?
+    return tcp_sock
+
+  end
+
 
   # Dispatch request to server & get response 
   # [conn]  TRP connection  previously opened via TrisulRP::Protocol::connect
