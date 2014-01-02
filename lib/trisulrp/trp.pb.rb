@@ -15,6 +15,7 @@ module TRP
   class AlertID < ::ProtocolBuffers::Message; end
   class ResourceID < ::ProtocolBuffers::Message; end
   class CounterGroupDetails < ::ProtocolBuffers::Message; end
+  class SessionDetails < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
   class HelloResponse < ::ProtocolBuffers::Message; end
@@ -37,11 +38,9 @@ module TRP
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message; end
   class SessionItemRequest < ::ProtocolBuffers::Message; end
   class SessionItemResponse < ::ProtocolBuffers::Message; end
-  class TopperSnapshotRequest < ::ProtocolBuffers::Message; end
-  class TopperSnapshotResponse < ::ProtocolBuffers::Message; end
+  class QuerySessionsRequest < ::ProtocolBuffers::Message; end
+  class QuerySessionsResponse < ::ProtocolBuffers::Message; end
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
-  class KeySessionActivityRequest < ::ProtocolBuffers::Message; end
-  class KeySessionActivityResponse < ::ProtocolBuffers::Message; end
   class SessionTrackerRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerResponse < ::ProtocolBuffers::Message; end
   class SessionGroupRequest < ::ProtocolBuffers::Message; end
@@ -147,6 +146,27 @@ module TRP
     optional :int64, :topper_bucket_size, 5
   end
 
+  class SessionDetails < ::ProtocolBuffers::Message
+    optional :string, :session_key, 1
+    required ::TRP::SessionID, :session_id, 2
+    optional :string, :user_label, 3
+    required ::TRP::TimeInterval, :time_interval, 4
+    required :int64, :state, 5
+    required :int64, :az_bytes, 6
+    required :int64, :za_bytes, 7
+    required :int64, :az_packets, 8
+    required :int64, :za_packets, 9
+    required ::TRP::KeyDetails, :key1A, 10
+    required ::TRP::KeyDetails, :key2A, 11
+    required ::TRP::KeyDetails, :key1Z, 12
+    required ::TRP::KeyDetails, :key2Z, 13
+    required ::TRP::KeyDetails, :protocol, 14
+    optional ::TRP::KeyDetails, :nf_routerid, 15
+    optional ::TRP::KeyDetails, :nf_ifindex_in, 16
+    optional ::TRP::KeyDetails, :nf_ifindex_out, 17
+    optional :string, :tags, 18
+  end
+
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -185,8 +205,8 @@ module TRP
       TOPPER_SNAPSHOT_RESPONSE = 31
       UPDATE_KEY_REQUEST = 32
       UPDATE_KEY_RESPONSE = 33
-      KEY_SESS_ACTIVITY_REQUEST = 34
-      KEY_SESS_ACTIVITY_RESPONSE = 35
+      QUERY_SESSIONS_REQUEST = 34
+      QUERY_SESSIONS_RESPONSE = 35
       RING_STATS_REQUEST = 36
       RING_STATS_RESPONSE = 37
       SERVER_STATS_REQUEST = 38
@@ -231,11 +251,9 @@ module TRP
     optional ::TRP::SessionItemResponse, :session_item_response, 23
     optional ::TRP::BulkCounterItemRequest, :bulk_counter_item_request, 24
     optional ::TRP::BulkCounterItemResponse, :bulk_counter_item_response, 25
-    optional ::TRP::TopperSnapshotRequest, :topper_snapshot_request, 28
-    optional ::TRP::TopperSnapshotResponse, :topper_snapshot_response, 29
     optional ::TRP::UpdateKeyRequest, :update_key_request, 30
-    optional ::TRP::KeySessionActivityRequest, :key_session_activity_request, 31
-    optional ::TRP::KeySessionActivityResponse, :key_session_activity_response, 32
+    optional ::TRP::QuerySessionsRequest, :query_sessions_request, 31
+    optional ::TRP::QuerySessionsResponse, :query_sessions_response, 32
     optional ::TRP::SessionTrackerRequest, :session_tracker_request, 33
     optional ::TRP::SessionTrackerResponse, :session_tracker_response, 34
     optional ::TRP::ServerStatsRequest, :server_stats_request, 37
@@ -418,48 +436,43 @@ module TRP
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated :string, :session_keys, 3
     repeated ::TRP::SessionID, :session_ids, 4
+    optional :bool, :resolve_keys, 5, :default => true
   end
 
   class SessionItemResponse < ::ProtocolBuffers::Message
-    # forward declarations
-    class Item < ::ProtocolBuffers::Message; end
-
-    # nested messages
-    class Item < ::ProtocolBuffers::Message
-      optional :string, :session_key, 1
-      optional ::TRP::SessionID, :session_id, 2
-      optional :string, :user_label, 3
-      required ::TRP::TimeInterval, :time_interval, 4
-      required :int64, :state, 5
-      required :int64, :az_bytes, 6
-      required :int64, :za_bytes, 7
-      required ::TRP::KeyDetails, :key1A, 8
-      required ::TRP::KeyDetails, :key2A, 9
-      required ::TRP::KeyDetails, :key1Z, 10
-      required ::TRP::KeyDetails, :key2Z, 11
-    end
-
     optional :int64, :context, 1, :default => 0
     required :string, :session_group, 2
-    repeated ::TRP::SessionItemResponse::Item, :items, 3
+    repeated ::TRP::SessionDetails, :sessions, 3
   end
 
-  class TopperSnapshotRequest < ::ProtocolBuffers::Message
+  class QuerySessionsRequest < ::ProtocolBuffers::Message
     optional :int64, :context, 1, :default => 0
-    required :string, :counter_group, 2
-    required :int64, :meter, 3
-    required ::TRP::TimeInterval, :Time, 4
-    required :int64, :maxitems, 5
+    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :string, :key, 4
+    optional :string, :source_ip, 5
+    optional :string, :source_port, 6
+    optional :string, :dest_ip, 7
+    optional :string, :dest_port, 8
+    optional :string, :any_ip, 9
+    optional :string, :any_port, 10
+    optional :string, :ip_pair, 11
+    optional :string, :protocol, 12
+    optional :string, :flowtag, 13
+    optional :string, :nf_routerid, 14
+    optional :string, :nf_ifindex_in, 15
+    optional :string, :nf_ifindex_out, 16
+    optional :string, :subnet_24, 17
+    optional :string, :subnet_16, 18
+    optional :int64, :maxitems, 19, :default => 100
+    optional :int64, :volume_filter, 20, :default => 0
+    optional :bool, :resolve_keys, 21, :default => true
   end
 
-  class TopperSnapshotResponse < ::ProtocolBuffers::Message
+  class QuerySessionsResponse < ::ProtocolBuffers::Message
     optional :int64, :context, 1
-    required :string, :counter_group, 2
-    required :int64, :meter, 3
-    required ::TRP::Timestamp, :time, 4
-    required :int64, :window_secs, 5
-    required :string, :keys, 6
-    required :string, :labels, 7
+    required :string, :session_group, 2
+    repeated ::TRP::SessionDetails, :sessions, 3
   end
 
   class UpdateKeyRequest < ::ProtocolBuffers::Message
@@ -468,23 +481,6 @@ module TRP
     required :string, :key, 4
     required :string, :label, 5
     optional :string, :description, 6
-  end
-
-  class KeySessionActivityRequest < ::ProtocolBuffers::Message
-    optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    required :string, :key, 3
-    optional :string, :key2, 4
-    optional :int64, :maxitems, 5, :default => 100
-    optional :int64, :volume_filter, 6, :default => 0
-    optional :int64, :duration_filter, 7, :default => 0
-    required ::TRP::TimeInterval, :time_interval, 8
-  end
-
-  class KeySessionActivityResponse < ::ProtocolBuffers::Message
-    optional :int64, :context, 1
-    required :string, :session_group, 2
-    repeated ::TRP::SessionID, :sessions, 3
   end
 
   class SessionTrackerRequest < ::ProtocolBuffers::Message

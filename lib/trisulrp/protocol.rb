@@ -181,9 +181,9 @@ module TrisulRP::Protocol
   #
   # <code>
   #
-  #  # create a new command of type KeySessionActivityRequest
-  #  req = TrisulRP::Protocol.mk_request(TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST,
-  #            :key => target_key ,
+  #  # create a new command of type QuerySessionsRequest
+  #  req = TrisulRP::Protocol.mk_request(TRP::Message::Command::QUERY_SESSIONS_REQUEST,
+  #            :source_ip => .. ,
   #            :time_interval => mk_time_interval(tmarr))
   #
   #  ... now you can use the req object ...
@@ -195,10 +195,10 @@ module TrisulRP::Protocol
   # <code>
   #
   #  # create a new command of type CounterItemRequest
-  #  req =TRP::Message.new(:trp_command => TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST )
-  #  req.key_session_activity_request = TRP::KeySessionActivityRequest.new( 
-  #            :key =>  target_key ,
-  #                  :time_interval => mk_time_interval(tmarr))
+  #  req =TRP::Message.new(:trp_command => TRP::Message::Command::QUERY_SESSIONS_REQUEST )
+  #  req.query_sessions_request = TRP::QuerySessionsRequest.new( 
+  #            :source_ip =>  ... ,
+  #            :time_interval => mk_time_interval(tmarr))
   #
   #  ... now you can use the req object ...
   #
@@ -254,8 +254,8 @@ module TrisulRP::Protocol
       req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
     when TRP::Message::Command::SESSION_TRACKER_REQUEST
       req.session_tracker_request = TRP::SessionTrackerRequest.new(params)
-    when TRP::Message::Command::KEY_SESS_ACTIVITY_REQUEST
-      req.key_session_activity_request = TRP::KeySessionActivityRequest.new(params)
+    when TRP::Message::Command::QUERY_SESSIONS_REQUEST 
+      req.query_sessions_request = TRP::QuerySessionsRequest.new(params)
     when TRP::Message::Command::GREP_REQUEST
       req.grep_request  = TRP::GrepRequest.new(params)
     when TRP::Message::Command::KEYSPACE_REQUEST
@@ -349,8 +349,8 @@ module TrisulRP::Protocol
         resp.counter_group_info_response 
     when TRP::Message::Command::SESSION_TRACKER_RESPONSE
         resp.session_tracker_response 
-    when TRP::Message::Command::KEY_SESS_ACTIVITY_RESPONSE
-        resp.key_session_activity_response 
+    when TRP::Message::Command::QUERY_SESSIONS_RESPONSE
+        resp.query_sessions_response 
     when TRP::Message::Command::GREP_RESPONSE
         resp.grep_response  
     when TRP::Message::Command::KEYSPACE_RESPONSE

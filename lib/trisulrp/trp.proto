@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 5966 $
+// $Rev: 6513 $
 package TRP;
 
 message Timestamp  {
@@ -60,6 +60,28 @@ message CounterGroupDetails {
     optional int64          topper_bucket_size=5;
 }
 
+message SessionDetails  {
+	optional string         session_key=1;
+	required SessionID      session_id=2;
+	optional string         user_label=3;
+	required TimeInterval   time_interval=4;
+	required int64          state=5;
+	required int64          az_bytes=6;
+	required int64          za_bytes=7;
+	required int64          az_packets=8;
+	required int64          za_packets=9;
+	required KeyDetails     key1A=10;
+	required KeyDetails     key2A=11;
+	required KeyDetails     key1Z=12;
+	required KeyDetails     key2Z=13;
+	required KeyDetails     protocol=14;
+	optional KeyDetails     nf_routerid=15;
+	optional KeyDetails     nf_ifindex_in=16;
+	optional KeyDetails     nf_ifindex_out=17;
+	optional string		    tags=18;
+}
+
+
 enum AuthLevel {
     ADMIN=1;
     BASIC_USER=2;
@@ -115,8 +137,8 @@ message Message {
                     TOPPER_SNAPSHOT_RESPONSE=31;                      
                     UPDATE_KEY_REQUEST=32;                            
                     UPDATE_KEY_RESPONSE=33;                           
-                    KEY_SESS_ACTIVITY_REQUEST=34;                     
-                    KEY_SESS_ACTIVITY_RESPONSE=35;
+                    QUERY_SESSIONS_REQUEST=34;                     
+                    QUERY_SESSIONS_RESPONSE=35;
                     RING_STATS_REQUEST=36;          
                     RING_STATS_RESPONSE=37;                     
                     SERVER_STATS_REQUEST=38;                    
@@ -161,11 +183,11 @@ message Message {
     optional SessionItemResponse session_item_response=23;
     optional BulkCounterItemRequest bulk_counter_item_request=24;
     optional BulkCounterItemResponse bulk_counter_item_response=25;
-    optional TopperSnapshotRequest topper_snapshot_request=28; 
-    optional TopperSnapshotResponse topper_snapshot_response=29;
+    // optional TopperSnapshotRequest topper_snapshot_request=28; 
+    // optional TopperSnapshotResponse topper_snapshot_response=29;
     optional UpdateKeyRequest update_key_request=30;
-    optional KeySessionActivityRequest key_session_activity_request=31;
-    optional KeySessionActivityResponse key_session_activity_response=32;
+    optional QuerySessionsRequest query_sessions_request=31;
+    optional QuerySessionsResponse  query_sessions_response=32;
     optional SessionTrackerRequest session_tracker_request=33;
     optional SessionTrackerResponse session_tracker_response=34;
     optional ServerStatsRequest server_stats_request=37;
@@ -385,51 +407,50 @@ message SessionItemRequest{
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
     repeated string         session_keys=3;
     repeated SessionID      session_ids=4;
+	optional bool			resolve_keys=5[default=true];
 }
 
 ////////////////////////////////////
 // SessionItemResponse
 message SessionItemResponse{
-    optional int64          context=1[default=0];            
-    required string         session_group=2;
-
-    message Item {
-        optional string         session_key=1;
-        optional SessionID      session_id=2;
-        optional string         user_label=3;
-        required TimeInterval   time_interval=4;
-        required int64          state=5;
-        required int64          az_bytes=6;
-        required int64          za_bytes=7;
-        required KeyDetails     key1A=8;
-        required KeyDetails     key2A=9;
-        required KeyDetails     key1Z=10;
-        required KeyDetails     key2Z=11;
-    }
-
-    repeated Item           items=3;
+    optional int64          	context=1[default=0];            
+    required string         	session_group=2;
+    repeated SessionDetails     sessions=3;
 }
-///////////////////////////////////////////
-/// TopperSnapshotRequest
-message TopperSnapshotRequest{
+///////////////////////////////////
+// QuerySessions - any of the fields can be filled
+// 				   all the fields filled are treated as AND criteria 
+message QuerySessionsRequest {
     optional int64          context=1[default=0];
-    required string         counter_group=2;
-    required int64          meter=3;
-    required TimeInterval   Time=4;
-    required int64          maxitems=5;
+    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+    required TimeInterval   time_interval=3;
+    optional string         key=4;
+	optional string			source_ip=5;
+	optional string			source_port=6;
+	optional string			dest_ip=7;
+	optional string			dest_port=8;
+	optional string			any_ip=9;
+	optional string			any_port=10;
+	optional string			ip_pair=11;
+	optional string			protocol=12;
+	optional string			flowtag=13;
+	optional string			nf_routerid=14;
+	optional string			nf_ifindex_in=15;
+	optional string			nf_ifindex_out=16;
+	optional string			subnet_24=17;
+	optional string			subnet_16=18;
+
+    optional int64          maxitems=19[default=100];
+    optional int64          volume_filter=20[default=0];
+	optional bool			resolve_keys=21[default=true];
 }
 
-
-///////////////////////////////////////////
-// TopperSnapshotResponse
-message TopperSnapshotResponse{
-    optional int64          context=1;
-    required string         counter_group=2;
-    required int64          meter=3;
-    required Timestamp      time=4;
-    required int64          window_secs=5;
-    required string         keys=6;
-    required string         labels=7;
+/////////////////////////////////////
+// QuerySessionsResponse 
+message QuerySessionsResponse {
+    optional int64          	context=1;
+    required string         	session_group=2;
+    repeated SessionDetails     sessions=3;
 }
 
 //////////////////////////////////////////////
@@ -441,27 +462,6 @@ message UpdateKeyRequest{
     required string         key=4;
     required string         label=5;
     optional string         description=6;
-}
-
-///////////////////////////////////
-// KeySessionActivityrequest
-message KeySessionActivityRequest{
-    optional int64          context=1[default=0];
-    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    required string         key=3;
-    optional string         key2=4;
-    optional int64          maxitems=5[default=100];
-    optional int64          volume_filter=6[default=0];
-    optional int64          duration_filter=7[default=0];
-    required TimeInterval   time_interval=8;
-}
-
-/////////////////////////////////////
-// KeySessionActivityResponse
-message KeySessionActivityResponse{
-    optional int64          context=1;
-    required string         session_group=2;
-    repeated SessionID      sessions=3;
 }
 
 /////////////////////////////////////
