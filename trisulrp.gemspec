@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "trisulrp"
-  s.version = "1.6.0"
+  s.version = "2.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["vivek"]
-  s.date = "2013-12-13"
+  s.date = "2014-04-11"
   s.description = "This gem deals about the trisul remote protocol"
   s.email = "vivek_rajagopal@yahoo.com"
   s.extra_rdoc_files = [
@@ -49,11 +49,11 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/vivekrajan/trisulrp"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.23"
+  s.rubygems_version = "2.0.14"
   s.summary = "trisul trp"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<ruby-protocol-buffers>, [">= 0"])
