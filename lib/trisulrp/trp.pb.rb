@@ -65,6 +65,9 @@ module TRP
   # enums
   module AuthLevel
     include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.AuthLevel"
+
     ADMIN = 1
     BASIC_USER = 2
     FORENSIC_USER = 3
@@ -73,43 +76,62 @@ module TRP
 
   module CompressionType
     include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.CompressionType"
+
     UNCOMPRESSED = 1
     GZIP = 2
   end
 
   module PcapFormat
     include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.PcapFormat"
+
     LIBPCAP = 1
     UNSNIFF = 2
   end
 
   module PcapDisposition
     include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.PcapDisposition"
+
     DOWNLOAD = 1
     SAVE_ON_SERVER = 2
   end
 
   class Timestamp < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.Timestamp"
+
     required :int64, :tv_sec, 1
     optional :int64, :tv_usec, 2, :default => 0
   end
 
   class TimeInterval < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.TimeInterval"
+
     required ::TRP::Timestamp, :from, 1
     required ::TRP::Timestamp, :to, 2
   end
 
   class StatsTuple < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.StatsTuple"
+
     required ::TRP::Timestamp, :ts, 1
     required :int64, :val, 2
   end
 
   class MeterValues < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.MeterValues"
+
     required :int32, :meter, 1
     repeated ::TRP::StatsTuple, :values, 2
   end
 
   class KeyStats < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeyStats"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     required :string, :key, 3
@@ -117,6 +139,8 @@ module TRP
   end
 
   class KeyDetails < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeyDetails"
+
     required :string, :key, 1
     optional :string, :label, 2
     optional :string, :description, 3
@@ -124,21 +148,29 @@ module TRP
   end
 
   class SessionID < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionID"
+
     required :int64, :slice_id, 1
     required :int64, :session_id, 2
   end
 
   class AlertID < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AlertID"
+
     required :int64, :slice_id, 1
     required :int64, :alert_id, 2
   end
 
   class ResourceID < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ResourceID"
+
     required :int64, :slice_id, 1
     required :int64, :resource_id, 2
   end
 
   class CounterGroupDetails < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupDetails"
+
     required :string, :guid, 1
     required :string, :name, 2
     optional :int64, :bucket_size, 3
@@ -147,6 +179,8 @@ module TRP
   end
 
   class SessionDetails < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionDetails"
+
     optional :string, :session_key, 1
     required ::TRP::SessionID, :session_id, 2
     optional :string, :user_label, 3
@@ -165,6 +199,10 @@ module TRP
     optional ::TRP::KeyDetails, :nf_ifindex_in, 16
     optional ::TRP::KeyDetails, :nf_ifindex_out, 17
     optional :string, :tags, 18
+    required :int64, :az_payload, 19
+    required :int64, :za_payload, 20
+    required :int64, :setup_rtt, 21
+    required :int64, :retransmissions, 22
   end
 
   class Message < ::ProtocolBuffers::Message
@@ -173,6 +211,9 @@ module TRP
     # enums
     module Command
       include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "TRP.Message.Command"
+
       HELLO_REQUEST = 1
       HELLO_RESPONSE = 2
       OK_RESPONSE = 3
@@ -229,6 +270,8 @@ module TRP
       KEYSPACE_RESPONSE = 71
     end
 
+    set_fully_qualified_name "TRP.Message"
+
     required ::TRP::Message::Command, :trp_command, 1
     optional ::TRP::HelloRequest, :hello_request, 2
     optional ::TRP::HelloResponse, :hello_response, 3
@@ -277,10 +320,14 @@ module TRP
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.HelloRequest"
+
     required :string, :station_id, 1
   end
 
   class HelloResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.HelloResponse"
+
     required :string, :trisul_id, 1
     required :string, :trisul_description, 2
     required :string, :connection_id, 3
@@ -291,21 +338,29 @@ module TRP
   end
 
   class ErrorResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ErrorResponse"
+
     required :int64, :original_command, 1
     required :int64, :error_code, 2
     required :string, :error_message, 3
   end
 
   class OKResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.OKResponse"
+
     required :int64, :original_command, 1
     optional :string, :message, 2
   end
 
   class ReleaseContextRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ReleaseContextRequest"
+
     optional :int64, :context, 1
   end
 
   class CounterItemRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterItemRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3
@@ -315,10 +370,14 @@ module TRP
   end
 
   class CounterItemResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterItemResponse"
+
     required ::TRP::KeyStats, :stats, 1
   end
 
   class BulkCounterItemRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.BulkCounterItemRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     required :int64, :meter, 3
@@ -327,10 +386,14 @@ module TRP
   end
 
   class BulkCounterItemResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.BulkCounterItemResponse"
+
     repeated ::TRP::KeyStats, :stats, 1
   end
 
   class CounterGroupRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3, :default => 0
@@ -341,6 +404,8 @@ module TRP
   end
 
   class CounterGroupResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupResponse"
+
     required :int64, :context, 1
     required :string, :counter_group, 2
     required :int64, :meter, 3
@@ -354,23 +419,33 @@ module TRP
     class ByAlert < ::ProtocolBuffers::Message; end
     class ByResource < ::ProtocolBuffers::Message; end
 
+    set_fully_qualified_name "TRP.FilteredDatagramRequest"
+
     # nested messages
     class ByFilterExpr < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByFilterExpr"
+
       required ::TRP::TimeInterval, :time_interval, 1
       required :string, :filter_expression, 2
     end
 
     class BySession < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.FilteredDatagramRequest.BySession"
+
       optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
       required ::TRP::SessionID, :session_id, 2
     end
 
     class ByAlert < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByAlert"
+
       optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
       required ::TRP::AlertID, :alert_id, 2
     end
 
     class ByResource < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByResource"
+
       required :string, :resource_group, 1
       required ::TRP::ResourceID, :resource_id, 2
     end
@@ -386,6 +461,8 @@ module TRP
   end
 
   class FilteredDatagramResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.FilteredDatagramResponse"
+
     required ::TRP::PcapFormat, :format, 1
     required ::TRP::CompressionType, :compress_type, 2
     required ::TRP::TimeInterval, :time_interval, 3
@@ -398,17 +475,23 @@ module TRP
   end
 
   class ControlledContextRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ControlledContextRequest"
+
     required ::TRP::TimeInterval, :time_interval, 1
     required :string, :filter_expression, 2
   end
 
   class ControlledContextResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ControlledContextResponse"
+
     required :int64, :context, 1
     optional :string, :context_db, 2
     required ::TRP::TimeInterval, :time_interval, 3
   end
 
   class SearchKeysRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SearchKeysRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     required :string, :pattern, 3
@@ -416,22 +499,30 @@ module TRP
   end
 
   class SearchKeysResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SearchKeysResponse"
+
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :found_keys, 3
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupInfoRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :counter_group, 2
   end
 
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupInfoResponse"
+
     optional :int64, :context, 1
     repeated ::TRP::CounterGroupDetails, :group_details, 2
   end
 
   class SessionItemRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionItemRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated :string, :session_keys, 3
@@ -440,12 +531,16 @@ module TRP
   end
 
   class SessionItemResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionItemResponse"
+
     optional :int64, :context, 1, :default => 0
     required :string, :session_group, 2
     repeated ::TRP::SessionDetails, :sessions, 3
   end
 
   class QuerySessionsRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.QuerySessionsRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required ::TRP::TimeInterval, :time_interval, 3
@@ -470,12 +565,16 @@ module TRP
   end
 
   class QuerySessionsResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.QuerySessionsResponse"
+
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionDetails, :sessions, 3
   end
 
   class UpdateKeyRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.UpdateKeyRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     required :string, :key, 4
@@ -484,6 +583,8 @@ module TRP
   end
 
   class SessionTrackerRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionTrackerRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required :int64, :tracker_id, 3, :default => 1
@@ -492,12 +593,16 @@ module TRP
   end
 
   class SessionTrackerResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionTrackerResponse"
+
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionID, :sessions, 3
   end
 
   class SessionGroupRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionGroupRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     optional :int64, :tracker_id, 3
@@ -506,16 +611,22 @@ module TRP
   end
 
   class SessionGroupResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionGroupResponse"
+
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated :string, :session_keys, 3
   end
 
   class ServerStatsRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ServerStatsRequest"
+
     required :int64, :param, 1
   end
 
   class ServerStatsResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ServerStatsResponse"
+
     required :string, :instance_name, 1
     required :int64, :connections, 2
     required :int64, :uptime_seconds, 3
@@ -531,6 +642,8 @@ module TRP
   end
 
   class AlertItemRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AlertItemRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     repeated ::TRP::AlertID, :alert_ids, 3
@@ -540,8 +653,12 @@ module TRP
     # forward declarations
     class Item < ::ProtocolBuffers::Message; end
 
+    set_fully_qualified_name "TRP.AlertItemResponse"
+
     # nested messages
     class Item < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.AlertItemResponse.Item"
+
       optional :int64, :sensor_id, 1
       required ::TRP::Timestamp, :time, 2
       required ::TRP::AlertID, :alert_id, 3
@@ -563,6 +680,8 @@ module TRP
   end
 
   class AlertGroupRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AlertGroupRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
@@ -579,12 +698,16 @@ module TRP
   end
 
   class AlertGroupResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AlertGroupResponse"
+
     optional :int64, :context, 1
     required :string, :alert_group, 2
     repeated ::TRP::AlertID, :alerts, 3
   end
 
   class ResourceItemRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ResourceItemRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :resource_group, 2
     repeated ::TRP::ResourceID, :resource_ids, 3
@@ -594,8 +717,12 @@ module TRP
     # forward declarations
     class Item < ::ProtocolBuffers::Message; end
 
+    set_fully_qualified_name "TRP.ResourceItemResponse"
+
     # nested messages
     class Item < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.ResourceItemResponse.Item"
+
       required ::TRP::Timestamp, :time, 1
       required ::TRP::ResourceID, :resource_id, 2
       optional :string, :source_ip, 3
@@ -612,6 +739,8 @@ module TRP
   end
 
   class ResourceGroupRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ResourceGroupRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :resource_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
@@ -626,24 +755,32 @@ module TRP
   end
 
   class ResourceGroupResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ResourceGroupResponse"
+
     optional :int64, :context, 1
     required :string, :resource_group, 2
     repeated ::TRP::ResourceID, :resources, 3
   end
 
   class KeyLookupRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeyLookupRequest"
+
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     repeated :string, :keys, 3
   end
 
   class KeyLookupResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeyLookupResponse"
+
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :key_details, 3
   end
 
   class GrepRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.GrepRequest"
+
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required ::TRP::TimeInterval, :time_interval, 3
@@ -653,6 +790,8 @@ module TRP
   end
 
   class GrepResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.GrepResponse"
+
     optional :int64, :context, 1
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated ::TRP::SessionID, :sessions, 3
@@ -663,8 +802,12 @@ module TRP
     # forward declarations
     class KeySpace < ::ProtocolBuffers::Message; end
 
+    set_fully_qualified_name "TRP.KeySpaceRequest"
+
     # nested messages
     class KeySpace < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.KeySpaceRequest.KeySpace"
+
       required :string, :from, 1
       required :string, :to, 2
     end
@@ -677,6 +820,8 @@ module TRP
   end
 
   class KeySpaceResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeySpaceResponse"
+
     optional :int64, :context, 1
     optional :string, :counter_group, 2
     repeated :string, :hits, 3
