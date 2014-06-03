@@ -114,7 +114,10 @@ module TrisulRP::Protocol
     dataarray=conn.read(datalen)
     resp =TRP::Message.new
     resp.parse dataarray
-    raise resp.error_response if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
+    if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
+		print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
+		raise resp.error_response 
+	end
     yield unwrap_response(resp) if block_given?
     return unwrap_response(resp)
   end
