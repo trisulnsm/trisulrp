@@ -458,6 +458,7 @@ module TRP
     optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
     optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
     optional ::TRP::PcapDisposition, :disposition, 8, :default => ::TRP::PcapDisposition::DOWNLOAD
+    repeated ::TRP::FilteredDatagramRequest::BySession, :session_id_list, 9
   end
 
   class FilteredDatagramResponse < ::ProtocolBuffers::Message
