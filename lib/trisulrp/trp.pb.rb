@@ -433,21 +433,21 @@ module TRP
       set_fully_qualified_name "TRP.FilteredDatagramRequest.BySession"
 
       optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-      required ::TRP::SessionID, :session_id, 2
+      repeated ::TRP::SessionID, :session_ids, 2
     end
 
     class ByAlert < ::ProtocolBuffers::Message
       set_fully_qualified_name "TRP.FilteredDatagramRequest.ByAlert"
 
       optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
-      required ::TRP::AlertID, :alert_id, 2
+      repeated ::TRP::AlertID, :alert_ids, 2
     end
 
     class ByResource < ::ProtocolBuffers::Message
       set_fully_qualified_name "TRP.FilteredDatagramRequest.ByResource"
 
       required :string, :resource_group, 1
-      required ::TRP::ResourceID, :resource_id, 2
+      repeated ::TRP::ResourceID, :resource_ids, 2
     end
 
     optional :int64, :max_packets, 1, :default => 0
@@ -458,7 +458,6 @@ module TRP
     optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
     optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
     optional ::TRP::PcapDisposition, :disposition, 8, :default => ::TRP::PcapDisposition::DOWNLOAD
-    repeated ::TRP::FilteredDatagramRequest::BySession, :session_id_list, 9
   end
 
   class FilteredDatagramResponse < ::ProtocolBuffers::Message

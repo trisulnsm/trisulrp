@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 6927 $
+// $Rev: 6929 $
 package TRP;
 
 message Timestamp  {
@@ -317,12 +317,12 @@ message FilteredDatagramRequest{
 		required TimeInterval   time_interval=1;                   
 		required string         filter_expression=2;
 	}
-	optional ByFilterExpr 	filter_expression=4;
+	optional ByFilterExpr 		filter_expression=4;
 
 	// by session
 	message BySession   {
     	optional string         session_group=1[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-		required SessionID		session_id=2;
+		repeated SessionID		session_ids=2;
 	}
 	optional BySession			session=5;
 
@@ -330,20 +330,19 @@ message FilteredDatagramRequest{
 	// by alert
 	message ByAlert     {
 		optional string			alert_group=1[default="{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"];
-		required AlertID		alert_id=2;
+		repeated AlertID		alert_ids=2;
 	}
 	optional ByAlert			alert=6;
 
 	// by resource
 	message ByResource  {
 		required string			resource_group=1;
-		required ResourceID		resource_id=2;
+		repeated ResourceID		resource_ids=2;
 	}
 	optional ByResource			resource=7;
 
     optional PcapDisposition    disposition=8[default=DOWNLOAD];              
 
-	repeated BySession			session_id_list=9;
 }
 
 /////////////////////////////////////
