@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 6929 $
+// $Rev: 6931 $
 package TRP;
 
 message Timestamp  {
@@ -484,7 +484,7 @@ message SessionTrackerRequest {
 message SessionTrackerResponse{
     optional int64          context=1;
     required string         session_group=2;
-    repeated SessionID      sessions=3;
+    repeated SessionDetails sessions=3;
 }
 
 ///////////////////////////////////
@@ -669,7 +669,7 @@ message GrepRequest {
 message GrepResponse  {
     optional int64          context=1;
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    repeated SessionID      sessions=3;
+    repeated SessionDetails sessions=3;
     repeated string         hints=4;
 }
 
