@@ -7,6 +7,14 @@ require 'openssl'
 require 'socket'
 require 'time'
 
+begin
+FFI_RZMQ_AVAIL=true
+require 'ffi-rzmq'
+rescue
+FFI_RZMQ_AVAIL=false
+end
+
+
 # ==== TrisulRP::Protocol
 # Contains methods to help with common TRP tasks like 
 # * creating connections
@@ -92,6 +100,12 @@ module TrisulRP::Protocol
 
   # Dispatch request to server & get response 
   # [conn]  TRP connection  previously opened via TrisulRP::Protocol::connect
+  #
+  #         - connection can a ZMQ endpoint string like zmq:ipc://.. if string starts
+  #           with 'zmq:' it will be treated as ZMQ.
+  #
+  #         Needs ffi-rzmq gem
+  #
   # [trp_request]  a TRP request object, created directly or using the mk_request helper 
   #
   # ==== Returns
@@ -105,10 +119,25 @@ module TrisulRP::Protocol
   #
   def get_response(conn,trp_request)
     outbuf=""
+    inbuf=""
     outbuf=trp_request.serialize_to_string
-    conn.write([outbuf.length].pack("N*"))
-    conn.write(outbuf)
-    inbuf = conn.read(4)
+
+	if conn.is_a?(String) and conn \=~ /^zmq:/
+		ctx=ZMQ::Context.new
+		sock = ctx.socket(ZMQ::REQ)
+		sock.connect(conn.slice(4..-1))
+
+		conn.send_string(outbuf)
+		conn.recv_string(inbuf)
+		sock.close
+		ctx.terminate 
+	else
+		conn.write([outbuf.length].pack("N*"))
+		conn.write(outbuf)
+		inbuf = conn.read(4)
+	end 
+
+
     buflenarr=inbuf.unpack("N*")
     datalen=buflenarr[0]
     dataarray=conn.read(datalen)
@@ -121,6 +150,55 @@ module TrisulRP::Protocol
     yield unwrap_response(resp) if block_given?
     return unwrap_response(resp)
   end
+
+  # Using ZMQ to Dispatch request to server & get response 
+  #
+  # This is used by new webtrisul architecuter to connect to trisul_queryd 
+  #
+  # [conn]  - a ZMQ endpoint string like ipc://.. 
+  #
+  #         Needs ffi-rzmq gem
+  #
+  # [trp_request]  a TRP request object, created directly or using the mk_request helper 
+  #
+  # ==== Returns
+  # ==== Yields
+  # a response object, you can then inspect the fields in the response and spawn additional 
+  # requests if required 
+  #
+  # ==== On error
+  # raises an error if the server returns an ErrorResponse - this contains an error_message field
+  # which can tell you what went wrong
+  #
+  def get_response_zmq(endpoint, trp_request)
+
+    outbuf=""
+
+	# out
+    outbuf=trp_request.serialize_to_string
+	ctx=ZMQ::Context.new
+	sock = ctx.socket(ZMQ::REQ)
+	sock.connect(endpoint))
+	sock.send_string(outbuf)
+
+
+	#in 
+	sock.recv_string(dataarray)
+    resp =TRP::Message.new
+    resp.parse dataarray
+    if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
+		print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
+		raise resp.error_response 
+	end
+
+	sock.close
+	ctx.terminate 
+
+    yield unwrap_response(resp) if block_given?
+    return unwrap_response(resp)
+
+  end
+
 
 
   # Query the total time window available in Trisul
