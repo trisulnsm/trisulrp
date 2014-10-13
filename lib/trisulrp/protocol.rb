@@ -119,25 +119,13 @@ module TrisulRP::Protocol
   #
   def get_response(conn,trp_request)
     outbuf=""
-    inbuf=""
     outbuf=trp_request.serialize_to_string
 
-	if conn.is_a?(String) and conn \=~ /^zmq:/
-		ctx=ZMQ::Context.new
-		sock = ctx.socket(ZMQ::REQ)
-		sock.connect(conn.slice(4..-1))
+	conn.write([outbuf.length].pack("N*"))
+	conn.write(outbuf)
 
-		conn.send_string(outbuf)
-		conn.recv_string(inbuf)
-		sock.close
-		ctx.terminate 
-	else
-		conn.write([outbuf.length].pack("N*"))
-		conn.write(outbuf)
-		inbuf = conn.read(4)
-	end 
-
-
+    inbuf=""
+	inbuf = conn.read(4)
     buflenarr=inbuf.unpack("N*")
     datalen=buflenarr[0]
     dataarray=conn.read(datalen)
@@ -178,11 +166,12 @@ module TrisulRP::Protocol
     outbuf=trp_request.serialize_to_string
 	ctx=ZMQ::Context.new
 	sock = ctx.socket(ZMQ::REQ)
-	sock.connect(endpoint))
+	sock.connect(endpoint)
 	sock.send_string(outbuf)
 
 
 	#in 
+	dataarray=""
 	sock.recv_string(dataarray)
     resp =TRP::Message.new
     resp.parse dataarray
@@ -227,10 +216,15 @@ module TrisulRP::Protocol
     req=mk_request(TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST,
                     :counter_group => TrisulRP::Guids::CG_AGGREGATE)
 
-    get_response(conn,req) do |resp|
-      from_tm =  Time.at(resp.group_details[0].time_interval.from.tv_sec)
-      to_tm =  Time.at(resp.group_details[0].time_interval.to.tv_sec)
-    end
+	if conn.is_a?(String)
+		resp = get_response_zmq(conn,req) 
+	else
+		resp = get_response(conn,req) 
+	end 
+
+
+    from_tm =  Time.at(resp.group_details[0].time_interval.from.tv_sec)
+    to_tm =  Time.at(resp.group_details[0].time_interval.to.tv_sec)
 
     return [from_tm,to_tm]
 
