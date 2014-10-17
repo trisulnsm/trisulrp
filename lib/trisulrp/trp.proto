@@ -1,7 +1,7 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
-// $Rev: 6931 $
+// $Rev: 6946 $
 package TRP;
 
 message Timestamp  {
@@ -22,6 +22,8 @@ message StatsTuple {
 message MeterValues {
     required int32          meter=1;
     repeated StatsTuple     values=2;
+	optional int64			total=3;
+	optional int64			seconds=4;
 }
 
 message KeyStats {
@@ -83,6 +85,7 @@ message SessionDetails  {
 	required int64          za_payload=20;
 	required int64          setup_rtt=21;
 	required int64          retransmissions=22;
+	optional int64		    tracker_statval=23;
 }
 
 
@@ -163,6 +166,8 @@ message Message {
 					GREP_RESPONSE=61;
 					KEYSPACE_REQUEST=70;
 					KEYSPACE_RESPONSE=71;
+					TOPPER_TREND_REQUEST=72;
+					TOPPER_TREND_RESPONSE=73;
     }
 
     required Command    trp_command=1;
@@ -212,6 +217,8 @@ message Message {
     optional GrepResponse  grep_response=52;
     optional KeySpaceRequest  keyspace_request=53;
     optional KeySpaceResponse  keyspace_response=54;
+    optional TopperTrendRequest  topper_trend_request=55;
+    optional TopperTrendResponse  topper_trend_response=56;
 }
 
 ///////////////////////////////
@@ -301,6 +308,7 @@ message  CounterGroupResponse{
     required int64          context=1;
     required string         counter_group=2;
     required int64          meter=3;
+	optional int64			sysgrouptotal=4;
     repeated KeyDetails     keys=6;
 }
 
@@ -485,6 +493,7 @@ message SessionTrackerResponse{
     optional int64          context=1;
     required string         session_group=2;
     repeated SessionDetails sessions=3;
+    optional int64          tracker_id=4;
 }
 
 ///////////////////////////////////
@@ -696,5 +705,24 @@ message KeySpaceResponse  {
     optional int64          context=1;
     optional string         counter_group=2;
     repeated string         hits=3;
+}
+
+///////////////////////////////
+// TopperTrendRequest 
+message TopperTrendRequest {
+    optional int64          context=1 [default=0];
+    required string         counter_group=2;
+    optional int64          meter=3 [default=0];
+    optional int64          maxitems=4 [default=10];
+    optional TimeInterval   time_interval=5;
+}
+
+///////////////////////////////
+// TopperTrendResponse   
+message  TopperTrendResponse {
+    required int64          context=1;
+    required string         counter_group=2;
+    required int64          meter=3;
+    repeated KeyStats       keytrends=4;
 }
 

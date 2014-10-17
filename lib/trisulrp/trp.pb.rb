@@ -61,6 +61,8 @@ module TRP
   class GrepResponse < ::ProtocolBuffers::Message; end
   class KeySpaceRequest < ::ProtocolBuffers::Message; end
   class KeySpaceResponse < ::ProtocolBuffers::Message; end
+  class TopperTrendRequest < ::ProtocolBuffers::Message; end
+  class TopperTrendResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -127,6 +129,8 @@ module TRP
 
     required :int32, :meter, 1
     repeated ::TRP::StatsTuple, :values, 2
+    optional :int64, :total, 3
+    optional :int64, :seconds, 4
   end
 
   class KeyStats < ::ProtocolBuffers::Message
@@ -203,6 +207,7 @@ module TRP
     required :int64, :za_payload, 20
     required :int64, :setup_rtt, 21
     required :int64, :retransmissions, 22
+    optional :int64, :tracker_statval, 23
   end
 
   class Message < ::ProtocolBuffers::Message
@@ -268,6 +273,8 @@ module TRP
       GREP_RESPONSE = 61
       KEYSPACE_REQUEST = 70
       KEYSPACE_RESPONSE = 71
+      TOPPER_TREND_REQUEST = 72
+      TOPPER_TREND_RESPONSE = 73
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -317,6 +324,8 @@ module TRP
     optional ::TRP::GrepResponse, :grep_response, 52
     optional ::TRP::KeySpaceRequest, :keyspace_request, 53
     optional ::TRP::KeySpaceResponse, :keyspace_response, 54
+    optional ::TRP::TopperTrendRequest, :topper_trend_request, 55
+    optional ::TRP::TopperTrendResponse, :topper_trend_response, 56
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -409,6 +418,7 @@ module TRP
     required :int64, :context, 1
     required :string, :counter_group, 2
     required :int64, :meter, 3
+    optional :int64, :sysgrouptotal, 4
     repeated ::TRP::KeyDetails, :keys, 6
   end
 
@@ -598,6 +608,7 @@ module TRP
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionDetails, :sessions, 3
+    optional :int64, :tracker_id, 4
   end
 
   class SessionGroupRequest < ::ProtocolBuffers::Message
@@ -825,6 +836,25 @@ module TRP
     optional :int64, :context, 1
     optional :string, :counter_group, 2
     repeated :string, :hits, 3
+  end
+
+  class TopperTrendRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.TopperTrendRequest"
+
+    optional :int64, :context, 1, :default => 0
+    required :string, :counter_group, 2
+    optional :int64, :meter, 3, :default => 0
+    optional :int64, :maxitems, 4, :default => 10
+    optional ::TRP::TimeInterval, :time_interval, 5
+  end
+
+  class TopperTrendResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.TopperTrendResponse"
+
+    required :int64, :context, 1
+    required :string, :counter_group, 2
+    required :int64, :meter, 3
+    repeated ::TRP::KeyStats, :keytrends, 4
   end
 
 end
