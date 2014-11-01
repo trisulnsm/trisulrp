@@ -443,6 +443,7 @@ module TRP
     optional ::TRP::TimeInterval, :time_interval, 5
     optional ::TRP::Timestamp, :time_instant, 6
     optional :int64, :flags, 7
+    optional :bool, :resolve_keys, 8
   end
 
   class CounterGroupResponse < ::ProtocolBuffers::Message
