@@ -9,6 +9,7 @@ module TRP
   class TimeInterval < ::ProtocolBuffers::Message; end
   class StatsTuple < ::ProtocolBuffers::Message; end
   class MeterValues < ::ProtocolBuffers::Message; end
+  class MeterInfo < ::ProtocolBuffers::Message; end
   class KeyStats < ::ProtocolBuffers::Message; end
   class KeyDetails < ::ProtocolBuffers::Message; end
   class SessionID < ::ProtocolBuffers::Message; end
@@ -133,6 +134,37 @@ module TRP
     optional :int64, :seconds, 4
   end
 
+  class MeterInfo < ::ProtocolBuffers::Message
+    # forward declarations
+
+    # enums
+    module MeterType
+      include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "TRP.MeterInfo.MeterType"
+
+      VT_INVALID = 0
+      VT_RATE_COUNTER_WITH_SLIDING_WINDOW = 1
+      VT_COUNTER = 2
+      VT_COUNTER_WITH_SLIDING_WINDOW = 3
+      VT_RATE_COUNTER = 4
+      VT_GAUGE = 5
+      VT_GAUGE_MIN_MAX_AVG = 6
+      VT_AUTO = 7
+      VT_RUNNING_COUNTER = 8
+      VT_AVERAGE = 9
+    end
+
+    set_fully_qualified_name "TRP.MeterInfo"
+
+    required :int32, :id, 1
+    required ::TRP::MeterInfo::MeterType, :type, 2
+    required :int32, :topcount, 3
+    required :string, :name, 4
+    optional :string, :description, 5
+    optional :string, :units, 6
+  end
+
   class KeyStats < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.KeyStats"
 
@@ -180,6 +212,7 @@ module TRP
     optional :int64, :bucket_size, 3
     optional ::TRP::TimeInterval, :time_interval, 4
     optional :int64, :topper_bucket_size, 5
+    repeated ::TRP::MeterInfo, :meters, 6
   end
 
   class SessionDetails < ::ProtocolBuffers::Message
@@ -521,6 +554,7 @@ module TRP
 
     optional :int64, :context, 1, :default => 0
     optional :string, :counter_group, 2
+    optional :bool, :get_meter_info, 3, :default => false
   end
 
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message

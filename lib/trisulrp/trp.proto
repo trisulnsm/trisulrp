@@ -2,6 +2,10 @@
 // Based on Google Protocol Buffers
 // (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
 // $Rev: 6946 $
+
+option optimize_for = LITE_RUNTIME; 
+
+
 package TRP;
 
 message Timestamp  {
@@ -24,6 +28,32 @@ message MeterValues {
     repeated StatsTuple     values=2;
 	optional int64			total=3;
 	optional int64			seconds=4;
+}
+
+message MeterInfo {
+
+	// from TrisulAPI 
+	enum MeterType
+	{
+		VT_INVALID=0;
+		VT_RATE_COUNTER_WITH_SLIDING_WINDOW=1;// this for top-N type counters
+		VT_COUNTER=2;                         // basic counter, stores val in the raw
+		VT_COUNTER_WITH_SLIDING_WINDOW=3;     // use this for top-N type counters
+		VT_RATE_COUNTER=4;                    // rate counter stores val/sec
+		VT_GAUGE=5;                           // basic gauge
+		VT_GAUGE_MIN_MAX_AVG=6;               // gauge with 3 additional min/avg/max cols (auto)
+		VT_AUTO=7;                            // automatic (eg, min/max/avg/stddev/)
+		VT_RUNNING_COUNTER=8;                 // running counter, no delta calc 
+        VT_AVERAGE=9;                 		  // average of samples, total/sampl uses 32bt|32bit
+	}
+
+
+    required int32          id=1;
+    required MeterType      type=2;
+    required int32	     	topcount=3;
+	required string			name=4;
+	optional string			description=5;
+	optional string			units=6;
 }
 
 message KeyStats {
@@ -60,6 +90,7 @@ message CounterGroupDetails {
     optional int64          bucket_size=3;
     optional TimeInterval   time_interval=4;
     optional int64          topper_bucket_size=5;
+	repeated MeterInfo		meters=6;
 }
 
 message SessionDetails  {
@@ -404,6 +435,7 @@ message SearchKeysResponse{
 message CounterGroupInfoRequest{
     optional int64         context=1[default=0];
     optional string        counter_group=2;
+	optional bool		   get_meter_info=3[default=false];
 }
 
 ///////////////////////////////////
