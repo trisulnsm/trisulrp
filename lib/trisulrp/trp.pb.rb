@@ -265,7 +265,6 @@ module TRP
     required :string, :cause, 14
     required :int64, :stat0, 15
     required :int64, :stat1, 16
-    required :int64, :sid, 17
     required ::TRP::TimeInterval, :time_interval, 18
   end
 
@@ -926,7 +925,7 @@ module TRP
     set_fully_qualified_name "TRP.QueryPDPRequest"
 
     optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{3fcbae7f-bbec-47ca-bae0-b48d5f96fd6b}"
+    optional :string, :session_group, 2, :default => "{3FCBAE7F-BBEC-47CA-BAE0-B48D5F96FD6B}"
     required ::TRP::TimeInterval, :time_interval, 3
     optional :string, :ipa, 4
     optional :string, :msisdn, 5

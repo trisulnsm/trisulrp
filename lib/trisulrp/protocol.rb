@@ -337,6 +337,8 @@ module TrisulRP::Protocol
       req.keyspace_request  = TRP::KeySpaceRequest.new(params)
     when TRP::Message::Command::TOPPER_TREND_REQUEST
       req.topper_trend_request  = TRP::TopperTrendRequest.new(params)
+    when TRP::Message::Command::QUERY_PDP_REQUEST 
+      req.query_pdp_request = TRP::QueryPDPRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -434,6 +436,8 @@ module TrisulRP::Protocol
         resp.keyspace_response  
     when TRP::Message::Command::TOPPER_TREND_RESPONSE
         resp.topper_trend_response  
+    when TRP::Message::Command::QUERY_PDP_RESPONSE
+        resp.query_pdp_response 
     else
       raise "Unknown TRP command ID"
     end
