@@ -17,6 +17,7 @@ module TRP
   class ResourceID < ::ProtocolBuffers::Message; end
   class CounterGroupDetails < ::ProtocolBuffers::Message; end
   class SessionDetails < ::ProtocolBuffers::Message; end
+  class PDPDetails < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
   class HelloResponse < ::ProtocolBuffers::Message; end
@@ -64,6 +65,8 @@ module TRP
   class KeySpaceResponse < ::ProtocolBuffers::Message; end
   class TopperTrendRequest < ::ProtocolBuffers::Message; end
   class TopperTrendResponse < ::ProtocolBuffers::Message; end
+  class QueryPDPRequest < ::ProtocolBuffers::Message; end
+  class QueryPDPResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -243,6 +246,29 @@ module TRP
     optional :int64, :tracker_statval, 23
   end
 
+  class PDPDetails < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PDPDetails"
+
+    required ::TRP::SessionID, :session_id, 1
+    required :string, :ipa, 2
+    required :string, :msisdn, 3
+    required :string, :imei, 4
+    required :string, :imsi, 5
+    required :string, :teidc1, 6
+    required :string, :teidd1, 7
+    required :string, :teidc2, 8
+    required :string, :teidd2, 9
+    required :string, :apn, 10
+    required :string, :rai, 11
+    required :string, :uli, 12
+    required :string, :rat, 13
+    required :string, :cause, 14
+    required :int64, :stat0, 15
+    required :int64, :stat1, 16
+    required :int64, :sid, 17
+    required ::TRP::TimeInterval, :time_interval, 18
+  end
+
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -308,6 +334,8 @@ module TRP
       KEYSPACE_RESPONSE = 71
       TOPPER_TREND_REQUEST = 72
       TOPPER_TREND_RESPONSE = 73
+      QUERY_PDP_REQUEST = 74
+      QUERY_PDP_RESPONSE = 75
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -359,6 +387,8 @@ module TRP
     optional ::TRP::KeySpaceResponse, :keyspace_response, 54
     optional ::TRP::TopperTrendRequest, :topper_trend_request, 55
     optional ::TRP::TopperTrendResponse, :topper_trend_response, 56
+    optional ::TRP::QueryPDPRequest, :query_pdp_request, 57
+    optional ::TRP::QueryPDPResponse, :query_pdp_response, 58
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -890,6 +920,31 @@ module TRP
     required :string, :counter_group, 2
     required :int64, :meter, 3
     repeated ::TRP::KeyStats, :keytrends, 4
+  end
+
+  class QueryPDPRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.QueryPDPRequest"
+
+    optional :int64, :context, 1, :default => 0
+    optional :string, :session_group, 2, :default => "{3fcbae7f-bbec-47ca-bae0-b48d5f96fd6b}"
+    required ::TRP::TimeInterval, :time_interval, 3
+    optional :string, :ipa, 4
+    optional :string, :msisdn, 5
+    optional :string, :imei, 6
+    optional :string, :imsi, 7
+    optional :string, :apn, 8
+    optional :string, :rai, 9
+    optional :string, :uli, 10
+    optional :string, :rat, 11
+    optional :string, :cause, 12
+    optional :int64, :maxitems, 13, :default => 100
+  end
+
+  class QueryPDPResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.QueryPDPResponse"
+
+    optional :int64, :context, 1
+    repeated ::TRP::PDPDetails, :sessions, 3
   end
 
 end
