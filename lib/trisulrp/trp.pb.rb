@@ -266,6 +266,7 @@ module TRP
     required :int64, :stat0, 15
     required :int64, :stat1, 16
     required ::TRP::TimeInterval, :time_interval, 18
+    optional :string, :mccmnc, 19
   end
 
   class Message < ::ProtocolBuffers::Message
@@ -936,7 +937,8 @@ module TRP
     optional :string, :uli, 10
     optional :string, :rat, 11
     optional :string, :cause, 12
-    optional :int64, :maxitems, 13, :default => 100
+    optional :string, :mccmnc, 13
+    optional :int64, :maxitems, 14, :default => 100
   end
 
   class QueryPDPResponse < ::ProtocolBuffers::Message
