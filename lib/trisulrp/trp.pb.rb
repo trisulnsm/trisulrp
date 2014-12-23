@@ -267,6 +267,7 @@ module TRP
     required :int64, :stat1, 16
     required ::TRP::TimeInterval, :time_interval, 18
     optional :string, :mccmnc, 19
+    optional :string, :trace, 20
   end
 
   class Message < ::ProtocolBuffers::Message

@@ -139,6 +139,7 @@ message PDPDetails  {
 	required int64			stat1 = 16 ; 
 	required TimeInterval   time_interval=18;
 	optional string 		mccmnc  = 19 ;
+	optional string 		trace   = 20 ;
 }
 
 enum AuthLevel {
