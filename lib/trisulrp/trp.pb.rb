@@ -940,6 +940,7 @@ module TRP
     optional :string, :cause, 12
     optional :string, :mccmnc, 13
     optional :int64, :maxitems, 14, :default => 100
+    optional :string, :teid, 15
   end
 
   class QueryPDPResponse < ::ProtocolBuffers::Message
