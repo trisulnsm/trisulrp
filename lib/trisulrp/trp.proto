@@ -223,6 +223,8 @@ message Message {
 					TOPPER_TREND_RESPONSE=73;
                     QUERY_PDP_REQUEST=74;                     
                     QUERY_PDP_RESPONSE=75;
+                    STAB_SUBSCRIBE=80;
+                    STAB_UNSUBSCRIBE=81;
     }
 
     required Command    trp_command=1;
@@ -276,6 +278,7 @@ message Message {
     optional TopperTrendResponse  topper_trend_response=56;
     optional QueryPDPRequest query_pdp_request=57;
     optional QueryPDPResponse  query_pdp_response=58;
+    optional SubscribeCtl  subscribe_ctl=59;
 }
 
 ///////////////////////////////
@@ -815,5 +818,35 @@ message QueryPDPRequest {
 message QueryPDPResponse {
     optional int64          	context=1;
     repeated PDPDetails         sessions=3;
+}
+
+
+
+
+///////////////////////////////////
+// Subscribe - add a subcription to the Real Time channel
+message SubscribeCtl  {
+
+	// from TrisulAPI 
+	enum StabberType 
+	{
+		ST_COUNTER_ITEM=0;
+		ST_ALERT=1;			
+		ST_FLOW=2;         
+		ST_TOPPER=3;     
+	}
+
+	enum CtlType
+	{
+		CT_SUBSCRIBE=0;
+		CT_UNSUBSCRIBE=1;
+	}
+
+    optional int64          context=1[default=0];
+	required CtlType		ctl=2;
+	required StabberType	type=3;
+	optional string			guid=4;
+	optional string			key=5;
+	optional int64			meterid=6;
 }
 

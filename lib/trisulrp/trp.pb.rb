@@ -67,6 +67,7 @@ module TRP
   class TopperTrendResponse < ::ProtocolBuffers::Message; end
   class QueryPDPRequest < ::ProtocolBuffers::Message; end
   class QueryPDPResponse < ::ProtocolBuffers::Message; end
+  class SubscribeCtl < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -337,6 +338,8 @@ module TRP
       TOPPER_TREND_RESPONSE = 73
       QUERY_PDP_REQUEST = 74
       QUERY_PDP_RESPONSE = 75
+      STAB_SUBSCRIBE = 80
+      STAB_UNSUBSCRIBE = 81
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -390,6 +393,7 @@ module TRP
     optional ::TRP::TopperTrendResponse, :topper_trend_response, 56
     optional ::TRP::QueryPDPRequest, :query_pdp_request, 57
     optional ::TRP::QueryPDPResponse, :query_pdp_response, 58
+    optional ::TRP::SubscribeCtl, :subscribe_ctl, 59
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -948,6 +952,40 @@ module TRP
 
     optional :int64, :context, 1
     repeated ::TRP::PDPDetails, :sessions, 3
+  end
+
+  class SubscribeCtl < ::ProtocolBuffers::Message
+    # forward declarations
+
+    # enums
+    module StabberType
+      include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "TRP.SubscribeCtl.StabberType"
+
+      ST_COUNTER_ITEM = 0
+      ST_ALERT = 1
+      ST_FLOW = 2
+      ST_TOPPER = 3
+    end
+
+    module CtlType
+      include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "TRP.SubscribeCtl.CtlType"
+
+      CT_SUBSCRIBE = 0
+      CT_UNSUBSCRIBE = 1
+    end
+
+    set_fully_qualified_name "TRP.SubscribeCtl"
+
+    optional :int64, :context, 1, :default => 0
+    required ::TRP::SubscribeCtl::CtlType, :ctl, 2
+    required ::TRP::SubscribeCtl::StabberType, :type, 3
+    optional :string, :guid, 4
+    optional :string, :key, 5
+    optional :int64, :meterid, 6
   end
 
 end
