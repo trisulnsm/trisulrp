@@ -339,6 +339,8 @@ module TrisulRP::Protocol
       req.topper_trend_request  = TRP::TopperTrendRequest.new(params)
     when TRP::Message::Command::QUERY_PDP_REQUEST 
       req.query_pdp_request = TRP::QueryPDPRequest.new(params)
+    when TRP::Message::Command::STAB_PUBSUB_CTL 
+      req.subscribe_ctl = TRP::SubscribeCtl.new(params)
     else
       raise "Unknown TRP command ID"
     end

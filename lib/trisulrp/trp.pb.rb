@@ -338,8 +338,7 @@ module TRP
       TOPPER_TREND_RESPONSE = 73
       QUERY_PDP_REQUEST = 74
       QUERY_PDP_RESPONSE = 75
-      STAB_SUBSCRIBE = 80
-      STAB_UNSUBSCRIBE = 81
+      STAB_PUBSUB_CTL = 80
     end
 
     set_fully_qualified_name "TRP.Message"
