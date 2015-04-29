@@ -177,6 +177,8 @@ module TrisulRP::Protocol
     resp.parse dataarray
     if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
 		print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
+		sock.close
+		ctx.terminate 
 		raise resp.error_response.error_message
 	end
 
