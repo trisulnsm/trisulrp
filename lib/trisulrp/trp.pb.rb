@@ -641,6 +641,7 @@ module TRP
     optional :int64, :maxitems, 19, :default => 100
     optional :int64, :volume_filter, 20, :default => 0
     optional :bool, :resolve_keys, 21, :default => true
+    optional :string, :outputpath, 22
   end
 
   class QuerySessionsResponse < ::ProtocolBuffers::Message
@@ -649,6 +650,7 @@ module TRP
     optional :int64, :context, 1
     required :string, :session_group, 2
     repeated ::TRP::SessionDetails, :sessions, 3
+    optional :string, :outputpath, 4
   end
 
   class UpdateKeyRequest < ::ProtocolBuffers::Message
