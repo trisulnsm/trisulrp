@@ -317,14 +317,10 @@ module TrisulRP::Protocol
       req.session_item_request = TRP::SessionItemRequest.new(params)
     when TRP::Message::Command::SESSION_GROUP_REQUEST
       req.session_group_request = TRP::SessionGroupRequest.new(params)
-    when TRP::Message::Command::ALERT_ITEM_REQUEST
-      req.alert_item_request = TRP::AlertItemRequest.new(params)
-    when TRP::Message::Command::ALERT_GROUP_REQUEST
-      req.alert_group_request = TRP::AlertGroupRequest.new(params)
-    when TRP::Message::Command::RESOURCE_ITEM_REQUEST
-      req.resource_item_request = TRP::ResourceItemRequest.new(params)
-    when TRP::Message::Command::RESOURCE_GROUP_REQUEST
-      req.resource_group_request = TRP::ResourceGroupRequest.new(params)
+    when TRP::Message::Command::QUERY_ALERTS_REQUEST
+      req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
+    when TRP::Message::Command::QUERY_RESOURCES_REQUEST
+      req.query_resources_request = TRP::QueryResourcesRequest.new(params)
     when TRP::Message::Command::KEY_LOOKUP_REQUEST
       req.key_lookup_request = TRP::KeyLookupRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
@@ -418,14 +414,10 @@ module TrisulRP::Protocol
         resp.session_item_response 
     when TRP::Message::Command::SESSION_GROUP_RESPONSE
         resp.session_group_response 
-    when TRP::Message::Command::ALERT_ITEM_RESPONSE
-        resp.alert_item_response 
-    when TRP::Message::Command::ALERT_GROUP_RESPONSE
-        resp.alert_group_response 
-    when TRP::Message::Command::RESOURCE_ITEM_RESPONSE
-        resp.resource_item_response 
-    when TRP::Message::Command::RESOURCE_GROUP_RESPONSE
-        resp.resource_group_response 
+    when TRP::Message::Command::QUERY_ALERTS_RESPONSE
+        resp.query_alerts_response 
+    when TRP::Message::Command::QUERY_RESOURCES_RESPONSE
+        resp.query_resources_response 
     when TRP::Message::Command::KEY_LOOKUP_RESPONSE
         resp.key_lookup_response 
     when TRP::Message::Command::COUNTER_GROUP_INFO_RESPONSE

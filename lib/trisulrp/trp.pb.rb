@@ -704,13 +704,13 @@ module TRP
     optional ::TRP::KeyDetails, :source_port, 5
     optional ::TRP::KeyDetails, :destination_ip, 6
     optional ::TRP::KeyDetails, :destination_port, 7
-    required ::TRP::KeyDetails, :sigid, 8
-    required ::TRP::KeyDetails, :classification, 9
-    required ::TRP::KeyDetails, :priority, 10
-    required ::TRP::Timestamp, :dispatch_time, 11
-    required :string, :aux_message1, 12
-    required :string, :aux_message2, 13
-    required :int64, :occurrances, 14
+    optional ::TRP::KeyDetails, :sigid, 8
+    optional ::TRP::KeyDetails, :classification, 9
+    optional ::TRP::KeyDetails, :priority, 10
+    optional ::TRP::Timestamp, :dispatch_time, 11
+    optional :string, :aux_message1, 12
+    optional :string, :aux_message2, 13
+    optional :int64, :occurrances, 14
   end
 
   class QueryAlertsRequest < ::ProtocolBuffers::Message

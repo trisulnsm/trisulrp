@@ -586,13 +586,13 @@ message AlertDetails{
 	optional KeyDetails     source_port=5;
 	optional KeyDetails     destination_ip=6;
 	optional KeyDetails     destination_port=7;
-	required KeyDetails     sigid=8;
-	required KeyDetails     classification=9;
-	required KeyDetails     priority=10;
-	required Timestamp      dispatch_time=11;
-	required string         aux_message1=12;
-	required string         aux_message2=13;
-	required int64          occurrances=14;
+	optional KeyDetails     sigid=8;
+	optional KeyDetails     classification=9;
+	optional KeyDetails     priority=10;
+	optional Timestamp      dispatch_time=11;
+	optional string         aux_message1=12;
+	optional string         aux_message2=13;
+	optional int64          occurrances=14;
 }
 
 ////////////////////////////////////
