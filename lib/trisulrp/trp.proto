@@ -65,9 +65,10 @@ message KeyStats {
 
 message KeyDetails {
     required string         key=1;
-    optional string         label=2;
-    optional string         description=3;
-	optional int64			metric=4;
+    optional string         readable=2;
+    optional string         label=3;
+    optional string         description=4;
+	optional int64			metric=5;
 }
 
 message SessionID {
@@ -205,14 +206,10 @@ message Message {
                     SERVER_STATS_RESPONSE=39;                              
                     SESSION_GROUP_REQUEST=40;
                     SESSION_GROUP_RESPONSE=41;
-                    ALERT_ITEM_REQUEST=42;
-                    ALERT_ITEM_RESPONSE=43;
-                    ALERT_GROUP_REQUEST=44;
-                    ALERT_GROUP_RESPONSE=45;
-                    RESOURCE_ITEM_REQUEST=46;
-                    RESOURCE_ITEM_RESPONSE=47;
-                    RESOURCE_GROUP_REQUEST=48;
-                    RESOURCE_GROUP_RESPONSE=49;
+                    QUERY_ALERTS_REQUEST=44;
+                    QUERY_ALERTS_RESPONSE=45;
+                    QUERY_RESOURCES_REQUEST=48;
+                    QUERY_RESOURCES_RESPONSE=49;
                     KEY_LOOKUP_REQUEST=50;
                     KEY_LOOKUP_RESPONSE=51;
 					GREP_REQUEST=60;
@@ -246,8 +243,6 @@ message Message {
     optional CounterGroupInfoResponse counter_group_info_response=21;
     optional SessionItemRequest session_item_request=22;
     optional SessionItemResponse session_item_response=23;
-    optional BulkCounterItemRequest bulk_counter_item_request=24;
-    optional BulkCounterItemResponse bulk_counter_item_response=25;
     // optional TopperSnapshotRequest topper_snapshot_request=28; 
     // optional TopperSnapshotResponse topper_snapshot_response=29;
     optional UpdateKeyRequest update_key_request=30;
@@ -259,14 +254,10 @@ message Message {
     optional ServerStatsResponse server_stats_response=38;
     optional SessionGroupRequest session_group_request=39;
     optional SessionGroupResponse session_group_response=40;
-    optional AlertItemRequest alert_item_request=41;
-    optional AlertItemResponse alert_item_response=42;
-    optional AlertGroupRequest alert_group_request=43;
-    optional AlertGroupResponse alert_group_response=44;
-    optional ResourceItemRequest resource_item_request=45;
-    optional ResourceItemResponse resource_item_response=46;
-    optional ResourceGroupRequest resource_group_request=47;
-    optional ResourceGroupResponse resource_group_response=48;
+    optional QueryAlertsRequest query_alerts_request=43;
+    optional QueryAlertsResponse  query_alerts_response=44;
+    optional QueryResourcesRequest query_resources_request=47;
+    optional QueryResourcesResponse  query_resources_response=48;
     optional KeyLookupRequest key_lookup_request=49;
     optional KeyLookupResponse key_lookup_response=50;
     optional GrepRequest  grep_request=51;
@@ -332,22 +323,6 @@ message CounterItemResponse{
     required KeyStats       stats=1;
 }
 
-
-//////////////////////////////////////////
-// BulkCounterItemRequest
-message BulkCounterItemRequest{
-    optional int64          context=1[default=0];
-    required string         counter_group=2;
-    required int64          meter=3;
-    required TimeInterval   time_interval=4;
-    repeated string         keys=5;
-}
-
-//////////////////////////////////////////
-// BulkCounterItemResponse
-message BulkCounterItemResponse{
-    repeated KeyStats       stats=1;
-}
 
 ///////////////////////////////
 // CounterGroupRequest 
@@ -601,39 +576,28 @@ message ServerStatsResponse{
     required TimeInterval   time_interval=13;
 }
 
-/////////////////////////////////////
-// AlertItemRequest
-message AlertItemRequest{
-    optional int64          context=1[default=0];            
-    required string         alert_group=2;
-    repeated AlertID        alert_ids=3;
-}
 ////////////////////////////////////
-// AlertItemResponse
-message AlertItemResponse{
-    optional int64          context=1;            
-    required string         alert_group=2;
-    message Item {
-        optional int64          sensor_id=1;
-        required Timestamp      time=2;
-		required AlertID		alert_id=3;
-        optional string         source_ip=4;
-        optional string         source_port=5;
-        optional string         destination_ip=6;
-        optional string         destination_port=7;
-        required string         sigid=8;
-        required string         classification=9;
-        required string         priority=10;
-        required Timestamp      dispatch_time=11;
-        required string         aux_message1=12;
-        required string         aux_message2=13;
-    }
-    repeated Item           items=3;
+// AlertDetails
+message AlertDetails{
+	optional int64          sensor_id=1;
+	required Timestamp      time=2;
+	required AlertID		alert_id=3;
+	optional KeyDetails     source_ip=4;
+	optional KeyDetails     source_port=5;
+	optional KeyDetails     destination_ip=6;
+	optional KeyDetails     destination_port=7;
+	required KeyDetails     sigid=8;
+	required KeyDetails     classification=9;
+	required KeyDetails     priority=10;
+	required Timestamp      dispatch_time=11;
+	required string         aux_message1=12;
+	required string         aux_message2=13;
+	required int64          occurrances=14;
 }
 
 ////////////////////////////////////
-// AlertGroupQueryRequest
-message AlertGroupRequest {
+// QueryAlertsRequest 
+message QueryAlertsRequest  {
     optional int64          context=1[default=0];            
     required string         alert_group=2;
     required TimeInterval   time_interval=3;
@@ -647,63 +611,57 @@ message AlertGroupRequest {
     optional string         priority=12;
     optional string         aux_message1=13;
     optional string         aux_message2=14;
+    optional string         group_by_fieldname=15;
+	repeated AlertID		idlist=16;
+	optional bool			resolve_keys=17[default=true];
 }
 
 /////////////////////////////////////
-// AlertGroupResponse 
-message AlertGroupResponse {
+// QueryAlertsResponse 
+message QueryAlertsResponse {
     optional int64          context=1;
     required string         alert_group=2;
-    repeated AlertID        alerts=3;
-}
-
-/////////////////////////////////////
-// ResourceRequest - mutliple 
-message ResourceItemRequest{
-    optional int64          context=1[default=0];            
-    required string         resource_group=2;
-    repeated ResourceID     resource_ids=3;
-}
-////////////////////////////////////
-// ResourceItemResponse
-message ResourceItemResponse{
-    optional int64          context=1;            
-    required string         resource_group=2;
-    message Item {
-        required Timestamp      time=1;
-        required ResourceID     resource_id=2;
-        optional string         source_ip=3;
-        optional string         source_port=4;
-        optional string         destination_ip=5;
-        optional string         destination_port=6;
-        optional string         uri=7;
-        optional string         userlabel=8;
-    }
-    repeated Item           items=3;
+    repeated AlertDetails   alerts=3;
 }
 
 ////////////////////////////////////
-// ResourceGroupRequest
-message ResourceGroupRequest {
+// ResourceDetails
+message ResourceDetails {
+	required Timestamp      time=1;
+	required ResourceID     resource_id=2;
+	optional KeyDetails     source_ip=3;
+	optional KeyDetails     source_port=4;
+	optional KeyDetails     destination_ip=5;
+	optional KeyDetails     destination_port=6;
+    optional string         uri=7;
+    optional string         userlabel=8;
+}
+
+////////////////////////////////////
+//  QueryResourcesRequest
+message QueryResourcesRequest {
     optional int64          context=1[default=0];            
     required string         resource_group=2;
     required TimeInterval   time_interval=3;
     optional int64          maxitems=4 [default=10];
     optional string         source_ip=5;
     optional string         source_port=6;
-    optional string         destination_ip=7;
+    optional string         destination_ip=7; 
     optional string         destination_port=8;
     optional string         uri_pattern=9;
     optional string         userlabel_pattern=10;
-    repeated string         uri_list=11;
+    repeated string         uri_list=11;			 // cant be combined with others 
+    repeated string         regex_uri=12;            // cant be combined with others 
+	repeated ResourceID		idlist=13;				 // resource ID list 
+	optional bool			resolve_keys=14 [default=true];
 }
 
 /////////////////////////////////////
-// ResourceGroupResponse  
-message ResourceGroupResponse {
-    optional int64          context=1;
-    required string         resource_group=2;
-    repeated ResourceID     resources=3;
+// QueryResourceResponse  
+message QueryResourcesResponse {
+    optional int64          		context=1;
+    required string         		resource_group=2;
+    repeated ResourceDetails     	resources=3;
 }
 
 

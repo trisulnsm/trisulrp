@@ -834,6 +834,9 @@ module TRP
     optional :string, :uri_pattern, 9
     optional :string, :userlabel_pattern, 10
     repeated :string, :uri_list, 11
+    repeated :string, :regex_uri, 12
+    repeated :string, :prefix_match, 13
+    repeated :string, :suffix_match, 14
   end
 
   class ResourceGroupResponse < ::ProtocolBuffers::Message
