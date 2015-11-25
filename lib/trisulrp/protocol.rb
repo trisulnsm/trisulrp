@@ -291,10 +291,6 @@ module TrisulRP::Protocol
       req.counter_group_request = TRP::CounterGroupRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_REQUEST
       req.counter_item_request = TRP::CounterItemRequest.new(params)
-    when TRP::Message::Command::RELEASE_RESOURCE_REQUEST
-      req.release_resource_request = TRP::ReleaseResourceRequest.new(params)
-    when TRP::Message::Command::CONTROLLED_COUNTER_GROUP_REQUEST
-      req.controlled_counter_group_request = TRP::ControlledCounterGroupRequest.new(params)
     when TRP::Message::Command::FILTERED_DATAGRAMS_REQUEST
       req.filtered_datagram_request = TRP::FilteredDatagramRequest.new(params)
     when TRP::Message::Command::CONTROLLED_CONTEXT_REQUEST
