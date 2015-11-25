@@ -339,6 +339,12 @@ module TrisulRP::Protocol
       req.query_pdp_request = TRP::QueryPDPRequest.new(params)
     when TRP::Message::Command::STAB_PUBSUB_CTL 
       req.subscribe_ctl = TRP::SubscribeCtl.new(params)
+    when TRP::Message::Command::TIMESLICES_REQUEST 
+      req.time_slices_request = TRP::TimeSlicesRequest.new(params)
+    when TRP::Message::Command::DELETE_ALERTS_REQUEST 
+      req.delete_alerts_request = TRP::DeleteAlertsRequest.new(params)
+    when TRP::Message::Command::QUERY_FTS_REQUEST 
+      req.query_fts_request = TRP::QueryFTSRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -434,6 +440,10 @@ module TrisulRP::Protocol
         resp.topper_trend_response  
     when TRP::Message::Command::QUERY_PDP_RESPONSE
         resp.query_pdp_response 
+    when TRP::Message::Command::QUERY_FTS_RESPONSE
+        resp.query_fts_response 
+    when TRP::Message::Command::TIMESLICES_RESPONSE
+        resp.time_slices_response 
     else
       raise "Unknown TRP command ID"
     end
