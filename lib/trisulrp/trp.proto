@@ -85,6 +85,13 @@ message ResourceID {
     required int64          slice_id=1;
     required int64          resource_id=2;
 }
+
+message DocumentID {
+    required int64          slice_id=1;
+    required int64          doc_id=2;
+}
+
+
 message CounterGroupDetails {
     required string         guid=1;
     required string         name=2;
@@ -221,6 +228,11 @@ message Message {
                     QUERY_PDP_REQUEST=74;                     
                     QUERY_PDP_RESPONSE=75;
                     STAB_PUBSUB_CTL=80;
+                    QUERY_FTS_REQUEST=90;
+                    QUERY_FTS_RESPONSE=91;
+                    TIMESLICES_REQUEST=92;
+                    TIMESLICES_RESPONSE=93;
+                    DELETE_ALERTS_REQUEST=94;
     }
 
     required Command    trp_command=1;
@@ -269,6 +281,11 @@ message Message {
     optional QueryPDPRequest query_pdp_request=57;
     optional QueryPDPResponse  query_pdp_response=58;
     optional SubscribeCtl  subscribe_ctl=59;
+    optional QueryFTSRequest  query_fts_request=60;
+    optional QueryFTSResponse  query_fts_response=61;
+    optional TimeSlicesRequest  time_slices_request=62;
+    optional TimeSlicesResponse  time_slices_response=63;
+    optional DeleteAlertsRequest delete_alerts_request=64;
 }
 
 ///////////////////////////////
@@ -510,9 +527,7 @@ message QuerySessionsResponse {
 message UpdateKeyRequest{
     optional int64          context=1[default=0];
     required string         counter_group=2;
-    required string         key=4;
-    required string         label=5;
-    optional string         description=6;
+    repeated KeyDetails     keys=4;
 }
 
 /////////////////////////////////////
@@ -592,7 +607,8 @@ message AlertDetails{
 	optional Timestamp      dispatch_time=11;
 	optional string         aux_message1=12;
 	optional string         aux_message2=13;
-	optional int64          occurrances=14;
+	optional int64          occurrances=14[default=1];
+	optional string         group_by_key=15;
 }
 
 ////////////////////////////////////
@@ -600,8 +616,8 @@ message AlertDetails{
 message QueryAlertsRequest  {
     optional int64          context=1[default=0];            
     required string         alert_group=2;
-    required TimeInterval   time_interval=3;
-    optional int64          maxitems=5 [default=10];
+    optional TimeInterval   time_interval=3;
+    optional int64          maxitems=5 [default=100];
     optional string         source_ip=6;
     optional string         source_port=7;
     optional string         destination_ip=8;
@@ -638,12 +654,27 @@ message ResourceDetails {
 }
 
 ////////////////////////////////////
+// DocumentDetails
+message DocumentDetails  {
+	required DocumentID     docid=1;
+	optional string         attributes=2;
+	optional string         fullcontent=3;
+
+    message Flow {
+        required Timestamp  time=1;
+        required string     key=2;
+    };
+
+    repeated Flow          flows=4;
+}
+
+////////////////////////////////////
 //  QueryResourcesRequest
 message QueryResourcesRequest {
     optional int64          context=1[default=0];            
     required string         resource_group=2;
-    required TimeInterval   time_interval=3;
-    optional int64          maxitems=4 [default=10];
+    optional TimeInterval   time_interval=3;
+    optional int64          maxitems=4 [default=100];
     optional string         source_ip=5;
     optional string         source_port=6;
     optional string         destination_ip=7; 
@@ -680,7 +711,7 @@ message KeyLookupRequest {
 message KeyLookupResponse {
     optional int64          context=1;            
     required string         counter_group=2;
-    repeated KeyDetails     key_details=3;
+    repeated KeyDetails     keys=3;
 }
 
 ////////////////////////////////////
@@ -809,4 +840,48 @@ message SubscribeCtl  {
 	optional int64			meterid=6;
 }
 
+
+
+// FTS
+//  query to return docs, docids, and flows based on keyword search
+//
+
+message QueryFTSRequest  {
+
+    optional int64              context=1[default=0];
+    required TimeInterval       time_interval=2;
+	required string			    fts_group=3;
+    required string             keywords=4;
+    optional int64              maxitems=5[default=100];
+}
+
+
+message QueryFTSResponse {
+
+    optional int64              context=1[default=0];
+	required string			    fts_group=2;
+    repeated DocumentDetails    documents=3;   
+
+}
+
+
+// Timeslices
+//
+
+message TimeSlicesRequest  {
+    optional int64              context=1[default=0];
+}
+message TimeSlicesResponse  {
+	repeated TimeInterval       slices=1;
+}
+
+
+// DeleteAlerts
+//  - very limited exception to Trisul rule of not having delete options 
+message DeleteAlertsRequest  {
+    optional int64          context=1[default=0];            
+    required string         alert_group=2;
+    required TimeInterval   time_interval=3;
+    required string         sigid=4;
+} 
 
