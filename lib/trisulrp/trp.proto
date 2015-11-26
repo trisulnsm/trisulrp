@@ -656,16 +656,7 @@ message ResourceDetails {
 ////////////////////////////////////
 // DocumentDetails
 message DocumentDetails  {
-	required DocumentID     docid=1;
-	optional string         attributes=2;
-	optional string         fullcontent=3;
-
-    message Flow {
-        required Timestamp  time=1;
-        required string     key=2;
-    };
-
-    repeated Flow          flows=4;
+	required string         did=1;
 }
 
 ////////////////////////////////////

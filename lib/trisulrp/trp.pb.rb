@@ -779,23 +779,9 @@ module TRP
   end
 
   class DocumentDetails < ::ProtocolBuffers::Message
-    # forward declarations
-    class Flow < ::ProtocolBuffers::Message; end
-
     set_fully_qualified_name "TRP.DocumentDetails"
 
-    # nested messages
-    class Flow < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.DocumentDetails.Flow"
-
-      required ::TRP::Timestamp, :time, 1
-      required :string, :key, 2
-    end
-
-    required ::TRP::DocumentID, :docid, 1
-    optional :string, :attributes, 2
-    optional :string, :fullcontent, 3
-    repeated ::TRP::DocumentDetails::Flow, :flows, 4
+    required :string, :did, 1
   end
 
   class QueryResourcesRequest < ::ProtocolBuffers::Message
