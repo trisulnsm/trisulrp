@@ -12,10 +12,6 @@ module TRP
   class MeterInfo < ::ProtocolBuffers::Message; end
   class KeyStats < ::ProtocolBuffers::Message; end
   class KeyDetails < ::ProtocolBuffers::Message; end
-  class SessionID < ::ProtocolBuffers::Message; end
-  class AlertID < ::ProtocolBuffers::Message; end
-  class ResourceID < ::ProtocolBuffers::Message; end
-  class DocumentID < ::ProtocolBuffers::Message; end
   class CounterGroupDetails < ::ProtocolBuffers::Message; end
   class SessionDetails < ::ProtocolBuffers::Message; end
   class PDPDetails < ::ProtocolBuffers::Message; end
@@ -191,34 +187,6 @@ module TRP
     optional :int64, :metric, 5
   end
 
-  class SessionID < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionID"
-
-    required :int64, :slice_id, 1
-    required :int64, :session_id, 2
-  end
-
-  class AlertID < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.AlertID"
-
-    required :int64, :slice_id, 1
-    required :int64, :alert_id, 2
-  end
-
-  class ResourceID < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ResourceID"
-
-    required :int64, :slice_id, 1
-    required :int64, :resource_id, 2
-  end
-
-  class DocumentID < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.DocumentID"
-
-    required :int64, :slice_id, 1
-    required :int64, :doc_id, 2
-  end
-
   class CounterGroupDetails < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterGroupDetails"
 
@@ -234,7 +202,7 @@ module TRP
     set_fully_qualified_name "TRP.SessionDetails"
 
     optional :string, :session_key, 1
-    required ::TRP::SessionID, :session_id, 2
+    required :string, :session_id, 2
     optional :string, :user_label, 3
     required ::TRP::TimeInterval, :time_interval, 4
     required :int64, :state, 5
@@ -261,7 +229,7 @@ module TRP
   class PDPDetails < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.PDPDetails"
 
-    required ::TRP::SessionID, :session_id, 1
+    required :string, :session_id, 1
     required :string, :ipa, 2
     required :string, :msisdn, 3
     required :string, :imei, 4
@@ -506,21 +474,21 @@ module TRP
       set_fully_qualified_name "TRP.FilteredDatagramRequest.BySession"
 
       optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-      repeated ::TRP::SessionID, :session_ids, 2
+      repeated :string, :session_ids, 2
     end
 
     class ByAlert < ::ProtocolBuffers::Message
       set_fully_qualified_name "TRP.FilteredDatagramRequest.ByAlert"
 
       optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
-      repeated ::TRP::AlertID, :alert_ids, 2
+      repeated :string, :alert_ids, 2
     end
 
     class ByResource < ::ProtocolBuffers::Message
       set_fully_qualified_name "TRP.FilteredDatagramRequest.ByResource"
 
       required :string, :resource_group, 1
-      repeated ::TRP::ResourceID, :resource_ids, 2
+      repeated :string, :resource_ids, 2
     end
 
     optional :int64, :max_packets, 1, :default => 0
@@ -600,7 +568,7 @@ module TRP
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     repeated :string, :session_keys, 3
-    repeated ::TRP::SessionID, :session_ids, 4
+    repeated :string, :session_ids, 4
     optional :bool, :resolve_keys, 5, :default => true
   end
 
@@ -721,7 +689,7 @@ module TRP
 
     optional :int64, :sensor_id, 1
     required ::TRP::Timestamp, :time, 2
-    required ::TRP::AlertID, :alert_id, 3
+    required :string, :alert_id, 3
     optional ::TRP::KeyDetails, :source_ip, 4
     optional ::TRP::KeyDetails, :source_port, 5
     optional ::TRP::KeyDetails, :destination_ip, 6
@@ -753,7 +721,7 @@ module TRP
     optional :string, :aux_message1, 13
     optional :string, :aux_message2, 14
     optional :string, :group_by_fieldname, 15
-    repeated ::TRP::AlertID, :idlist, 16
+    repeated :string, :idlist, 16
     optional :bool, :resolve_keys, 17, :default => true
   end
 
@@ -769,7 +737,7 @@ module TRP
     set_fully_qualified_name "TRP.ResourceDetails"
 
     required ::TRP::Timestamp, :time, 1
-    required ::TRP::ResourceID, :resource_id, 2
+    required :string, :resource_id, 2
     optional ::TRP::KeyDetails, :source_ip, 3
     optional ::TRP::KeyDetails, :source_port, 4
     optional ::TRP::KeyDetails, :destination_ip, 5
@@ -792,8 +760,8 @@ module TRP
       required :string, :key, 2
     end
 
-    required ::TRP::DocumentID, :docid, 1
-    optional :string, :attributes, 2
+    required :string, :docid, 1
+    optional :string, :fts_attributes, 2
     optional :string, :fullcontent, 3
     repeated ::TRP::DocumentDetails::Flow, :flows, 4
   end
@@ -813,7 +781,7 @@ module TRP
     optional :string, :userlabel_pattern, 10
     repeated :string, :uri_list, 11
     repeated :string, :regex_uri, 12
-    repeated ::TRP::ResourceID, :idlist, 13
+    repeated :string, :idlist, 13
     optional :bool, :resolve_keys, 14, :default => true
   end
 
