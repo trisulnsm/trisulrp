@@ -535,8 +535,9 @@ module TRP
 
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
-    required :string, :pattern, 3
-    required :int64, :maxitems, 4
+    optional :int64, :maxitems, 3, :default => 100
+    optional :string, :pattern, 4
+    optional :string, :label, 5
   end
 
   class SearchKeysResponse < ::ProtocolBuffers::Message
@@ -544,7 +545,7 @@ module TRP
 
     optional :int64, :context, 1
     required :string, :counter_group, 2
-    repeated ::TRP::KeyDetails, :found_keys, 3
+    repeated ::TRP::KeyDetails, :keys, 3
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
@@ -723,6 +724,8 @@ module TRP
     optional :string, :group_by_fieldname, 15
     repeated :string, :idlist, 16
     optional :bool, :resolve_keys, 17, :default => true
+    optional :string, :any_ip, 18
+    optional :string, :any_port, 19
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message
@@ -974,7 +977,15 @@ module TRP
     optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
-    required :string, :sigid, 4
+    optional :string, :source_ip, 6
+    optional :string, :source_port, 7
+    optional :string, :destination_ip, 8
+    optional :string, :destination_port, 9
+    optional :string, :sigid, 10
+    optional :string, :classification, 11
+    optional :string, :priority, 12
+    optional :string, :any_ip, 18
+    optional :string, :any_port, 19
   end
 
 end
