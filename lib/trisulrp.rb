@@ -14,10 +14,8 @@ require 'trisulrp/trp.pb'
 require 'trisulrp/guids.rb'
 require 'trisulrp/keys.rb'
 require 'trisulrp/protocol.rb'
-require 'trisulrp/utils.rb'
 
 include TrisulRP::Protocol
 include TrisulRP::Guids
-include TrisulRP::Utils
 include TrisulRP::Keys
 

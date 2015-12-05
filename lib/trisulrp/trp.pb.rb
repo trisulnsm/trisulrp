@@ -20,15 +20,12 @@ module TRP
   class HelloResponse < ::ProtocolBuffers::Message; end
   class ErrorResponse < ::ProtocolBuffers::Message; end
   class OKResponse < ::ProtocolBuffers::Message; end
-  class ReleaseContextRequest < ::ProtocolBuffers::Message; end
   class CounterItemRequest < ::ProtocolBuffers::Message; end
   class CounterItemResponse < ::ProtocolBuffers::Message; end
-  class CounterGroupRequest < ::ProtocolBuffers::Message; end
-  class CounterGroupResponse < ::ProtocolBuffers::Message; end
+  class CounterGroupTopperRequest < ::ProtocolBuffers::Message; end
+  class CounterGroupTopperResponse < ::ProtocolBuffers::Message; end
   class FilteredDatagramRequest < ::ProtocolBuffers::Message; end
   class FilteredDatagramResponse < ::ProtocolBuffers::Message; end
-  class ControlledContextRequest < ::ProtocolBuffers::Message; end
-  class ControlledContextResponse < ::ProtocolBuffers::Message; end
   class SearchKeysRequest < ::ProtocolBuffers::Message; end
   class SearchKeysResponse < ::ProtocolBuffers::Message; end
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message; end
@@ -261,36 +258,22 @@ module TRP
       HELLO_RESPONSE = 2
       OK_RESPONSE = 3
       ERROR_RESPONSE = 5
-      COUNTER_GROUP_REQUEST = 6
-      COUNTER_GROUP_RESPONSE = 7
+      COUNTER_GROUP_TOPPER_REQUEST = 6
+      COUNTER_GROUP_TOPPER_RESPONSE = 7
       COUNTER_ITEM_REQUEST = 8
       COUNTER_ITEM_RESPONSE = 9
-      RELEASE_RESOURCE_REQUEST = 10
-      RELEASE_CONTEXT_REQUEST = 11
-      CONTROLLED_COUNTER_GROUP_REQUEST = 12
-      CONTROLLED_COUNTER_GROUP_RESPONSE = 13
       FILTERED_DATAGRAMS_REQUEST = 14
       FILTERED_DATAGRAMS_RESPONSE = 15
-      CONTROLLED_CONTEXT_REQUEST = 16
-      CONTROLLED_CONTEXT_RESPONSE = 17
       SEARCH_KEYS_REQUEST = 18
       SEARCH_KEYS_RESPONSE = 19
       COUNTER_GROUP_INFO_REQUEST = 20
       COUNTER_GROUP_INFO_RESPONSE = 21
       SESSION_TRACKER_REQUEST = 22
       SESSION_TRACKER_RESPONSE = 23
-      BULK_COUNTER_ITEM_REQUEST = 26
-      BULK_COUNTER_ITEM_RESPONSE = 27
-      CGMONITOR_REQUEST = 28
-      CGMONITOR_RESPONSE = 29
-      TOPPER_SNAPSHOT_REQUEST = 30
-      TOPPER_SNAPSHOT_RESPONSE = 31
       UPDATE_KEY_REQUEST = 32
       UPDATE_KEY_RESPONSE = 33
       QUERY_SESSIONS_REQUEST = 34
       QUERY_SESSIONS_RESPONSE = 35
-      RING_STATS_REQUEST = 36
-      RING_STATS_RESPONSE = 37
       SERVER_STATS_REQUEST = 38
       SERVER_STATS_RESPONSE = 39
       SESSION_GROUP_REQUEST = 40
@@ -324,15 +307,12 @@ module TRP
     optional ::TRP::HelloResponse, :hello_response, 3
     optional ::TRP::OKResponse, :ok_response, 4
     optional ::TRP::ErrorResponse, :error_response, 5
-    optional ::TRP::CounterGroupRequest, :counter_group_request, 6
-    optional ::TRP::CounterGroupResponse, :counter_group_response, 7
+    optional ::TRP::CounterGroupTopperRequest, :counter_group_topper_request, 6
+    optional ::TRP::CounterGroupTopperResponse, :counter_group_topper_response, 7
     optional ::TRP::CounterItemRequest, :counter_item_request, 8
     optional ::TRP::CounterItemResponse, :counter_item_response, 9
-    optional ::TRP::ReleaseContextRequest, :release_context_request, 11
     optional ::TRP::FilteredDatagramRequest, :filtered_datagram_request, 14
     optional ::TRP::FilteredDatagramResponse, :filtered_datagram_response, 15
-    optional ::TRP::ControlledContextRequest, :controlled_context_request, 16
-    optional ::TRP::ControlledContextResponse, :controlled_context_response, 17
     optional ::TRP::SearchKeysRequest, :search_keys_request, 18
     optional ::TRP::SearchKeysResponse, :search_keys_response, 19
     optional ::TRP::CounterGroupInfoRequest, :counter_group_info_request, 20
@@ -401,12 +381,6 @@ module TRP
     optional :string, :message, 2
   end
 
-  class ReleaseContextRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ReleaseContextRequest"
-
-    optional :int64, :context, 1
-  end
-
   class CounterItemRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterItemRequest"
 
@@ -424,21 +398,21 @@ module TRP
     required ::TRP::KeyStats, :stats, 1
   end
 
-  class CounterGroupRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.CounterGroupRequest"
+  class CounterGroupTopperRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupTopperRequest"
 
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3, :default => 0
-    optional :int64, :maxitems, 4, :default => 10
+    optional :int64, :maxitems, 4, :default => 100
     optional ::TRP::TimeInterval, :time_interval, 5
     optional ::TRP::Timestamp, :time_instant, 6
     optional :int64, :flags, 7
-    optional :bool, :resolve_keys, 8
+    optional :bool, :resolve_keys, 8, :default => true
   end
 
-  class CounterGroupResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.CounterGroupResponse"
+  class CounterGroupTopperResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupTopperResponse"
 
     required :int64, :context, 1
     required :string, :counter_group, 2
@@ -507,21 +481,6 @@ module TRP
     required :bytes, :contents, 7
     required ::TRP::PcapDisposition, :disposition, 8
     optional :string, :path, 9
-  end
-
-  class ControlledContextRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ControlledContextRequest"
-
-    required ::TRP::TimeInterval, :time_interval, 1
-    required :string, :filter_expression, 2
-  end
-
-  class ControlledContextResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ControlledContextResponse"
-
-    required :int64, :context, 1
-    optional :string, :context_db, 2
-    required ::TRP::TimeInterval, :time_interval, 3
   end
 
   class SearchKeysRequest < ::ProtocolBuffers::Message
@@ -796,7 +755,7 @@ module TRP
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required ::TRP::TimeInterval, :time_interval, 3
-    optional :int64, :maxitems, 4, :default => 50
+    optional :int64, :maxitems, 4, :default => 100
     optional :string, :pattern, 5
     repeated :string, :md5list, 6
   end
@@ -845,7 +804,7 @@ module TRP
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3, :default => 0
-    optional :int64, :maxitems, 4, :default => 10
+    optional :int64, :maxitems, 4, :default => 100
     optional ::TRP::TimeInterval, :time_interval, 5
   end
 

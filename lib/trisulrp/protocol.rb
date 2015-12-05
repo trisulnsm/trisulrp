@@ -287,26 +287,16 @@ module TrisulRP::Protocol
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
       req.hello_request = TRP::HelloRequest.new(params)
-    when TRP::Message::Command::COUNTER_GROUP_REQUEST
-      req.counter_group_request = TRP::CounterGroupRequest.new(params)
+    when TRP::Message::Command::COUNTER_GROUP_TOPPER_REQUEST
+      req.counter_group_topper_request = TRP::CounterGroupTopperRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_REQUEST
       req.counter_item_request = TRP::CounterItemRequest.new(params)
     when TRP::Message::Command::FILTERED_DATAGRAMS_REQUEST
       req.filtered_datagram_request = TRP::FilteredDatagramRequest.new(params)
-    when TRP::Message::Command::CONTROLLED_CONTEXT_REQUEST
-      req.controlled_context_request = TRP::ControlledContextRequest.new(params)
     when TRP::Message::Command::SEARCH_KEYS_REQUEST
       req.search_keys_request = TRP::SearchKeysRequest.new(params)
-    when TRP::Message::Command::BULK_COUNTER_ITEM_REQUEST
-      req.bulk_counter_item_request = TRP::BulkCounterItemRequest.new(params)
-    when TRP::Message::Command:: CGMONITOR_REQUEST
-      req.cgmonitor_request = TRP::CgmonitorRequest.new(params)
-    when TRP::Message::Command::TOPPER_SNAPSHOT_REQUEST
-      req.topper_snapshot_request = TRP::TopperSnapshotRequest.new(params)
     when TRP::Message::Command::UPDATE_KEY_REQUEST
       req.update_key_request = TRP::UpdateKeyRequest.new(params)
-    when TRP::Message::Command::RING_STATS_REQUEST
-      req.ring_stats_request = TRP::RingStatsRequest.new(params)
     when TRP::Message::Command::SERVER_STATS_REQUEST
       req.server_stats_request = TRP::ServerStatsRequest.new(params)
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
@@ -382,30 +372,18 @@ module TrisulRP::Protocol
     case resp.trp_command
     when TRP::Message::Command::HELLO_RESPONSE
       resp.hello_response
-    when TRP::Message::Command::COUNTER_GROUP_RESPONSE
-      resp.counter_group_response
+    when TRP::Message::Command::COUNTER_GROUP_TOPPER_RESPONSE
+      resp.counter_group_topper_response
     when TRP::Message::Command::COUNTER_ITEM_RESPONSE
       resp.counter_item_response
     when TRP::Message::Command::OK_RESPONSE
       resp.ok_response
-    when TRP::Message::Command::CONTROLLED_COUNTER_GROUP_RESPONSE
-      resp.controlled_counter_group_response
     when TRP::Message::Command::FILTERED_DATAGRAMS_RESPONSE
       resp.filtered_datagram_response
-    when TRP::Message::Command::CONTROLLED_CONTEXT_RESPONSE
-      resp.controlled_context_response
     when TRP::Message::Command::SEARCH_KEYS_RESPONSE
       resp.search_keys_response
-    when TRP::Message::Command::BULK_COUNTER_ITEM_RESPONSE
-        resp.bulk_counter_item_response 
-    when TRP::Message::Command:: CGMONITOR_RESPONSE
-        resp.cgmonitor_response 
-    when TRP::Message::Command::TOPPER_SNAPSHOT_RESPONSE
-      resp.topper_snapshot_response
     when TRP::Message::Command::UPDATE_KEY_RESPONSE
       resp.update_key_response 
-    when TRP::Message::Command::RING_STATS_RESPONSE
-        resp.ring_stats_response 
     when TRP::Message::Command::SERVER_STATS_RESPONSE
         resp.server_stats_response 
     when TRP::Message::Command::QUERY_ALERTS_RESPONSE
