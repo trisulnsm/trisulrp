@@ -33,8 +33,6 @@ module TRP
   class SearchKeysResponse < ::ProtocolBuffers::Message; end
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message; end
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message; end
-  class SessionItemRequest < ::ProtocolBuffers::Message; end
-  class SessionItemResponse < ::ProtocolBuffers::Message; end
   class QuerySessionsRequest < ::ProtocolBuffers::Message; end
   class QuerySessionsResponse < ::ProtocolBuffers::Message; end
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
@@ -205,11 +203,11 @@ module TRP
     required :string, :session_id, 2
     optional :string, :user_label, 3
     required ::TRP::TimeInterval, :time_interval, 4
-    required :int64, :state, 5
-    required :int64, :az_bytes, 6
-    required :int64, :za_bytes, 7
-    required :int64, :az_packets, 8
-    required :int64, :za_packets, 9
+    optional :int64, :state, 5
+    optional :int64, :az_bytes, 6
+    optional :int64, :za_bytes, 7
+    optional :int64, :az_packets, 8
+    optional :int64, :za_packets, 9
     required ::TRP::KeyDetails, :key1A, 10
     required ::TRP::KeyDetails, :key2A, 11
     required ::TRP::KeyDetails, :key1Z, 12
@@ -219,10 +217,10 @@ module TRP
     optional ::TRP::KeyDetails, :nf_ifindex_in, 16
     optional ::TRP::KeyDetails, :nf_ifindex_out, 17
     optional :string, :tags, 18
-    required :int64, :az_payload, 19
-    required :int64, :za_payload, 20
-    required :int64, :setup_rtt, 21
-    required :int64, :retransmissions, 22
+    optional :int64, :az_payload, 19
+    optional :int64, :za_payload, 20
+    optional :int64, :setup_rtt, 21
+    optional :int64, :retransmissions, 22
     optional :int64, :tracker_statval, 23
   end
 
@@ -281,8 +279,6 @@ module TRP
       COUNTER_GROUP_INFO_RESPONSE = 21
       SESSION_TRACKER_REQUEST = 22
       SESSION_TRACKER_RESPONSE = 23
-      SESSION_ITEM_REQUEST = 24
-      SESSION_ITEM_RESPONSE = 25
       BULK_COUNTER_ITEM_REQUEST = 26
       BULK_COUNTER_ITEM_RESPONSE = 27
       CGMONITOR_REQUEST = 28
@@ -341,8 +337,6 @@ module TRP
     optional ::TRP::SearchKeysResponse, :search_keys_response, 19
     optional ::TRP::CounterGroupInfoRequest, :counter_group_info_request, 20
     optional ::TRP::CounterGroupInfoResponse, :counter_group_info_response, 21
-    optional ::TRP::SessionItemRequest, :session_item_request, 22
-    optional ::TRP::SessionItemResponse, :session_item_response, 23
     optional ::TRP::UpdateKeyRequest, :update_key_request, 30
     optional ::TRP::QuerySessionsRequest, :query_sessions_request, 31
     optional ::TRP::QuerySessionsResponse, :query_sessions_response, 32
@@ -535,8 +529,9 @@ module TRP
 
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
-    required :string, :pattern, 3
-    required :int64, :maxitems, 4
+    optional :int64, :maxitems, 3, :default => 100
+    optional :string, :pattern, 4
+    optional :string, :label, 5
   end
 
   class SearchKeysResponse < ::ProtocolBuffers::Message
@@ -544,7 +539,7 @@ module TRP
 
     optional :int64, :context, 1
     required :string, :counter_group, 2
-    repeated ::TRP::KeyDetails, :found_keys, 3
+    repeated ::TRP::KeyDetails, :keys, 3
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
@@ -562,30 +557,12 @@ module TRP
     repeated ::TRP::CounterGroupDetails, :group_details, 2
   end
 
-  class SessionItemRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionItemRequest"
-
-    optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    repeated :string, :session_keys, 3
-    repeated :string, :session_ids, 4
-    optional :bool, :resolve_keys, 5, :default => true
-  end
-
-  class SessionItemResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionItemResponse"
-
-    optional :int64, :context, 1, :default => 0
-    required :string, :session_group, 2
-    repeated ::TRP::SessionDetails, :sessions, 3
-  end
-
   class QuerySessionsRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QuerySessionsRequest"
 
     optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    required ::TRP::TimeInterval, :time_interval, 3
+    optional ::TRP::TimeInterval, :time_interval, 3
     optional :string, :key, 4
     optional :string, :source_ip, 5
     optional :string, :source_port, 6
@@ -605,6 +582,7 @@ module TRP
     optional :int64, :volume_filter, 20, :default => 0
     optional :bool, :resolve_keys, 21, :default => true
     optional :string, :outputpath, 22
+    repeated :string, :idlist, 23
   end
 
   class QuerySessionsResponse < ::ProtocolBuffers::Message
@@ -632,6 +610,7 @@ module TRP
     required :int64, :tracker_id, 3, :default => 1
     optional :int64, :maxitems, 4, :default => 100
     required ::TRP::TimeInterval, :time_interval, 5
+    optional :bool, :resolve_keys, 6, :default => true
   end
 
   class SessionTrackerResponse < ::ProtocolBuffers::Message
@@ -723,6 +702,8 @@ module TRP
     optional :string, :group_by_fieldname, 15
     repeated :string, :idlist, 16
     optional :bool, :resolve_keys, 17, :default => true
+    optional :string, :any_ip, 18
+    optional :string, :any_port, 19
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message
@@ -760,7 +741,7 @@ module TRP
       required :string, :key, 2
     end
 
-    required :string, :docid, 1
+    required :string, :dockey, 1
     optional :string, :fts_attributes, 2
     optional :string, :fullcontent, 3
     repeated ::TRP::DocumentDetails::Flow, :flows, 4
@@ -974,7 +955,15 @@ module TRP
     optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
-    required :string, :sigid, 4
+    optional :string, :source_ip, 6
+    optional :string, :source_port, 7
+    optional :string, :destination_ip, 8
+    optional :string, :destination_port, 9
+    optional :string, :sigid, 10
+    optional :string, :classification, 11
+    optional :string, :priority, 12
+    optional :string, :any_ip, 18
+    optional :string, :any_port, 19
   end
 
 end

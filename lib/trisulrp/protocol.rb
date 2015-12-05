@@ -309,10 +309,6 @@ module TrisulRP::Protocol
       req.ring_stats_request = TRP::RingStatsRequest.new(params)
     when TRP::Message::Command::SERVER_STATS_REQUEST
       req.server_stats_request = TRP::ServerStatsRequest.new(params)
-    when TRP::Message::Command::SESSION_ITEM_REQUEST
-      req.session_item_request = TRP::SessionItemRequest.new(params)
-    when TRP::Message::Command::SESSION_GROUP_REQUEST
-      req.session_group_request = TRP::SessionGroupRequest.new(params)
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
@@ -412,10 +408,6 @@ module TrisulRP::Protocol
         resp.ring_stats_response 
     when TRP::Message::Command::SERVER_STATS_RESPONSE
         resp.server_stats_response 
-    when TRP::Message::Command::SESSION_ITEM_RESPONSE
-        resp.session_item_response 
-    when TRP::Message::Command::SESSION_GROUP_RESPONSE
-        resp.session_group_response 
     when TRP::Message::Command::QUERY_ALERTS_RESPONSE
         resp.query_alerts_response 
     when TRP::Message::Command::QUERY_RESOURCES_RESPONSE
