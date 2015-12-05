@@ -177,8 +177,6 @@ message Message {
                     QUERY_SESSIONS_RESPONSE=35;
                     SERVER_STATS_REQUEST=38;                    
                     SERVER_STATS_RESPONSE=39;                              
-                    SESSION_GROUP_REQUEST=40;
-                    SESSION_GROUP_RESPONSE=41;
                     QUERY_ALERTS_REQUEST=44;
                     QUERY_ALERTS_RESPONSE=45;
                     QUERY_RESOURCES_REQUEST=48;
@@ -223,8 +221,6 @@ message Message {
     optional SessionTrackerResponse session_tracker_response=34;
     optional ServerStatsRequest server_stats_request=37;
     optional ServerStatsResponse server_stats_response=38;
-    optional SessionGroupRequest session_group_request=39;
-    optional SessionGroupResponse session_group_response=40;
     optional QueryAlertsRequest query_alerts_request=43;
     optional QueryAlertsResponse  query_alerts_response=44;
     optional QueryResourcesRequest query_resources_request=47;
@@ -474,25 +470,6 @@ message SessionTrackerResponse{
     repeated SessionDetails sessions=3;
     optional int64          tracker_id=4;
 }
-
-///////////////////////////////////
-// SessionGroupRequest
-message SessionGroupRequest {
-    optional int64          context=1[default=0];
-    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    optional int64          tracker_id=3;
-    optional string         key_filter=4;
-    optional int64          maxitems=5 [default=100];
-}
-
-//////////////////////////////////
-// SessionGroupResponse
-message SessionGroupResponse {
-    optional int64          context=1;
-    required string         session_group=2;
-    repeated string         session_keys=3;
-}
-
 
 //////////////////////////////////
 // ServerStatsRequest

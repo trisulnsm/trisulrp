@@ -35,8 +35,6 @@ module TRP
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerResponse < ::ProtocolBuffers::Message; end
-  class SessionGroupRequest < ::ProtocolBuffers::Message; end
-  class SessionGroupResponse < ::ProtocolBuffers::Message; end
   class ServerStatsRequest < ::ProtocolBuffers::Message; end
   class ServerStatsResponse < ::ProtocolBuffers::Message; end
   class AlertDetails < ::ProtocolBuffers::Message; end
@@ -276,8 +274,6 @@ module TRP
       QUERY_SESSIONS_RESPONSE = 35
       SERVER_STATS_REQUEST = 38
       SERVER_STATS_RESPONSE = 39
-      SESSION_GROUP_REQUEST = 40
-      SESSION_GROUP_RESPONSE = 41
       QUERY_ALERTS_REQUEST = 44
       QUERY_ALERTS_RESPONSE = 45
       QUERY_RESOURCES_REQUEST = 48
@@ -324,8 +320,6 @@ module TRP
     optional ::TRP::SessionTrackerResponse, :session_tracker_response, 34
     optional ::TRP::ServerStatsRequest, :server_stats_request, 37
     optional ::TRP::ServerStatsResponse, :server_stats_response, 38
-    optional ::TRP::SessionGroupRequest, :session_group_request, 39
-    optional ::TRP::SessionGroupResponse, :session_group_response, 40
     optional ::TRP::QueryAlertsRequest, :query_alerts_request, 43
     optional ::TRP::QueryAlertsResponse, :query_alerts_response, 44
     optional ::TRP::QueryResourcesRequest, :query_resources_request, 47
@@ -579,24 +573,6 @@ module TRP
     required :string, :session_group, 2
     repeated ::TRP::SessionDetails, :sessions, 3
     optional :int64, :tracker_id, 4
-  end
-
-  class SessionGroupRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionGroupRequest"
-
-    optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    optional :int64, :tracker_id, 3
-    optional :string, :key_filter, 4
-    optional :int64, :maxitems, 5, :default => 100
-  end
-
-  class SessionGroupResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionGroupResponse"
-
-    optional :int64, :context, 1
-    required :string, :session_group, 2
-    repeated :string, :session_keys, 3
   end
 
   class ServerStatsRequest < ::ProtocolBuffers::Message
