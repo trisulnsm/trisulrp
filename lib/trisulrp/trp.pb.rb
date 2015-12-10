@@ -14,7 +14,6 @@ module TRP
   class KeyDetails < ::ProtocolBuffers::Message; end
   class CounterGroupDetails < ::ProtocolBuffers::Message; end
   class SessionDetails < ::ProtocolBuffers::Message; end
-  class PDPDetails < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
   class HelloResponse < ::ProtocolBuffers::Message; end
@@ -24,8 +23,8 @@ module TRP
   class CounterItemResponse < ::ProtocolBuffers::Message; end
   class CounterGroupTopperRequest < ::ProtocolBuffers::Message; end
   class CounterGroupTopperResponse < ::ProtocolBuffers::Message; end
-  class FilteredDatagramRequest < ::ProtocolBuffers::Message; end
-  class FilteredDatagramResponse < ::ProtocolBuffers::Message; end
+  class PcapRequest < ::ProtocolBuffers::Message; end
+  class PcapResponse < ::ProtocolBuffers::Message; end
   class SearchKeysRequest < ::ProtocolBuffers::Message; end
   class SearchKeysResponse < ::ProtocolBuffers::Message; end
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message; end
@@ -44,16 +43,12 @@ module TRP
   class DocumentDetails < ::ProtocolBuffers::Message; end
   class QueryResourcesRequest < ::ProtocolBuffers::Message; end
   class QueryResourcesResponse < ::ProtocolBuffers::Message; end
-  class KeyLookupRequest < ::ProtocolBuffers::Message; end
-  class KeyLookupResponse < ::ProtocolBuffers::Message; end
   class GrepRequest < ::ProtocolBuffers::Message; end
   class GrepResponse < ::ProtocolBuffers::Message; end
   class KeySpaceRequest < ::ProtocolBuffers::Message; end
   class KeySpaceResponse < ::ProtocolBuffers::Message; end
   class TopperTrendRequest < ::ProtocolBuffers::Message; end
   class TopperTrendResponse < ::ProtocolBuffers::Message; end
-  class QueryPDPRequest < ::ProtocolBuffers::Message; end
-  class QueryPDPResponse < ::ProtocolBuffers::Message; end
   class SubscribeCtl < ::ProtocolBuffers::Message; end
   class QueryFTSRequest < ::ProtocolBuffers::Message; end
   class QueryFTSResponse < ::ProtocolBuffers::Message; end
@@ -89,15 +84,6 @@ module TRP
 
     LIBPCAP = 1
     UNSNIFF = 2
-  end
-
-  module PcapDisposition
-    include ::ProtocolBuffers::Enum
-
-    set_fully_qualified_name "TRP.PcapDisposition"
-
-    DOWNLOAD = 1
-    SAVE_ON_SERVER = 2
   end
 
   class Timestamp < ::ProtocolBuffers::Message
@@ -219,30 +205,6 @@ module TRP
     optional :int64, :tracker_statval, 23
   end
 
-  class PDPDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.PDPDetails"
-
-    required :string, :session_id, 1
-    required :string, :ipa, 2
-    required :string, :msisdn, 3
-    required :string, :imei, 4
-    required :string, :imsi, 5
-    required :string, :teidc1, 6
-    required :string, :teidd1, 7
-    required :string, :teidc2, 8
-    required :string, :teidd2, 9
-    required :string, :apn, 10
-    required :string, :rai, 11
-    required :string, :uli, 12
-    required :string, :rat, 13
-    required :string, :cause, 14
-    required :int64, :stat0, 15
-    required :int64, :stat1, 16
-    required ::TRP::TimeInterval, :time_interval, 18
-    optional :string, :mccmnc, 19
-    optional :string, :trace, 20
-  end
-
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -260,8 +222,8 @@ module TRP
       COUNTER_GROUP_TOPPER_RESPONSE = 7
       COUNTER_ITEM_REQUEST = 8
       COUNTER_ITEM_RESPONSE = 9
-      FILTERED_DATAGRAMS_REQUEST = 14
-      FILTERED_DATAGRAMS_RESPONSE = 15
+      PCAP_REQUEST = 14
+      PCAP_RESPONSE = 15
       SEARCH_KEYS_REQUEST = 18
       SEARCH_KEYS_RESPONSE = 19
       COUNTER_GROUP_INFO_REQUEST = 20
@@ -278,16 +240,12 @@ module TRP
       QUERY_ALERTS_RESPONSE = 45
       QUERY_RESOURCES_REQUEST = 48
       QUERY_RESOURCES_RESPONSE = 49
-      KEY_LOOKUP_REQUEST = 50
-      KEY_LOOKUP_RESPONSE = 51
       GREP_REQUEST = 60
       GREP_RESPONSE = 61
       KEYSPACE_REQUEST = 70
       KEYSPACE_RESPONSE = 71
       TOPPER_TREND_REQUEST = 72
       TOPPER_TREND_RESPONSE = 73
-      QUERY_PDP_REQUEST = 74
-      QUERY_PDP_RESPONSE = 75
       STAB_PUBSUB_CTL = 80
       QUERY_FTS_REQUEST = 90
       QUERY_FTS_RESPONSE = 91
@@ -307,8 +265,8 @@ module TRP
     optional ::TRP::CounterGroupTopperResponse, :counter_group_topper_response, 7
     optional ::TRP::CounterItemRequest, :counter_item_request, 8
     optional ::TRP::CounterItemResponse, :counter_item_response, 9
-    optional ::TRP::FilteredDatagramRequest, :filtered_datagram_request, 14
-    optional ::TRP::FilteredDatagramResponse, :filtered_datagram_response, 15
+    optional ::TRP::PcapRequest, :pcap_request, 14
+    optional ::TRP::PcapResponse, :pcap_response, 15
     optional ::TRP::SearchKeysRequest, :search_keys_request, 18
     optional ::TRP::SearchKeysResponse, :search_keys_response, 19
     optional ::TRP::CounterGroupInfoRequest, :counter_group_info_request, 20
@@ -324,16 +282,12 @@ module TRP
     optional ::TRP::QueryAlertsResponse, :query_alerts_response, 44
     optional ::TRP::QueryResourcesRequest, :query_resources_request, 47
     optional ::TRP::QueryResourcesResponse, :query_resources_response, 48
-    optional ::TRP::KeyLookupRequest, :key_lookup_request, 49
-    optional ::TRP::KeyLookupResponse, :key_lookup_response, 50
     optional ::TRP::GrepRequest, :grep_request, 51
     optional ::TRP::GrepResponse, :grep_response, 52
     optional ::TRP::KeySpaceRequest, :keyspace_request, 53
     optional ::TRP::KeySpaceResponse, :keyspace_response, 54
     optional ::TRP::TopperTrendRequest, :topper_trend_request, 55
     optional ::TRP::TopperTrendResponse, :topper_trend_response, 56
-    optional ::TRP::QueryPDPRequest, :query_pdp_request, 57
-    optional ::TRP::QueryPDPResponse, :query_pdp_response, 58
     optional ::TRP::SubscribeCtl, :subscribe_ctl, 59
     optional ::TRP::QueryFTSRequest, :query_fts_request, 60
     optional ::TRP::QueryFTSResponse, :query_fts_response, 61
@@ -381,7 +335,7 @@ module TRP
     optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3
-    required :string, :key, 4
+    required ::TRP::KeyDetails, :key, 4
     required ::TRP::TimeInterval, :time_interval, 5
     optional :int64, :volumes_only, 6, :default => 0
   end
@@ -415,66 +369,26 @@ module TRP
     repeated ::TRP::KeyDetails, :keys, 6
   end
 
-  class FilteredDatagramRequest < ::ProtocolBuffers::Message
-    # forward declarations
-    class ByFilterExpr < ::ProtocolBuffers::Message; end
-    class BySession < ::ProtocolBuffers::Message; end
-    class ByAlert < ::ProtocolBuffers::Message; end
-    class ByResource < ::ProtocolBuffers::Message; end
+  class PcapRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PcapRequest"
 
-    set_fully_qualified_name "TRP.FilteredDatagramRequest"
-
-    # nested messages
-    class ByFilterExpr < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByFilterExpr"
-
-      required ::TRP::TimeInterval, :time_interval, 1
-      required :string, :filter_expression, 2
-    end
-
-    class BySession < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.FilteredDatagramRequest.BySession"
-
-      optional :string, :session_group, 1, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-      repeated :string, :session_ids, 2
-    end
-
-    class ByAlert < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByAlert"
-
-      optional :string, :alert_group, 1, :default => "{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"
-      repeated :string, :alert_ids, 2
-    end
-
-    class ByResource < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.FilteredDatagramRequest.ByResource"
-
-      required :string, :resource_group, 1
-      repeated :string, :resource_ids, 2
-    end
-
-    optional :int64, :max_packets, 1, :default => 0
-    optional :int64, :max_bytes, 2, :default => 0
-    optional ::TRP::CompressionType, :compress_type, 3, :default => ::TRP::CompressionType::UNCOMPRESSED
-    optional ::TRP::FilteredDatagramRequest::ByFilterExpr, :filter_expression, 4
-    optional ::TRP::FilteredDatagramRequest::BySession, :session, 5
-    optional ::TRP::FilteredDatagramRequest::ByAlert, :alert, 6
-    optional ::TRP::FilteredDatagramRequest::ByResource, :resource, 7
-    optional ::TRP::PcapDisposition, :disposition, 8, :default => ::TRP::PcapDisposition::DOWNLOAD
+    optional :int64, :max_bytes, 1, :default => 100000000
+    optional ::TRP::CompressionType, :compress_type, 2, :default => ::TRP::CompressionType::UNCOMPRESSED
+    optional :string, :save_file, 3
+    required ::TRP::TimeInterval, :time_interval, 4
+    required :string, :filter_expression, 5
   end
 
-  class FilteredDatagramResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.FilteredDatagramResponse"
+  class PcapResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PcapResponse"
 
-    required ::TRP::PcapFormat, :format, 1
-    required ::TRP::CompressionType, :compress_type, 2
-    required ::TRP::TimeInterval, :time_interval, 3
-    required :int64, :num_datagrams, 4
-    required :int64, :num_bytes, 5
-    required :string, :sha1, 6
-    required :bytes, :contents, 7
-    required ::TRP::PcapDisposition, :disposition, 8
-    optional :string, :path, 9
+    optional ::TRP::PcapFormat, :format, 1, :default => ::TRP::PcapFormat::LIBPCAP
+    optional ::TRP::CompressionType, :compress_type, 2, :default => ::TRP::CompressionType::UNCOMPRESSED
+    optional ::TRP::TimeInterval, :time_interval, 3
+    optional :int64, :num_bytes, 4
+    optional :string, :sha1, 5
+    optional :bytes, :contents, 6
+    optional :string, :save_file, 7
   end
 
   class SearchKeysRequest < ::ProtocolBuffers::Message
@@ -485,6 +399,9 @@ module TRP
     optional :int64, :maxitems, 3, :default => 100
     optional :string, :pattern, 4
     optional :string, :label, 5
+    repeated :string, :keys, 6
+    optional :int64, :offset, 7, :default => 0
+    optional :bool, :get_totals, 8, :default => false
   end
 
   class SearchKeysResponse < ::ProtocolBuffers::Message
@@ -493,6 +410,7 @@ module TRP
     optional :int64, :context, 1
     required :string, :counter_group, 2
     repeated ::TRP::KeyDetails, :keys, 3
+    optional :int64, :total_count, 4
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
@@ -709,22 +627,6 @@ module TRP
     repeated ::TRP::ResourceDetails, :resources, 3
   end
 
-  class KeyLookupRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.KeyLookupRequest"
-
-    optional :int64, :context, 1, :default => 0
-    required :string, :counter_group, 2
-    repeated :string, :keys, 3
-  end
-
-  class KeyLookupResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.KeyLookupResponse"
-
-    optional :int64, :context, 1
-    required :string, :counter_group, 2
-    repeated ::TRP::KeyDetails, :keys, 3
-  end
-
   class GrepRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.GrepRequest"
 
@@ -791,33 +693,6 @@ module TRP
     required :string, :counter_group, 2
     required :int64, :meter, 3
     repeated ::TRP::KeyStats, :keytrends, 4
-  end
-
-  class QueryPDPRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.QueryPDPRequest"
-
-    optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{3FCBAE7F-BBEC-47CA-BAE0-B48D5F96FD6B}"
-    required ::TRP::TimeInterval, :time_interval, 3
-    optional :string, :ipa, 4
-    optional :string, :msisdn, 5
-    optional :string, :imei, 6
-    optional :string, :imsi, 7
-    optional :string, :apn, 8
-    optional :string, :rai, 9
-    optional :string, :uli, 10
-    optional :string, :rat, 11
-    optional :string, :cause, 12
-    optional :string, :mccmnc, 13
-    optional :int64, :maxitems, 14, :default => 100
-    optional :string, :teid, 15
-  end
-
-  class QueryPDPResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.QueryPDPResponse"
-
-    optional :int64, :context, 1
-    repeated ::TRP::PDPDetails, :sessions, 3
   end
 
   class SubscribeCtl < ::ProtocolBuffers::Message

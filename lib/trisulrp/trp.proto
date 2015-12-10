@@ -110,28 +110,6 @@ message SessionDetails  {
 }
 
 
-message PDPDetails  {
-	required string      session_id=1;
-	required string			ipa   = 2 ; 
-	required string			msisdn   = 3 ;
-	required string			imei   = 4 ;
-	required string			imsi   = 5 ; 
-	required string 		teidc1  = 6 ; 
-	required string 		teidd1  = 7 ; 
-	required string 		teidc2  = 8 ;
-	required string 		teidd2  = 9 ;
-	required string 		apn  = 10 ; 
-	required string 		rai  = 11 ;
-	required string 		uli  = 12 ;
-	required string 		rat  = 13 ;
-	required string 		cause  = 14 ; 
-	required int64			stat0 = 15 ;
-	required int64			stat1 = 16 ; 
-	required TimeInterval   time_interval=18;
-	optional string 		mccmnc  = 19 ;
-	optional string 		trace   = 20 ;
-}
-
 enum AuthLevel {
     ADMIN=1;
     BASIC_USER=2;
@@ -149,10 +127,6 @@ enum  PcapFormat {
     UNSNIFF=2;
 }
 
-enum PcapDisposition {
-	DOWNLOAD=1;
-	SAVE_ON_SERVER=2;
-}
 
 message Message {
     enum Command {  HELLO_REQUEST=1; 
@@ -163,8 +137,8 @@ message Message {
                     COUNTER_GROUP_TOPPER_RESPONSE=7;
                     COUNTER_ITEM_REQUEST=8;
                     COUNTER_ITEM_RESPONSE=9;
-                    FILTERED_DATAGRAMS_REQUEST=14;
-                    FILTERED_DATAGRAMS_RESPONSE=15;
+                    PCAP_REQUEST=14;
+                    PCAP_RESPONSE=15;
                     SEARCH_KEYS_REQUEST=18;                   
                     SEARCH_KEYS_RESPONSE=19;                        
                     COUNTER_GROUP_INFO_REQUEST=20;              
@@ -181,16 +155,12 @@ message Message {
                     QUERY_ALERTS_RESPONSE=45;
                     QUERY_RESOURCES_REQUEST=48;
                     QUERY_RESOURCES_RESPONSE=49;
-                    KEY_LOOKUP_REQUEST=50;
-                    KEY_LOOKUP_RESPONSE=51;
 					GREP_REQUEST=60;
 					GREP_RESPONSE=61;
 					KEYSPACE_REQUEST=70;
 					KEYSPACE_RESPONSE=71;
 					TOPPER_TREND_REQUEST=72;
 					TOPPER_TREND_RESPONSE=73;
-                    QUERY_PDP_REQUEST=74;                     
-                    QUERY_PDP_RESPONSE=75;
                     STAB_PUBSUB_CTL=80;
                     QUERY_FTS_REQUEST=90;
                     QUERY_FTS_RESPONSE=91;
@@ -208,8 +178,8 @@ message Message {
     optional CounterGroupTopperResponse counter_group_topper_response=7;
     optional CounterItemRequest counter_item_request=8;
     optional CounterItemResponse counter_item_response=9;
-    optional FilteredDatagramRequest filtered_datagram_request=14;
-    optional FilteredDatagramResponse filtered_datagram_response=15;
+    optional PcapRequest pcap_request=14;
+    optional PcapResponse pcap_response=15;
     optional SearchKeysRequest search_keys_request=18;
     optional SearchKeysResponse search_keys_response=19;
     optional CounterGroupInfoRequest counter_group_info_request=20;
@@ -225,16 +195,12 @@ message Message {
     optional QueryAlertsResponse  query_alerts_response=44;
     optional QueryResourcesRequest query_resources_request=47;
     optional QueryResourcesResponse  query_resources_response=48;
-    optional KeyLookupRequest key_lookup_request=49;
-    optional KeyLookupResponse key_lookup_response=50;
     optional GrepRequest  grep_request=51;
     optional GrepResponse  grep_response=52;
     optional KeySpaceRequest  keyspace_request=53;
     optional KeySpaceResponse  keyspace_response=54;
     optional TopperTrendRequest  topper_trend_request=55;
     optional TopperTrendResponse  topper_trend_response=56;
-    optional QueryPDPRequest query_pdp_request=57;
-    optional QueryPDPResponse  query_pdp_response=58;
     optional SubscribeCtl  subscribe_ctl=59;
     optional QueryFTSRequest  query_fts_request=60;
     optional QueryFTSResponse  query_fts_response=61;
@@ -281,7 +247,7 @@ message CounterItemRequest{
     optional int64          context=1 [default=0];
     required string         counter_group=2;
     optional int64          meter=3;
-    required string         key=4;
+    required KeyDetails     key=4;
     required TimeInterval   time_interval=5;
 	optional int64			volumes_only=6 [default=0];
 }
@@ -318,57 +284,28 @@ message  CounterGroupTopperResponse{
 
 
 ///////////////////////////////
-// FilteredDatagramRequest
-message FilteredDatagramRequest{
-    optional int64          max_packets=1[default=0];                
-    optional int64          max_bytes=2[default=0];                   
-    optional CompressionType compress_type=3[default=UNCOMPRESSED];              
-
-	// by trisul filter format expr
-	message ByFilterExpr {
-		required TimeInterval   time_interval=1;                   
-		required string         filter_expression=2;
-	}
-	optional ByFilterExpr 		filter_expression=4;
-
-	// by session
-	message BySession   {
-    	optional string         session_group=1[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-		repeated string		    session_ids=2;
-	}
-	optional BySession			session=5;
-
-
-	// by alert
-	message ByAlert     {
-		optional string			alert_group=1[default="{9AFD8C08-07EB-47E0-BF05-28B4A7AE8DC9}"];
-		repeated string 		alert_ids=2;
-	}
-	optional ByAlert			alert=6;
-
-	// by resource
-	message ByResource  {
-		required string			resource_group=1;
-		repeated string 		resource_ids=2;
-	}
-	optional ByResource			resource=7;
-
-    optional PcapDisposition    disposition=8[default=DOWNLOAD];              
-
+// PcapReqiest
+//  NOTE - only one of the various filters are supported
+//  sending > 1 will result in error 
+// 
+message PcapRequest {
+    optional int64              max_bytes=1[default=100000000]; // 100MB , can increase to 0.75 Filesystem freespace
+    optional CompressionType    compress_type=2[default=UNCOMPRESSED];              
+    optional string             save_file=3;
+	required TimeInterval       time_interval=4;                   
+	required string             filter_expression=5;
 }
 
 /////////////////////////////////////
 // FileredDatagaramResponse
-message FilteredDatagramResponse{
-    required PcapFormat     format=1;                                 
-    required CompressionType compress_type=2;                   
-    required TimeInterval   time_interval=3;                
-    required int64          num_datagrams=4;               
-    required int64          num_bytes=5;      
-    required string         sha1=6;
-    required bytes          contents=7;
-	required PcapDisposition disposition=8;
-	optional string			path=9;
+message PcapResponse  {
+    optional PcapFormat     format=1[default=LIBPCAP];                                 
+    optional CompressionType compress_type=2[default=UNCOMPRESSED];                   
+    optional TimeInterval   time_interval=3;                
+    optional int64          num_bytes=4;      
+    optional string         sha1=5;
+    optional bytes          contents=6;
+	optional string			save_file=7;
 }
 
 ///////////////////////////////////////
@@ -379,6 +316,9 @@ message SearchKeysRequest{
     optional int64          maxitems=3[default=100];
     optional string         pattern=4;        
     optional string         label=5;
+    repeated string         keys=6;
+    optional int64          offset=7[default=0];
+    optional bool           get_totals=8[default=false];
 } 
 
 //////////////////////////////////////
@@ -387,6 +327,8 @@ message SearchKeysResponse{
     optional int64          context=1;                    
     required string         counter_group=2;        
     repeated KeyDetails     keys=3;
+    optional int64          total_count=4;
+
 } 
 
 /////////////////////////////////////
@@ -602,23 +544,6 @@ message QueryResourcesResponse {
 
 
 
-/////////////////////////////////////////////
-// KeyLookup - mutliple keys from a single CG
-message KeyLookupRequest {
-    optional int64          context=1[default=0];            
-    required string         counter_group=2;
-    repeated string         keys=3;
-}
-
-
-/////////////////////////////////////////////
-// KeyLookup 
-message KeyLookupResponse {
-    optional int64          context=1;            
-    required string         counter_group=2;
-    repeated KeyDetails     keys=3;
-}
-
 ////////////////////////////////////
 // GrepRequest
 message GrepRequest {
@@ -682,39 +607,6 @@ message  TopperTrendResponse {
     required int64          meter=3;
     repeated KeyStats       keytrends=4;
 }
-
-///////////////////////////////////
-// QueryPDP - any of the fields can be filled
-// 				   all the fields filled are treated as AND criteria 
-// {3fcbae7f-bbec-47ca-bae0-b48d5f96fd6b}
-// define_guid(<<name>>, 
-// 0x3fcbae7f, 0xbbec, 0x47ca, 0xba, 0xe0, 0xb4, 0x8d, 0x5f, 0x96, 0xfd, 0x6b);
-
-message QueryPDPRequest {
-    optional int64          context=1[default=0];
-    optional string         session_group=2[default="{3FCBAE7F-BBEC-47CA-BAE0-B48D5F96FD6B}"];
-    required TimeInterval   time_interval=3;
-	optional string			ipa=4;
-	optional string			msisdn=5;
-	optional string			imei=6;
-	optional string			imsi=7;
-	optional string			apn=8;
-	optional string			rai=9;
-	optional string			uli=10;
-	optional string			rat=11;
-	optional string			cause=12;
-	optional string			mccmnc=13;
-    optional int64          maxitems=14[default=100];
-	optional string			teid=15;
-}
-
-/////////////////////////////////////
-// QueryPDPResponse 
-message QueryPDPResponse {
-    optional int64          	context=1;
-    repeated PDPDetails         sessions=3;
-}
-
 
 
 
