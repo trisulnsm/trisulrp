@@ -291,8 +291,8 @@ module TrisulRP::Protocol
       req.counter_group_topper_request = TRP::CounterGroupTopperRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_REQUEST
       req.counter_item_request = TRP::CounterItemRequest.new(params)
-    when TRP::Message::Command::FILTERED_DATAGRAMS_REQUEST
-      req.filtered_datagram_request = TRP::FilteredDatagramRequest.new(params)
+    when TRP::Message::Command::PCAP_REQUEST
+      req.pcap_request = TRP::PcapRequest.new(params)
     when TRP::Message::Command::SEARCH_KEYS_REQUEST
       req.search_keys_request = TRP::SearchKeysRequest.new(params)
     when TRP::Message::Command::UPDATE_KEY_REQUEST
@@ -303,8 +303,6 @@ module TrisulRP::Protocol
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
       req.query_resources_request = TRP::QueryResourcesRequest.new(params)
-    when TRP::Message::Command::KEY_LOOKUP_REQUEST
-      req.key_lookup_request = TRP::KeyLookupRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
       req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
     when TRP::Message::Command::SESSION_TRACKER_REQUEST
@@ -378,8 +376,8 @@ module TrisulRP::Protocol
       resp.counter_item_response
     when TRP::Message::Command::OK_RESPONSE
       resp.ok_response
-    when TRP::Message::Command::FILTERED_DATAGRAMS_RESPONSE
-      resp.filtered_datagram_response
+    when TRP::Message::Command::PCAP_RESPONSE
+      resp.pcap_response
     when TRP::Message::Command::SEARCH_KEYS_RESPONSE
       resp.search_keys_response
     when TRP::Message::Command::UPDATE_KEY_RESPONSE
@@ -390,8 +388,6 @@ module TrisulRP::Protocol
         resp.query_alerts_response 
     when TRP::Message::Command::QUERY_RESOURCES_RESPONSE
         resp.query_resources_response 
-    when TRP::Message::Command::KEY_LOOKUP_RESPONSE
-        resp.key_lookup_response 
     when TRP::Message::Command::COUNTER_GROUP_INFO_RESPONSE
         resp.counter_group_info_response 
     when TRP::Message::Command::SESSION_TRACKER_RESPONSE
