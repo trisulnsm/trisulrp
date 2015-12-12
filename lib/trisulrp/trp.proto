@@ -64,7 +64,7 @@ message KeyStats {
 }
 
 message KeyDetails {
-    required string         key=1;
+    optional string         key=1;
     optional string         readable=2;
     optional string         label=3;
     optional string         description=4;

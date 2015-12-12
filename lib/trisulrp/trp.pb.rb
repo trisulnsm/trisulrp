@@ -159,7 +159,7 @@ module TRP
   class KeyDetails < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.KeyDetails"
 
-    required :string, :key, 1
+    optional :string, :key, 1
     optional :string, :readable, 2
     optional :string, :label, 3
     optional :string, :description, 4
