@@ -37,8 +37,8 @@ module TRP
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerResponse < ::ProtocolBuffers::Message; end
-  class ServerStatsRequest < ::ProtocolBuffers::Message; end
-  class ServerStatsResponse < ::ProtocolBuffers::Message; end
+  class ProbeStatsRequest < ::ProtocolBuffers::Message; end
+  class ProbeStatsResponse < ::ProtocolBuffers::Message; end
   class QueryAlertsRequest < ::ProtocolBuffers::Message; end
   class QueryAlertsResponse < ::ProtocolBuffers::Message; end
   class QueryResourcesRequest < ::ProtocolBuffers::Message; end
@@ -286,8 +286,8 @@ module TRP
       UPDATE_KEY_RESPONSE = 33
       QUERY_SESSIONS_REQUEST = 34
       QUERY_SESSIONS_RESPONSE = 35
-      SERVER_STATS_REQUEST = 38
-      SERVER_STATS_RESPONSE = 39
+      PROBE_STATS_REQUEST = 38
+      PROBE_STATS_RESPONSE = 39
       QUERY_ALERTS_REQUEST = 44
       QUERY_ALERTS_RESPONSE = 45
       QUERY_RESOURCES_REQUEST = 48
@@ -328,8 +328,8 @@ module TRP
     optional ::TRP::QuerySessionsResponse, :query_sessions_response, 32
     optional ::TRP::SessionTrackerRequest, :session_tracker_request, 33
     optional ::TRP::SessionTrackerResponse, :session_tracker_response, 34
-    optional ::TRP::ServerStatsRequest, :server_stats_request, 37
-    optional ::TRP::ServerStatsResponse, :server_stats_response, 38
+    optional ::TRP::ProbeStatsRequest, :probe_stats_request, 37
+    optional ::TRP::ProbeStatsResponse, :probe_stats_response, 38
     optional ::TRP::QueryAlertsRequest, :query_alerts_request, 43
     optional ::TRP::QueryAlertsResponse, :query_alerts_response, 44
     optional ::TRP::QueryResourcesRequest, :query_resources_request, 47
@@ -533,14 +533,14 @@ module TRP
     optional :int64, :tracker_id, 4
   end
 
-  class ServerStatsRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ServerStatsRequest"
+  class ProbeStatsRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ProbeStatsRequest"
 
-    required :int64, :param, 1
+    optional :string, :param, 1
   end
 
-  class ServerStatsResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ServerStatsResponse"
+  class ProbeStatsResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ProbeStatsResponse"
 
     required :string, :instance_name, 1
     required :int64, :connections, 2

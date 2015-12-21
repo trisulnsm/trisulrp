@@ -61,7 +61,7 @@ message MeterInfo {
 
 message KeyStats {
     required string         counter_group=2;
-    required KeyT     key=3;
+    required KeyT           key=3;
     repeated MeterValues    meters=4;
 }
 
@@ -210,8 +210,8 @@ message Message {
                     UPDATE_KEY_RESPONSE=33;                           
                     QUERY_SESSIONS_REQUEST=34;                     
                     QUERY_SESSIONS_RESPONSE=35;
-                    SERVER_STATS_REQUEST=38;                    
-                    SERVER_STATS_RESPONSE=39;                              
+                    PROBE_STATS_REQUEST=38;                    
+                    PROBE_STATS_RESPONSE=39;                              
                     QUERY_ALERTS_REQUEST=44;
                     QUERY_ALERTS_RESPONSE=45;
                     QUERY_RESOURCES_REQUEST=48;
@@ -250,8 +250,8 @@ message Message {
     optional QuerySessionsResponse  query_sessions_response=32;
     optional SessionTrackerRequest session_tracker_request=33;
     optional SessionTrackerResponse session_tracker_response=34;
-    optional ServerStatsRequest server_stats_request=37;
-    optional ServerStatsResponse server_stats_response=38;
+    optional ProbeStatsRequest probe_stats_request=37;
+    optional ProbeStatsResponse probe_stats_response=38;
     optional QueryAlertsRequest query_alerts_request=43;
     optional QueryAlertsResponse  query_alerts_response=44;
     optional QueryResourcesRequest query_resources_request=47;
@@ -472,14 +472,14 @@ message SessionTrackerResponse{
 }
 
 //////////////////////////////////
-// ServerStatsRequest
-message ServerStatsRequest{
-     required int64         param=1;
+// ProbeStatsRequest
+message ProbeStatsRequest{
+     optional  string         param=1;
 }
 
 //////////////////////////////////
-// ServerStatsResponse
-message ServerStatsResponse{
+// ProbeStatsResponse
+message ProbeStatsResponse {
     required string         instance_name=1;
     required int64          connections=2;
     required int64          uptime_seconds=3;
