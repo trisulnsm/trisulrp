@@ -550,10 +550,8 @@ module TRP
     required :double, :mem_usage_trisul, 6
     required :double, :mem_usage_total, 7
     required :double, :mem_total, 8
-    required :int64, :size_total, 9
     required :double, :drop_percent_cap, 11
     required :double, :drop_percent_trisul, 12
-    required ::TRP::TimeInterval, :time_interval, 13
   end
 
   class QueryAlertsRequest < ::ProtocolBuffers::Message
