@@ -297,8 +297,8 @@ module TrisulRP::Protocol
       req.search_keys_request = TRP::SearchKeysRequest.new(params)
     when TRP::Message::Command::UPDATE_KEY_REQUEST
       req.update_key_request = TRP::UpdateKeyRequest.new(params)
-    when TRP::Message::Command::SERVER_STATS_REQUEST
-      req.server_stats_request = TRP::ServerStatsRequest.new(params)
+    when TRP::Message::Command::PROBE_STATS_REQUEST
+      req.probe_stats_request = TRP::ProbeStatsRequest.new(params)
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
@@ -380,8 +380,8 @@ module TrisulRP::Protocol
       resp.search_keys_response
     when TRP::Message::Command::UPDATE_KEY_RESPONSE
       resp.update_key_response 
-    when TRP::Message::Command::SERVER_STATS_RESPONSE
-        resp.server_stats_response 
+    when TRP::Message::Command::PROBE_STATS_RESPONSE
+        resp.probe_stats_response 
     when TRP::Message::Command::QUERY_ALERTS_RESPONSE
         resp.query_alerts_response 
     when TRP::Message::Command::QUERY_RESOURCES_RESPONSE
