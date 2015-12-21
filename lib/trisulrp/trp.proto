@@ -1,6 +1,6 @@
 // Trisul Remote Protocol (TRP) definition
 // Based on Google Protocol Buffers
-// (c) 2010-11, Unleash Networks (http://www.unleashnetworks.com)
+// (c) 2012-16, Unleash Networks (http://www.unleashnetworks.com)
 // $Rev: 6946 $
 
 option optimize_for = LITE_RUNTIME; 
@@ -8,6 +8,9 @@ option optimize_for = LITE_RUNTIME;
 
 package TRP;
 
+//
+// Basic structures
+//
 message Timestamp  {
   required int64            tv_sec=1;
   optional int64            tv_usec=2 [default=0];
@@ -57,13 +60,17 @@ message MeterInfo {
 }
 
 message KeyStats {
-    optional int64          context=1[default=0];
     required string         counter_group=2;
-    required string         key=3;
+    required KeyT     key=3;
     repeated MeterValues    meters=4;
 }
 
-message KeyDetails {
+
+//
+// Top level objects are named ObjT 
+//	 eg KeyT - Key Type, SessionT - Session Type etc.
+//
+message KeyT {
     optional string         key=1;
     optional string         readable=2;
     optional string         label=3;
@@ -72,9 +79,7 @@ message KeyDetails {
 }
 
 
-
-
-message CounterGroupDetails {
+message CounterGroupT {
     required string         guid=1;
     required string         name=2;
     optional int64          bucket_size=3;
@@ -83,7 +88,7 @@ message CounterGroupDetails {
 	repeated MeterInfo		meters=6;
 }
 
-message SessionDetails  {
+message SessionT  {
 	optional string         session_key=1;
 	required string         session_id=2;
 	optional string         user_label=3;
@@ -93,14 +98,14 @@ message SessionDetails  {
 	optional int64          za_bytes=7;
 	optional int64          az_packets=8;
 	optional int64          za_packets=9;
-	required KeyDetails     key1A=10;
-	required KeyDetails     key2A=11;
-	required KeyDetails     key1Z=12;
-	required KeyDetails     key2Z=13;
-	required KeyDetails     protocol=14;
-	optional KeyDetails     nf_routerid=15;
-	optional KeyDetails     nf_ifindex_in=16;
-	optional KeyDetails     nf_ifindex_out=17;
+	required KeyT     		key1A=10;
+	required KeyT     		key2A=11;
+	required KeyT     		key1Z=12;
+	required KeyT     		key2Z=13;
+	required KeyT     		protocol=14;
+	optional KeyT     		nf_routerid=15;
+	optional KeyT     		nf_ifindex_in=16;
+	optional KeyT     		nf_ifindex_out=17;
 	optional string		    tags=18;
 	optional int64          az_payload=19;
 	optional int64          za_payload=20;
@@ -110,6 +115,59 @@ message SessionDetails  {
 }
 
 
+////////////////////////////////////
+// AlertT
+message AlertT{
+	optional int64          sensor_id=1;
+	required Timestamp      time=2;
+	required string 		alert_id=3;
+	optional KeyT     source_ip=4;
+	optional KeyT     source_port=5;
+	optional KeyT     destination_ip=6;
+	optional KeyT     destination_port=7;
+	optional KeyT     sigid=8;
+	optional KeyT     classification=9;
+	optional KeyT     priority=10;
+	optional Timestamp      dispatch_time=11;
+	optional string         aux_message1=12;
+	optional string         aux_message2=13;
+	optional int64          occurrances=14[default=1];
+	optional string         group_by_key=15;
+}
+
+
+////////////////////////////////////
+// ResourceT
+message ResourceT {
+	required Timestamp      time=1;
+	required string         resource_id=2;
+	optional KeyT     source_ip=3;
+	optional KeyT     source_port=4;
+	optional KeyT     destination_ip=5;
+	optional KeyT     destination_port=6;
+    optional string         uri=7;
+    optional string         userlabel=8;
+}
+
+////////////////////////////////////
+// DocumentT
+message DocumentT  {
+	required string         dockey=1;
+	optional string         fts_attributes=2;
+	optional string         fullcontent=3;
+
+    message Flow {
+        required Timestamp  time=1;
+        required string     key=2;
+    }
+
+    repeated Flow          flows=4;
+}
+
+
+//
+// Enums
+//
 enum AuthLevel {
     ADMIN=1;
     BASIC_USER=2;
@@ -127,7 +185,10 @@ enum  PcapFormat {
     UNSNIFF=2;
 }
 
-
+//
+// Top level message is TRP::Message
+//  - wraps the actual request or response 
+// 
 message Message {
     enum Command {  HELLO_REQUEST=1; 
                     HELLO_RESPONSE=2;
@@ -209,6 +270,15 @@ message Message {
     optional DeleteAlertsRequest delete_alerts_request=64;
 }
 
+
+//////////////////////////////////////////////////////////////
+// --------------- Messages Section -------------------------//
+// TRP is a synchronous request response protocol            //
+// Send a xyz_Request() and wait for xyz_Response            //
+// All requests necessarily get a response                   //
+// --------------- Messages Section -------------------------//
+//////////////////////////////////////////////////////////////
+
 ///////////////////////////////
 // Hello 
 message HelloRequest{
@@ -244,10 +314,9 @@ message OKResponse{
 ///////////////////////////////
 // CounterItemRequest 
 message CounterItemRequest{
-    optional int64          context=1 [default=0];
     required string         counter_group=2;
     optional int64          meter=3;
-    required KeyDetails     key=4;
+    required KeyT     key=4;
     required TimeInterval   time_interval=5;
 	optional int64			volumes_only=6 [default=0];
 }
@@ -262,7 +331,6 @@ message CounterItemResponse{
 ///////////////////////////////
 // CounterGroupTopperRequest 
 message CounterGroupTopperRequest{
-    optional int64          context=1 [default=0];
     required string         counter_group=2;
     optional int64          meter=3 [default=0];
     optional int64          maxitems=4 [default=100];
@@ -275,11 +343,10 @@ message CounterGroupTopperRequest{
 ///////////////////////////////
 // CounterGroupTopperResponse  
 message  CounterGroupTopperResponse{
-    required int64          context=1;
     required string         counter_group=2;
     required int64          meter=3;
 	optional int64			sysgrouptotal=4;
-    repeated KeyDetails     keys=6;
+    repeated KeyT     keys=6;
 }
 
 
@@ -311,7 +378,6 @@ message PcapResponse  {
 ///////////////////////////////////////
 // SearchkeysRequest
 message SearchKeysRequest{
-    optional int64          context=1[default=0];                    
     required string         counter_group=2;        
     optional int64          maxitems=3[default=100];
     optional string         pattern=4;        
@@ -324,9 +390,8 @@ message SearchKeysRequest{
 //////////////////////////////////////
 // SearchKeysResponse
 message SearchKeysResponse{
-    optional int64          context=1;                    
     required string         counter_group=2;        
-    repeated KeyDetails     keys=3;
+    repeated KeyT     keys=3;
     optional int64          total_count=4;
 
 } 
@@ -334,7 +399,6 @@ message SearchKeysResponse{
 /////////////////////////////////////
 /// CounterGroupInfoRequest
 message CounterGroupInfoRequest{
-    optional int64         context=1[default=0];
     optional string        counter_group=2;
 	optional bool		   get_meter_info=3[default=false];
 }
@@ -342,30 +406,28 @@ message CounterGroupInfoRequest{
 ///////////////////////////////////
 /// CounterGroupInfoResponse
 message CounterGroupInfoResponse{
-    optional int64                  context=1;
-    repeated CounterGroupDetails    group_details=2;
+    repeated CounterGroupT    group_details=2;
 }
 
 ///////////////////////////////////
 // QuerySessions - any of the fields can be filled
 // 				   all the fields filled are treated as AND criteria 
 message QuerySessionsRequest {
-    optional int64          context=1[default=0];
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
     optional TimeInterval   time_interval=3;
     optional string         key=4;
-	optional string			source_ip=5;
-	optional string			source_port=6;
-	optional string			dest_ip=7;
-	optional string			dest_port=8;
-	optional string			any_ip=9;
-	optional string			any_port=10;
-	optional string			ip_pair=11;
-	optional string			protocol=12;
+	optional KeyT		    source_ip=5;
+	optional KeyT		    source_port=6;
+	optional KeyT			dest_ip=7;
+	optional KeyT			dest_port=8;
+	optional KeyT			any_ip=9;
+	optional KeyT			any_port=10;
+	optional string 		ip_pair=11;
+	optional KeyT			protocol=12;
 	optional string			flowtag=13;
-	optional string			nf_routerid=14;
-	optional string			nf_ifindex_in=15;
-	optional string			nf_ifindex_out=16;
+	optional KeyT			nf_routerid=14;
+	optional KeyT			nf_ifindex_in=15;
+	optional KeyT			nf_ifindex_out=16;
 	optional string			subnet_24=17;
 	optional string			subnet_16=18;
     optional int64          maxitems=19[default=100];
@@ -378,9 +440,8 @@ message QuerySessionsRequest {
 /////////////////////////////////////
 // QuerySessionsResponse 
 message QuerySessionsResponse {
-    optional int64          	context=1;
     required string         	session_group=2;
-    repeated SessionDetails     sessions=3;
+    repeated SessionT     sessions=3;
     optional string         	outputpath=4;
 }
 
@@ -388,15 +449,13 @@ message QuerySessionsResponse {
 /// UpdatekeysRequest
 /// Response = OKResponse or ErrorResponse
 message UpdateKeyRequest{
-    optional int64          context=1[default=0];
     required string         counter_group=2;
-    repeated KeyDetails     keys=4;
+    repeated KeyT     keys=4;
 }
 
 /////////////////////////////////////
 // SessionTrackerRequest
 message SessionTrackerRequest {
-    optional int64          context=1[default=0];
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
     required int64          tracker_id=3 [default=1];
     optional int64          maxitems=4 [default=100];
@@ -407,9 +466,8 @@ message SessionTrackerRequest {
 ///////////////////////////////////
 // SessionTrackerResponse 
 message SessionTrackerResponse{
-    optional int64          context=1;
     required string         session_group=2;
-    repeated SessionDetails sessions=3;
+    repeated SessionT       sessions=3;
     optional int64          tracker_id=4;
 }
 
@@ -435,41 +493,19 @@ message ServerStatsResponse{
     required double         drop_percent_trisul=12;
     required TimeInterval   time_interval=13;
 }
-
-////////////////////////////////////
-// AlertDetails
-message AlertDetails{
-	optional int64          sensor_id=1;
-	required Timestamp      time=2;
-	required string 		alert_id=3;
-	optional KeyDetails     source_ip=4;
-	optional KeyDetails     source_port=5;
-	optional KeyDetails     destination_ip=6;
-	optional KeyDetails     destination_port=7;
-	optional KeyDetails     sigid=8;
-	optional KeyDetails     classification=9;
-	optional KeyDetails     priority=10;
-	optional Timestamp      dispatch_time=11;
-	optional string         aux_message1=12;
-	optional string         aux_message2=13;
-	optional int64          occurrances=14[default=1];
-	optional string         group_by_key=15;
-}
-
 ////////////////////////////////////
 // QueryAlertsRequest 
 message QueryAlertsRequest  {
-    optional int64          context=1[default=0];            
     required string         alert_group=2;
     optional TimeInterval   time_interval=3;
     optional int64          maxitems=5 [default=100];
-    optional string         source_ip=6;
-    optional string         source_port=7;
-    optional string         destination_ip=8;
-    optional string         destination_port=9;
-    optional string         sigid=10;
-    optional string         classification=11;
-    optional string         priority=12;
+    optional KeyT      		source_ip=6;
+    optional KeyT     		source_port=7;
+    optional KeyT     		destination_ip=8;
+    optional KeyT     		destination_port=9;
+    optional KeyT     		sigid=10;
+    optional KeyT     		classification=11;
+    optional KeyT     		priority=12;
     optional string         aux_message1=13;
     optional string         aux_message2=14;
     optional string         group_by_fieldname=15;
@@ -482,50 +518,19 @@ message QueryAlertsRequest  {
 /////////////////////////////////////
 // QueryAlertsResponse 
 message QueryAlertsResponse {
-    optional int64          context=1;
     required string         alert_group=2;
-    repeated AlertDetails   alerts=3;
+    repeated AlertT   		alerts=3;
 }
-
-////////////////////////////////////
-// ResourceDetails
-message ResourceDetails {
-	required Timestamp      time=1;
-	required string         resource_id=2;
-	optional KeyDetails     source_ip=3;
-	optional KeyDetails     source_port=4;
-	optional KeyDetails     destination_ip=5;
-	optional KeyDetails     destination_port=6;
-    optional string         uri=7;
-    optional string         userlabel=8;
-}
-
-////////////////////////////////////
-// DocumentDetails
-message DocumentDetails  {
-	required string         dockey=1;
-	optional string         fts_attributes=2;
-	optional string         fullcontent=3;
-
-    message Flow {
-        required Timestamp  time=1;
-        required string     key=2;
-    }
-
-    repeated Flow          flows=4;
-}
-
 ////////////////////////////////////
 //  QueryResourcesRequest
 message QueryResourcesRequest {
-    optional int64          context=1[default=0];            
     required string         resource_group=2;
     optional TimeInterval   time_interval=3;
     optional int64          maxitems=4 [default=100];
-    optional string         source_ip=5;
-    optional string         source_port=6;
-    optional string         destination_ip=7; 
-    optional string         destination_port=8;
+    optional KeyT     		source_ip=5;
+    optional KeyT     		source_port=6;
+    optional KeyT     		destination_ip=7; 
+    optional KeyT     		destination_port=8;
     optional string         uri_pattern=9;
     optional string         userlabel_pattern=10;
     repeated string         uri_list=11;			 // cant be combined with others 
@@ -537,38 +542,34 @@ message QueryResourcesRequest {
 /////////////////////////////////////
 // QueryResourceResponse  
 message QueryResourcesResponse {
-    optional int64          		context=1;
-    required string         		resource_group=2;
-    repeated ResourceDetails     	resources=3;
+    required string        	resource_group=2;
+    repeated ResourceT     	resources=3;
 }
-
 
 
 ////////////////////////////////////
 // GrepRequest
 message GrepRequest {
-    optional int64          context=1[default=0];            
-    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    required TimeInterval   time_interval=3;
-    optional int64          maxitems=4 [default=100];
-    optional string         pattern=5;
-	repeated string         md5list=6;
+    required TimeInterval   time_interval=2;
+    optional int64          maxitems=3 [default=100];
+    optional int64          flowcutoff_bytes=4;
+    optional string         pattern_hex=5;
+    optional string         pattern_text=6;
+    optional string         pattern_file=7;
+	repeated string         md5list=8;
 }
 
 /////////////////////////////////////
 // GrepResponse  
 message GrepResponse  {
-    optional int64          context=1;
-    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    repeated SessionDetails sessions=3;
-    repeated string         hints=4;
+    repeated SessionT       sessions=2;
+    repeated string         hints=3;
 }
 
 
 ////////////////////////////////////
 // KeySpaceRequest
 message KeySpaceRequest {
-    optional int64          context=1[default=0];            
     required string         counter_group=2;
     required TimeInterval   time_interval=3;
     optional int64          maxitems=4 [default=100];
@@ -584,7 +585,6 @@ message KeySpaceRequest {
 /////////////////////////////////////
 // KeySpaceResponse  
 message KeySpaceResponse  {
-    optional int64          context=1;
     optional string         counter_group=2;
     repeated string         hits=3;
 }
@@ -592,7 +592,6 @@ message KeySpaceResponse  {
 ///////////////////////////////
 // TopperTrendRequest 
 message TopperTrendRequest {
-    optional int64          context=1 [default=0];
     required string         counter_group=2;
     optional int64          meter=3 [default=0];
     optional int64          maxitems=4 [default=100];
@@ -602,7 +601,6 @@ message TopperTrendRequest {
 ///////////////////////////////
 // TopperTrendResponse   
 message  TopperTrendResponse {
-    required int64          context=1;
     required string         counter_group=2;
     required int64          meter=3;
     repeated KeyStats       keytrends=4;
@@ -629,7 +627,6 @@ message SubscribeCtl  {
 		CT_UNSUBSCRIBE=1;
 	}
 
-    optional int64          context=1[default=0];
 	required CtlType		ctl=2;
 	required StabberType	type=3;
 	optional string			guid=4;
@@ -645,7 +642,6 @@ message SubscribeCtl  {
 
 message QueryFTSRequest  {
 
-    optional int64              context=1[default=0];
     required TimeInterval       time_interval=2;
 	required string			    fts_group=3;
     required string             keywords=4;
@@ -655,9 +651,8 @@ message QueryFTSRequest  {
 
 message QueryFTSResponse {
 
-    optional int64              context=1[default=0];
 	required string			    fts_group=2;
-    repeated DocumentDetails    documents=3;   
+    repeated DocumentT    		documents=3;   
 
 }
 
@@ -666,7 +661,6 @@ message QueryFTSResponse {
 //
 
 message TimeSlicesRequest  {
-    optional int64              context=1[default=0];
 }
 message TimeSlicesResponse  {
 	repeated TimeInterval       slices=1;
@@ -676,17 +670,16 @@ message TimeSlicesResponse  {
 // DeleteAlerts
 //  - very limited exception to Trisul rule of not having delete options 
 message DeleteAlertsRequest  {
-    optional int64          context=1[default=0];            
     required string         alert_group=2;
     required TimeInterval   time_interval=3;
-    optional string         source_ip=6;
-    optional string         source_port=7;
-    optional string         destination_ip=8;
-    optional string         destination_port=9;
-    optional string         sigid=10;
-    optional string         classification=11;
-    optional string         priority=12;
-    optional string         any_ip=18;
-    optional string         any_port=19;
+    optional KeyT     		source_ip=6;
+    optional KeyT     		source_port=7;
+    optional KeyT     		destination_ip=8;
+    optional KeyT     		destination_port=9;
+    optional KeyT     		sigid=10;
+    optional KeyT     		classification=11;
+    optional KeyT     		priority=12;
+    optional KeyT     		any_ip=18;
+    optional KeyT     		any_port=19;
 } 
 
