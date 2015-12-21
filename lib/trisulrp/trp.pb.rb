@@ -11,9 +11,12 @@ module TRP
   class MeterValues < ::ProtocolBuffers::Message; end
   class MeterInfo < ::ProtocolBuffers::Message; end
   class KeyStats < ::ProtocolBuffers::Message; end
-  class KeyDetails < ::ProtocolBuffers::Message; end
-  class CounterGroupDetails < ::ProtocolBuffers::Message; end
-  class SessionDetails < ::ProtocolBuffers::Message; end
+  class KeyT < ::ProtocolBuffers::Message; end
+  class CounterGroupT < ::ProtocolBuffers::Message; end
+  class SessionT < ::ProtocolBuffers::Message; end
+  class AlertT < ::ProtocolBuffers::Message; end
+  class ResourceT < ::ProtocolBuffers::Message; end
+  class DocumentT < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
   class HelloResponse < ::ProtocolBuffers::Message; end
@@ -36,11 +39,8 @@ module TRP
   class SessionTrackerResponse < ::ProtocolBuffers::Message; end
   class ServerStatsRequest < ::ProtocolBuffers::Message; end
   class ServerStatsResponse < ::ProtocolBuffers::Message; end
-  class AlertDetails < ::ProtocolBuffers::Message; end
   class QueryAlertsRequest < ::ProtocolBuffers::Message; end
   class QueryAlertsResponse < ::ProtocolBuffers::Message; end
-  class ResourceDetails < ::ProtocolBuffers::Message; end
-  class DocumentDetails < ::ProtocolBuffers::Message; end
   class QueryResourcesRequest < ::ProtocolBuffers::Message; end
   class QueryResourcesResponse < ::ProtocolBuffers::Message; end
   class GrepRequest < ::ProtocolBuffers::Message; end
@@ -150,14 +150,13 @@ module TRP
   class KeyStats < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.KeyStats"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
-    required :string, :key, 3
+    required ::TRP::KeyT, :key, 3
     repeated ::TRP::MeterValues, :meters, 4
   end
 
-  class KeyDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.KeyDetails"
+  class KeyT < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.KeyT"
 
     optional :string, :key, 1
     optional :string, :readable, 2
@@ -166,8 +165,8 @@ module TRP
     optional :int64, :metric, 5
   end
 
-  class CounterGroupDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.CounterGroupDetails"
+  class CounterGroupT < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.CounterGroupT"
 
     required :string, :guid, 1
     required :string, :name, 2
@@ -177,8 +176,8 @@ module TRP
     repeated ::TRP::MeterInfo, :meters, 6
   end
 
-  class SessionDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.SessionDetails"
+  class SessionT < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.SessionT"
 
     optional :string, :session_key, 1
     required :string, :session_id, 2
@@ -189,20 +188,73 @@ module TRP
     optional :int64, :za_bytes, 7
     optional :int64, :az_packets, 8
     optional :int64, :za_packets, 9
-    required ::TRP::KeyDetails, :key1A, 10
-    required ::TRP::KeyDetails, :key2A, 11
-    required ::TRP::KeyDetails, :key1Z, 12
-    required ::TRP::KeyDetails, :key2Z, 13
-    required ::TRP::KeyDetails, :protocol, 14
-    optional ::TRP::KeyDetails, :nf_routerid, 15
-    optional ::TRP::KeyDetails, :nf_ifindex_in, 16
-    optional ::TRP::KeyDetails, :nf_ifindex_out, 17
+    required ::TRP::KeyT, :key1A, 10
+    required ::TRP::KeyT, :key2A, 11
+    required ::TRP::KeyT, :key1Z, 12
+    required ::TRP::KeyT, :key2Z, 13
+    required ::TRP::KeyT, :protocol, 14
+    optional ::TRP::KeyT, :nf_routerid, 15
+    optional ::TRP::KeyT, :nf_ifindex_in, 16
+    optional ::TRP::KeyT, :nf_ifindex_out, 17
     optional :string, :tags, 18
     optional :int64, :az_payload, 19
     optional :int64, :za_payload, 20
     optional :int64, :setup_rtt, 21
     optional :int64, :retransmissions, 22
     optional :int64, :tracker_statval, 23
+  end
+
+  class AlertT < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AlertT"
+
+    optional :int64, :sensor_id, 1
+    required ::TRP::Timestamp, :time, 2
+    required :string, :alert_id, 3
+    optional ::TRP::KeyT, :source_ip, 4
+    optional ::TRP::KeyT, :source_port, 5
+    optional ::TRP::KeyT, :destination_ip, 6
+    optional ::TRP::KeyT, :destination_port, 7
+    optional ::TRP::KeyT, :sigid, 8
+    optional ::TRP::KeyT, :classification, 9
+    optional ::TRP::KeyT, :priority, 10
+    optional ::TRP::Timestamp, :dispatch_time, 11
+    optional :string, :aux_message1, 12
+    optional :string, :aux_message2, 13
+    optional :int64, :occurrances, 14, :default => 1
+    optional :string, :group_by_key, 15
+  end
+
+  class ResourceT < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ResourceT"
+
+    required ::TRP::Timestamp, :time, 1
+    required :string, :resource_id, 2
+    optional ::TRP::KeyT, :source_ip, 3
+    optional ::TRP::KeyT, :source_port, 4
+    optional ::TRP::KeyT, :destination_ip, 5
+    optional ::TRP::KeyT, :destination_port, 6
+    optional :string, :uri, 7
+    optional :string, :userlabel, 8
+  end
+
+  class DocumentT < ::ProtocolBuffers::Message
+    # forward declarations
+    class Flow < ::ProtocolBuffers::Message; end
+
+    set_fully_qualified_name "TRP.DocumentT"
+
+    # nested messages
+    class Flow < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.DocumentT.Flow"
+
+      required ::TRP::Timestamp, :time, 1
+      required :string, :key, 2
+    end
+
+    required :string, :dockey, 1
+    optional :string, :fts_attributes, 2
+    optional :string, :fullcontent, 3
+    repeated ::TRP::DocumentT::Flow, :flows, 4
   end
 
   class Message < ::ProtocolBuffers::Message
@@ -332,10 +384,9 @@ module TRP
   class CounterItemRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterItemRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3
-    required ::TRP::KeyDetails, :key, 4
+    required ::TRP::KeyT, :key, 4
     required ::TRP::TimeInterval, :time_interval, 5
     optional :int64, :volumes_only, 6, :default => 0
   end
@@ -349,7 +400,6 @@ module TRP
   class CounterGroupTopperRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterGroupTopperRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3, :default => 0
     optional :int64, :maxitems, 4, :default => 100
@@ -362,11 +412,10 @@ module TRP
   class CounterGroupTopperResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterGroupTopperResponse"
 
-    required :int64, :context, 1
     required :string, :counter_group, 2
     required :int64, :meter, 3
     optional :int64, :sysgrouptotal, 4
-    repeated ::TRP::KeyDetails, :keys, 6
+    repeated ::TRP::KeyT, :keys, 6
   end
 
   class PcapRequest < ::ProtocolBuffers::Message
@@ -394,7 +443,6 @@ module TRP
   class SearchKeysRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.SearchKeysRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :maxitems, 3, :default => 100
     optional :string, :pattern, 4
@@ -407,16 +455,14 @@ module TRP
   class SearchKeysResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.SearchKeysResponse"
 
-    optional :int64, :context, 1
     required :string, :counter_group, 2
-    repeated ::TRP::KeyDetails, :keys, 3
+    repeated ::TRP::KeyT, :keys, 3
     optional :int64, :total_count, 4
   end
 
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterGroupInfoRequest"
 
-    optional :int64, :context, 1, :default => 0
     optional :string, :counter_group, 2
     optional :bool, :get_meter_info, 3, :default => false
   end
@@ -424,29 +470,27 @@ module TRP
   class CounterGroupInfoResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterGroupInfoResponse"
 
-    optional :int64, :context, 1
-    repeated ::TRP::CounterGroupDetails, :group_details, 2
+    repeated ::TRP::CounterGroupT, :group_details, 2
   end
 
   class QuerySessionsRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QuerySessionsRequest"
 
-    optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     optional ::TRP::TimeInterval, :time_interval, 3
     optional :string, :key, 4
-    optional :string, :source_ip, 5
-    optional :string, :source_port, 6
-    optional :string, :dest_ip, 7
-    optional :string, :dest_port, 8
-    optional :string, :any_ip, 9
-    optional :string, :any_port, 10
+    optional ::TRP::KeyT, :source_ip, 5
+    optional ::TRP::KeyT, :source_port, 6
+    optional ::TRP::KeyT, :dest_ip, 7
+    optional ::TRP::KeyT, :dest_port, 8
+    optional ::TRP::KeyT, :any_ip, 9
+    optional ::TRP::KeyT, :any_port, 10
     optional :string, :ip_pair, 11
-    optional :string, :protocol, 12
+    optional ::TRP::KeyT, :protocol, 12
     optional :string, :flowtag, 13
-    optional :string, :nf_routerid, 14
-    optional :string, :nf_ifindex_in, 15
-    optional :string, :nf_ifindex_out, 16
+    optional ::TRP::KeyT, :nf_routerid, 14
+    optional ::TRP::KeyT, :nf_ifindex_in, 15
+    optional ::TRP::KeyT, :nf_ifindex_out, 16
     optional :string, :subnet_24, 17
     optional :string, :subnet_16, 18
     optional :int64, :maxitems, 19, :default => 100
@@ -459,24 +503,21 @@ module TRP
   class QuerySessionsResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QuerySessionsResponse"
 
-    optional :int64, :context, 1
     required :string, :session_group, 2
-    repeated ::TRP::SessionDetails, :sessions, 3
+    repeated ::TRP::SessionT, :sessions, 3
     optional :string, :outputpath, 4
   end
 
   class UpdateKeyRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.UpdateKeyRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
-    repeated ::TRP::KeyDetails, :keys, 4
+    repeated ::TRP::KeyT, :keys, 4
   end
 
   class SessionTrackerRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.SessionTrackerRequest"
 
-    optional :int64, :context, 1, :default => 0
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     required :int64, :tracker_id, 3, :default => 1
     optional :int64, :maxitems, 4, :default => 100
@@ -487,9 +528,8 @@ module TRP
   class SessionTrackerResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.SessionTrackerResponse"
 
-    optional :int64, :context, 1
     required :string, :session_group, 2
-    repeated ::TRP::SessionDetails, :sessions, 3
+    repeated ::TRP::SessionT, :sessions, 3
     optional :int64, :tracker_id, 4
   end
 
@@ -516,40 +556,19 @@ module TRP
     required ::TRP::TimeInterval, :time_interval, 13
   end
 
-  class AlertDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.AlertDetails"
-
-    optional :int64, :sensor_id, 1
-    required ::TRP::Timestamp, :time, 2
-    required :string, :alert_id, 3
-    optional ::TRP::KeyDetails, :source_ip, 4
-    optional ::TRP::KeyDetails, :source_port, 5
-    optional ::TRP::KeyDetails, :destination_ip, 6
-    optional ::TRP::KeyDetails, :destination_port, 7
-    optional ::TRP::KeyDetails, :sigid, 8
-    optional ::TRP::KeyDetails, :classification, 9
-    optional ::TRP::KeyDetails, :priority, 10
-    optional ::TRP::Timestamp, :dispatch_time, 11
-    optional :string, :aux_message1, 12
-    optional :string, :aux_message2, 13
-    optional :int64, :occurrances, 14, :default => 1
-    optional :string, :group_by_key, 15
-  end
-
   class QueryAlertsRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryAlertsRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     optional ::TRP::TimeInterval, :time_interval, 3
     optional :int64, :maxitems, 5, :default => 100
-    optional :string, :source_ip, 6
-    optional :string, :source_port, 7
-    optional :string, :destination_ip, 8
-    optional :string, :destination_port, 9
-    optional :string, :sigid, 10
-    optional :string, :classification, 11
-    optional :string, :priority, 12
+    optional ::TRP::KeyT, :source_ip, 6
+    optional ::TRP::KeyT, :source_port, 7
+    optional ::TRP::KeyT, :destination_ip, 8
+    optional ::TRP::KeyT, :destination_port, 9
+    optional ::TRP::KeyT, :sigid, 10
+    optional ::TRP::KeyT, :classification, 11
+    optional ::TRP::KeyT, :priority, 12
     optional :string, :aux_message1, 13
     optional :string, :aux_message2, 14
     optional :string, :group_by_fieldname, 15
@@ -562,55 +581,20 @@ module TRP
   class QueryAlertsResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryAlertsResponse"
 
-    optional :int64, :context, 1
     required :string, :alert_group, 2
-    repeated ::TRP::AlertDetails, :alerts, 3
-  end
-
-  class ResourceDetails < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ResourceDetails"
-
-    required ::TRP::Timestamp, :time, 1
-    required :string, :resource_id, 2
-    optional ::TRP::KeyDetails, :source_ip, 3
-    optional ::TRP::KeyDetails, :source_port, 4
-    optional ::TRP::KeyDetails, :destination_ip, 5
-    optional ::TRP::KeyDetails, :destination_port, 6
-    optional :string, :uri, 7
-    optional :string, :userlabel, 8
-  end
-
-  class DocumentDetails < ::ProtocolBuffers::Message
-    # forward declarations
-    class Flow < ::ProtocolBuffers::Message; end
-
-    set_fully_qualified_name "TRP.DocumentDetails"
-
-    # nested messages
-    class Flow < ::ProtocolBuffers::Message
-      set_fully_qualified_name "TRP.DocumentDetails.Flow"
-
-      required ::TRP::Timestamp, :time, 1
-      required :string, :key, 2
-    end
-
-    required :string, :dockey, 1
-    optional :string, :fts_attributes, 2
-    optional :string, :fullcontent, 3
-    repeated ::TRP::DocumentDetails::Flow, :flows, 4
+    repeated ::TRP::AlertT, :alerts, 3
   end
 
   class QueryResourcesRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryResourcesRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :resource_group, 2
     optional ::TRP::TimeInterval, :time_interval, 3
     optional :int64, :maxitems, 4, :default => 100
-    optional :string, :source_ip, 5
-    optional :string, :source_port, 6
-    optional :string, :destination_ip, 7
-    optional :string, :destination_port, 8
+    optional ::TRP::KeyT, :source_ip, 5
+    optional ::TRP::KeyT, :source_port, 6
+    optional ::TRP::KeyT, :destination_ip, 7
+    optional ::TRP::KeyT, :destination_port, 8
     optional :string, :uri_pattern, 9
     optional :string, :userlabel_pattern, 10
     repeated :string, :uri_list, 11
@@ -622,29 +606,27 @@ module TRP
   class QueryResourcesResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryResourcesResponse"
 
-    optional :int64, :context, 1
     required :string, :resource_group, 2
-    repeated ::TRP::ResourceDetails, :resources, 3
+    repeated ::TRP::ResourceT, :resources, 3
   end
 
   class GrepRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.GrepRequest"
 
-    optional :int64, :context, 1, :default => 0
-    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    required ::TRP::TimeInterval, :time_interval, 3
-    optional :int64, :maxitems, 4, :default => 100
-    optional :string, :pattern, 5
-    repeated :string, :md5list, 6
+    required ::TRP::TimeInterval, :time_interval, 2
+    optional :int64, :maxitems, 3, :default => 100
+    optional :int64, :flowcutoff_bytes, 4
+    optional :string, :pattern_hex, 5
+    optional :string, :pattern_text, 6
+    optional :string, :pattern_file, 7
+    repeated :string, :md5list, 8
   end
 
   class GrepResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.GrepResponse"
 
-    optional :int64, :context, 1
-    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    repeated ::TRP::SessionDetails, :sessions, 3
-    repeated :string, :hints, 4
+    repeated ::TRP::SessionT, :sessions, 2
+    repeated :string, :hints, 3
   end
 
   class KeySpaceRequest < ::ProtocolBuffers::Message
@@ -661,7 +643,6 @@ module TRP
       required :string, :to, 2
     end
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
     optional :int64, :maxitems, 4, :default => 100
@@ -671,7 +652,6 @@ module TRP
   class KeySpaceResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.KeySpaceResponse"
 
-    optional :int64, :context, 1
     optional :string, :counter_group, 2
     repeated :string, :hits, 3
   end
@@ -679,7 +659,6 @@ module TRP
   class TopperTrendRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.TopperTrendRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :counter_group, 2
     optional :int64, :meter, 3, :default => 0
     optional :int64, :maxitems, 4, :default => 100
@@ -689,7 +668,6 @@ module TRP
   class TopperTrendResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.TopperTrendResponse"
 
-    required :int64, :context, 1
     required :string, :counter_group, 2
     required :int64, :meter, 3
     repeated ::TRP::KeyStats, :keytrends, 4
@@ -721,7 +699,6 @@ module TRP
 
     set_fully_qualified_name "TRP.SubscribeCtl"
 
-    optional :int64, :context, 1, :default => 0
     required ::TRP::SubscribeCtl::CtlType, :ctl, 2
     required ::TRP::SubscribeCtl::StabberType, :type, 3
     optional :string, :guid, 4
@@ -732,7 +709,6 @@ module TRP
   class QueryFTSRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryFTSRequest"
 
-    optional :int64, :context, 1, :default => 0
     required ::TRP::TimeInterval, :time_interval, 2
     required :string, :fts_group, 3
     required :string, :keywords, 4
@@ -742,15 +718,13 @@ module TRP
   class QueryFTSResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryFTSResponse"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :fts_group, 2
-    repeated ::TRP::DocumentDetails, :documents, 3
+    repeated ::TRP::DocumentT, :documents, 3
   end
 
   class TimeSlicesRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
-    optional :int64, :context, 1, :default => 0
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message
@@ -762,18 +736,17 @@ module TRP
   class DeleteAlertsRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.DeleteAlertsRequest"
 
-    optional :int64, :context, 1, :default => 0
     required :string, :alert_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
-    optional :string, :source_ip, 6
-    optional :string, :source_port, 7
-    optional :string, :destination_ip, 8
-    optional :string, :destination_port, 9
-    optional :string, :sigid, 10
-    optional :string, :classification, 11
-    optional :string, :priority, 12
-    optional :string, :any_ip, 18
-    optional :string, :any_port, 19
+    optional ::TRP::KeyT, :source_ip, 6
+    optional ::TRP::KeyT, :source_port, 7
+    optional ::TRP::KeyT, :destination_ip, 8
+    optional ::TRP::KeyT, :destination_port, 9
+    optional ::TRP::KeyT, :sigid, 10
+    optional ::TRP::KeyT, :classification, 11
+    optional ::TRP::KeyT, :priority, 12
+    optional ::TRP::KeyT, :any_ip, 18
+    optional ::TRP::KeyT, :any_port, 19
   end
 
 end
