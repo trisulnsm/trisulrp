@@ -228,6 +228,8 @@ message Message {
                     TIMESLICES_REQUEST=92;
                     TIMESLICES_RESPONSE=93;
                     DELETE_ALERTS_REQUEST=94;
+                    METRICS_SUMMARY_REQUEST=95;
+                    METRICS_SUMMARY_RESPONSE=96;
     }
 
     required Command    trp_command=1;
@@ -268,6 +270,9 @@ message Message {
     optional TimeSlicesRequest  time_slices_request=62;
     optional TimeSlicesResponse  time_slices_response=63;
     optional DeleteAlertsRequest delete_alerts_request=64;
+	optional MetricsSummaryRequest metrics_summary_request=65;
+	optional MetricsSummaryResponse metrics_summary_response=66;
+
 }
 
 
@@ -680,4 +685,19 @@ message DeleteAlertsRequest  {
     optional KeyT     		any_ip=18;
     optional KeyT     		any_port=19;
 } 
+
+//////////////////////////////////
+// MetricsSummaryRequest
+message MetricsSummaryRequest{
+     optional  TimeInterval   time_interval=1;
+     required  string         metric_name=2;
+	 optional  bool			  totals_only=3[default=true];
+}
+
+//////////////////////////////////
+// MetricsSummaryResponse
+message MetricsSummaryResponse {
+    required  string         metric_name=2;
+    repeated  StatsTuple     vals=3;
+}
 

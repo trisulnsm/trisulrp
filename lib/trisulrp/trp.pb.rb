@@ -55,6 +55,8 @@ module TRP
   class TimeSlicesRequest < ::ProtocolBuffers::Message; end
   class TimeSlicesResponse < ::ProtocolBuffers::Message; end
   class DeleteAlertsRequest < ::ProtocolBuffers::Message; end
+  class MetricsSummaryRequest < ::ProtocolBuffers::Message; end
+  class MetricsSummaryResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -304,6 +306,8 @@ module TRP
       TIMESLICES_REQUEST = 92
       TIMESLICES_RESPONSE = 93
       DELETE_ALERTS_REQUEST = 94
+      METRICS_SUMMARY_REQUEST = 95
+      METRICS_SUMMARY_RESPONSE = 96
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -346,6 +350,8 @@ module TRP
     optional ::TRP::TimeSlicesRequest, :time_slices_request, 62
     optional ::TRP::TimeSlicesResponse, :time_slices_response, 63
     optional ::TRP::DeleteAlertsRequest, :delete_alerts_request, 64
+    optional ::TRP::MetricsSummaryRequest, :metrics_summary_request, 65
+    optional ::TRP::MetricsSummaryResponse, :metrics_summary_response, 66
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -745,6 +751,21 @@ module TRP
     optional ::TRP::KeyT, :priority, 12
     optional ::TRP::KeyT, :any_ip, 18
     optional ::TRP::KeyT, :any_port, 19
+  end
+
+  class MetricsSummaryRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.MetricsSummaryRequest"
+
+    optional ::TRP::TimeInterval, :time_interval, 1
+    required :string, :metric_name, 2
+    optional :bool, :totals_only, 3, :default => true
+  end
+
+  class MetricsSummaryResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.MetricsSummaryResponse"
+
+    required :string, :metric_name, 2
+    repeated ::TRP::StatsTuple, :vals, 3
   end
 
 end

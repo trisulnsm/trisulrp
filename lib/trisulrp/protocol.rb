@@ -323,6 +323,8 @@ module TrisulRP::Protocol
       req.delete_alerts_request = TRP::DeleteAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_FTS_REQUEST 
       req.query_fts_request = TRP::QueryFTSRequest.new(params)
+    when TRP::Message::Command::METRICS_SUMMARY_REQUEST
+      req.metrics_summary_request = TRP::MetricsSummaryRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -402,6 +404,8 @@ module TrisulRP::Protocol
         resp.query_fts_response 
     when TRP::Message::Command::TIMESLICES_RESPONSE
         resp.time_slices_response 
+    when TRP::Message::Command::METRICS_SUMMARY_RESPONSE
+        resp.metrics_summary_response  
     else
       raise "Unknown TRP command ID"
     end
