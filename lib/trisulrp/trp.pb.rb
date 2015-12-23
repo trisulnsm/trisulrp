@@ -491,7 +491,7 @@ module TRP
     optional ::TRP::KeyT, :dest_port, 8
     optional ::TRP::KeyT, :any_ip, 9
     optional ::TRP::KeyT, :any_port, 10
-    optional :string, :ip_pair, 11
+    repeated ::TRP::KeyT, :ip_pair, 11
     optional ::TRP::KeyT, :protocol, 12
     optional :string, :flowtag, 13
     optional ::TRP::KeyT, :nf_routerid, 14
@@ -578,8 +578,8 @@ module TRP
     optional :string, :group_by_fieldname, 15
     repeated :string, :idlist, 16
     optional :bool, :resolve_keys, 17, :default => true
-    optional :string, :any_ip, 18
-    optional :string, :any_port, 19
+    optional ::TRP::KeyT, :any_ip, 18
+    optional ::TRP::KeyT, :any_port, 19
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message

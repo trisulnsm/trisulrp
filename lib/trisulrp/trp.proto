@@ -427,7 +427,7 @@ message QuerySessionsRequest {
 	optional KeyT			dest_port=8;
 	optional KeyT			any_ip=9;
 	optional KeyT			any_port=10;
-	optional string 		ip_pair=11;
+	repeated KeyT           ip_pair=11;			// array of 2 ips 
 	optional KeyT			protocol=12;
 	optional string			flowtag=13;
 	optional KeyT			nf_routerid=14;
@@ -514,8 +514,8 @@ message QueryAlertsRequest  {
     optional string         group_by_fieldname=15;
 	repeated string 		idlist=16;
 	optional bool			resolve_keys=17[default=true];
-    optional string         any_ip=18;
-    optional string         any_port=19;
+    optional KeyT           any_ip=18;
+    optional KeyT           any_port=19;
 }
 
 /////////////////////////////////////
