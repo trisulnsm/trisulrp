@@ -729,12 +729,27 @@ module TRP
   class TimeSlicesRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
+    optional :bool, :get_disk_usage, 1, :default => false
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class SliceT < ::ProtocolBuffers::Message; end
+
     set_fully_qualified_name "TRP.TimeSlicesResponse"
 
-    repeated ::TRP::TimeInterval, :slices, 1
+    # nested messages
+    class SliceT < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.TimeSlicesResponse.SliceT"
+
+      required ::TRP::TimeInterval, :time_interval, 1
+      optional :string, :name, 2
+      optional :string, :status, 3
+      optional :int64, :disk_size, 4
+      optional :string, :path, 5
+    end
+
+    repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
   end
 
   class DeleteAlertsRequest < ::ProtocolBuffers::Message

@@ -242,8 +242,14 @@ module TrisulRP::Protocol
   #
   def mk_time_interval(tmarr)
     tint=TRP::TimeInterval.new
-    tint.from=TRP::Timestamp.new(:tv_sec => tmarr[0].tv_sec, :tv_usec => 0)
-    tint.to=TRP::Timestamp.new(:tv_sec => tmarr[1].tv_sec, :tv_usec => 0)
+	if ( tmarr[0].is_a? Integer)
+		tint.from=TRP::Timestamp.new(:tv_sec => tmarr[0], :tv_usec => 0)
+		tint.to=TRP::Timestamp.new(:tv_sec => tmarr[1], :tv_usec => 0)
+	elsif (tmarr[0].is_a? Time)
+		tint.from=TRP::Timestamp.new(:tv_sec => tmarr[0].tv_sec, :tv_usec => 0)
+		tint.to=TRP::Timestamp.new(:tv_sec => tmarr[1].tv_sec, :tv_usec => 0)
+	end
+
     return  tint
   end
 
@@ -284,6 +290,11 @@ module TrisulRP::Protocol
   #
   def mk_request(cmd_id,params={})
     req = TRP::Message.new(:trp_command => cmd_id)
+
+	ti = params[:time_interval]
+	if ti.is_a? Array
+		params[:time_interval] = mk_time_interval(ti)
+	end
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
       req.hello_request = TRP::HelloRequest.new(params)

@@ -664,9 +664,20 @@ message QueryFTSResponse {
 //
 
 message TimeSlicesRequest  {
+	optional bool	get_disk_usage=1[default=false];
 }
+
 message TimeSlicesResponse  {
-	repeated TimeInterval       slices=1;
+	message SliceT
+	{
+		required TimeInterval   time_interval=1;
+		optional string 		name=2;
+		optional string 		status=3;
+		optional int64          disk_size=4;
+		optional string         path=5;
+	};
+
+	repeated SliceT		slices=1;
 }
 
 
