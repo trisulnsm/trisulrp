@@ -55,6 +55,8 @@ module TRP
   class TimeSlicesRequest < ::ProtocolBuffers::Message; end
   class TimeSlicesResponse < ::ProtocolBuffers::Message; end
   class DeleteAlertsRequest < ::ProtocolBuffers::Message; end
+  class MetricsSummaryRequest < ::ProtocolBuffers::Message; end
+  class MetricsSummaryResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -304,6 +306,8 @@ module TRP
       TIMESLICES_REQUEST = 92
       TIMESLICES_RESPONSE = 93
       DELETE_ALERTS_REQUEST = 94
+      METRICS_SUMMARY_REQUEST = 95
+      METRICS_SUMMARY_RESPONSE = 96
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -346,6 +350,8 @@ module TRP
     optional ::TRP::TimeSlicesRequest, :time_slices_request, 62
     optional ::TRP::TimeSlicesResponse, :time_slices_response, 63
     optional ::TRP::DeleteAlertsRequest, :delete_alerts_request, 64
+    optional ::TRP::MetricsSummaryRequest, :metrics_summary_request, 65
+    optional ::TRP::MetricsSummaryResponse, :metrics_summary_response, 66
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -485,7 +491,7 @@ module TRP
     optional ::TRP::KeyT, :dest_port, 8
     optional ::TRP::KeyT, :any_ip, 9
     optional ::TRP::KeyT, :any_port, 10
-    optional :string, :ip_pair, 11
+    repeated ::TRP::KeyT, :ip_pair, 11
     optional ::TRP::KeyT, :protocol, 12
     optional :string, :flowtag, 13
     optional ::TRP::KeyT, :nf_routerid, 14
@@ -572,8 +578,9 @@ module TRP
     optional :string, :group_by_fieldname, 15
     repeated :string, :idlist, 16
     optional :bool, :resolve_keys, 17, :default => true
-    optional :string, :any_ip, 18
-    optional :string, :any_port, 19
+    optional ::TRP::KeyT, :any_ip, 18
+    optional ::TRP::KeyT, :any_port, 19
+    repeated ::TRP::KeyT, :ip_pair, 20
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message
@@ -595,10 +602,12 @@ module TRP
     optional ::TRP::KeyT, :destination_port, 8
     optional :string, :uri_pattern, 9
     optional :string, :userlabel_pattern, 10
-    repeated :string, :uri_list, 11
     repeated :string, :regex_uri, 12
     repeated :string, :idlist, 13
     optional :bool, :resolve_keys, 14, :default => true
+    optional ::TRP::KeyT, :any_port, 15
+    optional ::TRP::KeyT, :any_ip, 16
+    repeated ::TRP::KeyT, :ip_pair, 17
   end
 
   class QueryResourcesResponse < ::ProtocolBuffers::Message
@@ -723,12 +732,27 @@ module TRP
   class TimeSlicesRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
+    optional :bool, :get_disk_usage, 1, :default => false
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class SliceT < ::ProtocolBuffers::Message; end
+
     set_fully_qualified_name "TRP.TimeSlicesResponse"
 
-    repeated ::TRP::TimeInterval, :slices, 1
+    # nested messages
+    class SliceT < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.TimeSlicesResponse.SliceT"
+
+      required ::TRP::TimeInterval, :time_interval, 1
+      optional :string, :name, 2
+      optional :string, :status, 3
+      optional :int64, :disk_size, 4
+      optional :string, :path, 5
+    end
+
+    repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
   end
 
   class DeleteAlertsRequest < ::ProtocolBuffers::Message
@@ -745,6 +769,21 @@ module TRP
     optional ::TRP::KeyT, :priority, 12
     optional ::TRP::KeyT, :any_ip, 18
     optional ::TRP::KeyT, :any_port, 19
+  end
+
+  class MetricsSummaryRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.MetricsSummaryRequest"
+
+    optional ::TRP::TimeInterval, :time_interval, 1
+    required :string, :metric_name, 2
+    optional :bool, :totals_only, 3, :default => true
+  end
+
+  class MetricsSummaryResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.MetricsSummaryResponse"
+
+    required :string, :metric_name, 2
+    repeated ::TRP::StatsTuple, :vals, 3
   end
 
 end

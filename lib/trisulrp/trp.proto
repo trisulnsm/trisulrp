@@ -228,6 +228,8 @@ message Message {
                     TIMESLICES_REQUEST=92;
                     TIMESLICES_RESPONSE=93;
                     DELETE_ALERTS_REQUEST=94;
+                    METRICS_SUMMARY_REQUEST=95;
+                    METRICS_SUMMARY_RESPONSE=96;
     }
 
     required Command    trp_command=1;
@@ -268,6 +270,9 @@ message Message {
     optional TimeSlicesRequest  time_slices_request=62;
     optional TimeSlicesResponse  time_slices_response=63;
     optional DeleteAlertsRequest delete_alerts_request=64;
+	optional MetricsSummaryRequest metrics_summary_request=65;
+	optional MetricsSummaryResponse metrics_summary_response=66;
+
 }
 
 
@@ -422,7 +427,7 @@ message QuerySessionsRequest {
 	optional KeyT			dest_port=8;
 	optional KeyT			any_ip=9;
 	optional KeyT			any_port=10;
-	optional string 		ip_pair=11;
+	repeated KeyT           ip_pair=11;			// array of 2 ips 
 	optional KeyT			protocol=12;
 	optional string			flowtag=13;
 	optional KeyT			nf_routerid=14;
@@ -509,8 +514,9 @@ message QueryAlertsRequest  {
     optional string         group_by_fieldname=15;
 	repeated string 		idlist=16;
 	optional bool			resolve_keys=17[default=true];
-    optional string         any_ip=18;
-    optional string         any_port=19;
+    optional KeyT           any_ip=18;
+    optional KeyT           any_port=19;
+	repeated KeyT           ip_pair=20;			     // array of 2 ips 
 }
 
 /////////////////////////////////////
@@ -531,10 +537,12 @@ message QueryResourcesRequest {
     optional KeyT     		destination_port=8;
     optional string         uri_pattern=9;
     optional string         userlabel_pattern=10;
-    repeated string         uri_list=11;			 // cant be combined with others 
     repeated string         regex_uri=12;            // cant be combined with others 
 	repeated string    		idlist=13;				 // resource ID list 
 	optional bool			resolve_keys=14 [default=true];
+    optional KeyT     		any_port=15;
+    optional KeyT     		any_ip=16;
+	repeated KeyT           ip_pair=17;			     // array of 2 ips 
 }
 
 /////////////////////////////////////
@@ -659,9 +667,20 @@ message QueryFTSResponse {
 //
 
 message TimeSlicesRequest  {
+	optional bool	get_disk_usage=1[default=false];
 }
+
 message TimeSlicesResponse  {
-	repeated TimeInterval       slices=1;
+	message SliceT
+	{
+		required TimeInterval   time_interval=1;
+		optional string 		name=2;
+		optional string 		status=3;
+		optional int64          disk_size=4;
+		optional string         path=5;
+	};
+
+	repeated SliceT		slices=1;
 }
 
 
@@ -680,4 +699,19 @@ message DeleteAlertsRequest  {
     optional KeyT     		any_ip=18;
     optional KeyT     		any_port=19;
 } 
+
+//////////////////////////////////
+// MetricsSummaryRequest
+message MetricsSummaryRequest{
+     optional  TimeInterval   time_interval=1;
+     required  string         metric_name=2;
+	 optional  bool			  totals_only=3[default=true];
+}
+
+//////////////////////////////////
+// MetricsSummaryResponse
+message MetricsSummaryResponse {
+    required  string         metric_name=2;
+    repeated  StatsTuple     vals=3;
+}
 
