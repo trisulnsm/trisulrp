@@ -516,10 +516,7 @@ message QueryAlertsRequest  {
 	optional bool			resolve_keys=17[default=true];
     optional KeyT           any_ip=18;
     optional KeyT           any_port=19;
-<<<<<<< HEAD
 	repeated KeyT           ip_pair=20;			     // array of 2 ips 
-=======
->>>>>>> 982aa216596ce4ccfa09c70ec3114f5498dc82ea
 }
 
 /////////////////////////////////////

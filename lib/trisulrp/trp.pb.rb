@@ -580,10 +580,7 @@ module TRP
     optional :bool, :resolve_keys, 17, :default => true
     optional ::TRP::KeyT, :any_ip, 18
     optional ::TRP::KeyT, :any_port, 19
-<<<<<<< HEAD
     repeated ::TRP::KeyT, :ip_pair, 20
-=======
->>>>>>> 982aa216596ce4ccfa09c70ec3114f5498dc82ea
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message
