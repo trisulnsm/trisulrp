@@ -325,6 +325,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::COUNTER_GROUP_TOPPER_REQUEST
       req.counter_group_topper_request = TRP::CounterGroupTopperRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_REQUEST
+	  fix_KeyT( TRP::CounterItemRequest, params)
       req.counter_item_request = TRP::CounterItemRequest.new(params)
     when TRP::Message::Command::PCAP_REQUEST
       req.pcap_request = TRP::PcapRequest.new(params)
@@ -335,6 +336,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::PROBE_STATS_REQUEST
       req.probe_stats_request = TRP::ProbeStatsRequest.new(params)
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
+	  fix_KeyT( TRP::QueryAlertsRequest, params)
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
 	  fix_KeyT( TRP::QueryResourcesRequest, params)
@@ -344,6 +346,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::SESSION_TRACKER_REQUEST
       req.session_tracker_request = TRP::SessionTrackerRequest.new(params)
     when TRP::Message::Command::QUERY_SESSIONS_REQUEST 
+	  fix_KeyT( TRP::QuerySessionsRequest, params)
       req.query_sessions_request = TRP::QuerySessionsRequest.new(params)
     when TRP::Message::Command::GREP_REQUEST
       req.grep_request  = TRP::GrepRequest.new(params)
@@ -356,6 +359,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::TIMESLICES_REQUEST 
       req.time_slices_request = TRP::TimeSlicesRequest.new(params)
     when TRP::Message::Command::DELETE_ALERTS_REQUEST 
+	  fix_KeyT( TRP::DeleteAlertsRequest, params)
       req.delete_alerts_request = TRP::DeleteAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_FTS_REQUEST 
       req.query_fts_request = TRP::QueryFTSRequest.new(params)

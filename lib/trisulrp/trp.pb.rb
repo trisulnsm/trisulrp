@@ -400,7 +400,7 @@ module TRP
   class CounterItemResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterItemResponse"
 
-    optional ::TRP::KeyStats, :stats, 1
+    required ::TRP::KeyStats, :stats, 1
   end
 
   class CounterGroupTopperRequest < ::ProtocolBuffers::Message
@@ -733,6 +733,7 @@ module TRP
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
     optional :bool, :get_disk_usage, 1, :default => false
+    optional :bool, :get_all_engines, 2, :default => false
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message

@@ -329,7 +329,7 @@ message CounterItemRequest{
 ///////////////////////////////
 // CounterItemResponse  
 message CounterItemResponse{
-    optional  KeyStats       stats=1;
+    required KeyStats       stats=1;
 }
 
 
@@ -668,6 +668,7 @@ message QueryFTSResponse {
 
 message TimeSlicesRequest  {
 	optional bool	get_disk_usage=1[default=false];
+	optional bool	get_all_engines=2[default=false];
 }
 
 message TimeSlicesResponse  {
