@@ -329,7 +329,7 @@ message CounterItemRequest{
 ///////////////////////////////
 // CounterItemResponse  
 message CounterItemResponse{
-    required KeyStats       stats=1;
+    optional  KeyStats       stats=1;
 }
 
 

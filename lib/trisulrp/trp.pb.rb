@@ -400,7 +400,7 @@ module TRP
   class CounterItemResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.CounterItemResponse"
 
-    required ::TRP::KeyStats, :stats, 1
+    optional ::TRP::KeyStats, :stats, 1
   end
 
   class CounterGroupTopperRequest < ::ProtocolBuffers::Message

@@ -253,6 +253,27 @@ module TrisulRP::Protocol
     return  tint
   end
 
+  # Helper to allow assinging string to KeyT field
+  #
+  # instead of  
+  # ..{ :source_ip => TRP::KeyT.new( :label => val ) } 
+  #
+  # you can do
+  # ..{ :source_ip => val } 
+  # 
+  def fix_KeyT(msg, params)
+
+  	params.each do |k,v|
+		next unless v.is_a? String 
+		f = msg.field_for_name(k)
+
+		if f.is_a? ProtocolBuffers::Field::MessageField and f.proxy_class.to_s == "TRP::KeyT"
+			params[k] = TRP::KeyT.new( :label => v )
+		end
+	end
+
+  end
+
   # Helper to create a TRP request object
   #
   # Read the TRP documentation wiki for a description of each command. 
@@ -291,10 +312,13 @@ module TrisulRP::Protocol
   def mk_request(cmd_id,params={})
     req = TRP::Message.new(:trp_command => cmd_id)
 
+
+	# timeinterval can be array [Time,Time] or array [tv_sec, tv_sec] 
 	ti = params[:time_interval]
 	if ti.is_a? Array
 		params[:time_interval] = mk_time_interval(ti)
 	end
+
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
       req.hello_request = TRP::HelloRequest.new(params)
@@ -313,6 +337,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
+	  fix_KeyT( TRP::QueryResourcesRequest, params)
       req.query_resources_request = TRP::QueryResourcesRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
       req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
