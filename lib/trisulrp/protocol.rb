@@ -261,15 +261,25 @@ module TrisulRP::Protocol
   # you can do
   # ..{ :source_ip => val } 
   # 
-  def fix_KeyT(msg, params)
+  def fix_TRP_Fields(msg, params)
+
+	ti = params[:time_interval]
+	if ti.is_a? Array
+		params[:time_interval] = mk_time_interval(ti)
+	end
 
   	params.each do |k,v|
-		next unless v.is_a? String 
 		f = msg.field_for_name(k)
-
-		if f.is_a? ProtocolBuffers::Field::MessageField and f.proxy_class.to_s == "TRP::KeyT"
-			params[k] = TRP::KeyT.new( :label => v )
+		if v.is_a? String 
+			if f.is_a? ProtocolBuffers::Field::MessageField and f.proxy_class.to_s == "TRP::KeyT"
+				params[k] = TRP::KeyT.new( :label => v )
+			elsif f.is_a? ProtocolBuffers::Field::Int64Field 
+				params[k] = v.to_i
+			elsif f.is_a? ProtocolBuffers::Field::StringField and f.otype == :repeated  
+				params[k] = v.split(',') 
+			end
 		end
+
 	end
 
   end
@@ -312,58 +322,66 @@ module TrisulRP::Protocol
   def mk_request(cmd_id,params={})
     req = TRP::Message.new(:trp_command => cmd_id)
 
-
-	# timeinterval can be array [Time,Time] or array [tv_sec, tv_sec] 
-	ti = params[:time_interval]
-	if ti.is_a? Array
-		params[:time_interval] = mk_time_interval(ti)
-	end
-
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
+	  fix_TRP_Fields( TRP::HelloRequest, params)
       req.hello_request = TRP::HelloRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_TOPPER_REQUEST
+	  fix_TRP_Fields( TRP::CounterGroupTopperRequest, params)
       req.counter_group_topper_request = TRP::CounterGroupTopperRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_REQUEST
-	  fix_KeyT( TRP::CounterItemRequest, params)
+	  fix_TRP_Fields( TRP::CounterItemRequest, params)
       req.counter_item_request = TRP::CounterItemRequest.new(params)
     when TRP::Message::Command::PCAP_REQUEST
+	  fix_TRP_Fields( TRP::PcapRequest, params)
       req.pcap_request = TRP::PcapRequest.new(params)
     when TRP::Message::Command::SEARCH_KEYS_REQUEST
+	  fix_TRP_Fields( TRP::SearchKeysRequest, params)
       req.search_keys_request = TRP::SearchKeysRequest.new(params)
     when TRP::Message::Command::UPDATE_KEY_REQUEST
+	  fix_TRP_Fields( TRP::UpdateKeyRequest, params)
       req.update_key_request = TRP::UpdateKeyRequest.new(params)
     when TRP::Message::Command::PROBE_STATS_REQUEST
+	  fix_TRP_Fields( TRP::ProbeStatsRequest, params)
       req.probe_stats_request = TRP::ProbeStatsRequest.new(params)
     when TRP::Message::Command::QUERY_ALERTS_REQUEST
-	  fix_KeyT( TRP::QueryAlertsRequest, params)
+	  fix_TRP_Fields( TRP::QueryAlertsRequest, params)
       req.query_alerts_request = TRP::QueryAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_RESOURCES_REQUEST
-	  fix_KeyT( TRP::QueryResourcesRequest, params)
+	  fix_TRP_Fields( TRP::QueryResourcesRequest, params)
       req.query_resources_request = TRP::QueryResourcesRequest.new(params)
     when TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST
+	  fix_TRP_Fields( TRP::CounterGroupInfoRequest, params)
       req.counter_group_info_request = TRP::CounterGroupInfoRequest.new(params)
     when TRP::Message::Command::SESSION_TRACKER_REQUEST
+	  fix_TRP_Fields( TRP::SessionTrackerRequest, params)
       req.session_tracker_request = TRP::SessionTrackerRequest.new(params)
     when TRP::Message::Command::QUERY_SESSIONS_REQUEST 
-	  fix_KeyT( TRP::QuerySessionsRequest, params)
+	  fix_TRP_Fields( TRP::QuerySessionsRequest, params)
       req.query_sessions_request = TRP::QuerySessionsRequest.new(params)
     when TRP::Message::Command::GREP_REQUEST
+	  fix_TRP_Fields( TRP::GrepRequest, params)
       req.grep_request  = TRP::GrepRequest.new(params)
     when TRP::Message::Command::KEYSPACE_REQUEST
+	  fix_TRP_Fields( TRP::KeySpaceRequest, params)
       req.keyspace_request  = TRP::KeySpaceRequest.new(params)
     when TRP::Message::Command::TOPPER_TREND_REQUEST
+	  fix_TRP_Fields( TRP::TopperTrendRequest, params)
       req.topper_trend_request  = TRP::TopperTrendRequest.new(params)
     when TRP::Message::Command::STAB_PUBSUB_CTL 
+	  fix_TRP_Fields( TRP::SubscribeCtl, params)
       req.subscribe_ctl = TRP::SubscribeCtl.new(params)
     when TRP::Message::Command::TIMESLICES_REQUEST 
+	  fix_TRP_Fields( TRP::TimeSlicesRequest, params)
       req.time_slices_request = TRP::TimeSlicesRequest.new(params)
     when TRP::Message::Command::DELETE_ALERTS_REQUEST 
-	  fix_KeyT( TRP::DeleteAlertsRequest, params)
+	  fix_TRP_Fields( TRP::DeleteAlertsRequest, params)
       req.delete_alerts_request = TRP::DeleteAlertsRequest.new(params)
     when TRP::Message::Command::QUERY_FTS_REQUEST 
+	  fix_TRP_Fields( TRP::QueryFTSRequest, params)
       req.query_fts_request = TRP::QueryFTSRequest.new(params)
     when TRP::Message::Command::METRICS_SUMMARY_REQUEST
+	  fix_TRP_Fields( TRP::MetricsSummaryRequest, params)
       req.metrics_summary_request = TRP::MetricsSummaryRequest.new(params)
     else
       raise "Unknown TRP command ID"
