@@ -364,7 +364,7 @@ module TrisulRP::Protocol
       req.grep_request  = TRP::GrepRequest.new(params)
     when TRP::Message::Command::KEYSPACE_REQUEST
 	  fix_TRP_Fields( TRP::KeySpaceRequest, params)
-      req.keyspace_request  = TRP::KeySpaceRequest.new(params)
+      req.key_space_request  = TRP::KeySpaceRequest.new(params)
     when TRP::Message::Command::TOPPER_TREND_REQUEST
 	  fix_TRP_Fields( TRP::TopperTrendRequest, params)
       req.topper_trend_request  = TRP::TopperTrendRequest.new(params)
@@ -455,7 +455,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::GREP_RESPONSE
         resp.grep_response  
     when TRP::Message::Command::KEYSPACE_RESPONSE
-        resp.keyspace_response  
+        resp.key_space_response  
     when TRP::Message::Command::TOPPER_TREND_RESPONSE
         resp.topper_trend_response  
     when TRP::Message::Command::QUERY_FTS_RESPONSE
