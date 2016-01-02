@@ -352,6 +352,8 @@ module TRP
     optional ::TRP::DeleteAlertsRequest, :delete_alerts_request, 64
     optional ::TRP::MetricsSummaryRequest, :metrics_summary_request, 65
     optional ::TRP::MetricsSummaryResponse, :metrics_summary_response, 66
+    optional ::TRP::KeySpaceRequest, :key_space_request, 67
+    optional ::TRP::KeySpaceResponse, :key_space_response, 68
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -646,21 +648,22 @@ module TRP
     class KeySpace < ::ProtocolBuffers::Message
       set_fully_qualified_name "TRP.KeySpaceRequest.KeySpace"
 
-      required :string, :from, 1
-      required :string, :to, 2
+      required ::TRP::KeyT, :from_key, 1
+      required ::TRP::KeyT, :to_key, 2
     end
 
     required :string, :counter_group, 2
     required ::TRP::TimeInterval, :time_interval, 3
     optional :int64, :maxitems, 4, :default => 100
     repeated ::TRP::KeySpaceRequest::KeySpace, :spaces, 5
+    optional :bool, :resolve_keys, 6, :default => true
   end
 
   class KeySpaceResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.KeySpaceResponse"
 
     optional :string, :counter_group, 2
-    repeated :string, :hits, 3
+    repeated ::TRP::KeyT, :hits, 3
   end
 
   class TopperTrendRequest < ::ProtocolBuffers::Message
@@ -733,7 +736,6 @@ module TRP
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
     optional :bool, :get_disk_usage, 1, :default => false
-    optional :bool, :get_all_engines, 2, :default => false
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message

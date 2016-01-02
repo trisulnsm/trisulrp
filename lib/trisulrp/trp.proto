@@ -272,6 +272,8 @@ message Message {
     optional DeleteAlertsRequest delete_alerts_request=64;
 	optional MetricsSummaryRequest metrics_summary_request=65;
 	optional MetricsSummaryResponse metrics_summary_response=66;
+	optional KeySpaceRequest key_space_request=67;
+	optional KeySpaceResponse  key_space_response=68;
 
 }
 
@@ -581,18 +583,19 @@ message KeySpaceRequest {
     optional int64          maxitems=4 [default=100];
 
 	message KeySpace {
-		required string 	from=1;
-		required string 	to=2;
+		required KeyT 	from_key=1;
+		required KeyT 	to_key=2;
 	}
 
 	repeated KeySpace       spaces=5;
+    optional bool           resolve_keys=6[default=true];
 }
 
 /////////////////////////////////////
 // KeySpaceResponse  
 message KeySpaceResponse  {
     optional string         counter_group=2;
-    repeated string         hits=3;
+    repeated KeyT         hits=3;
 }
 
 ///////////////////////////////
@@ -668,7 +671,6 @@ message QueryFTSResponse {
 
 message TimeSlicesRequest  {
 	optional bool	get_disk_usage=1[default=false];
-	optional bool	get_all_engines=2[default=false];
 }
 
 message TimeSlicesResponse  {
