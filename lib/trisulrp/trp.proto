@@ -260,8 +260,6 @@ message Message {
     optional QueryResourcesResponse  query_resources_response=48;
     optional GrepRequest  grep_request=51;
     optional GrepResponse  grep_response=52;
-    optional KeySpaceRequest  keyspace_request=53;
-    optional KeySpaceResponse  keyspace_response=54;
     optional TopperTrendRequest  topper_trend_request=55;
     optional TopperTrendResponse  topper_trend_response=56;
     optional SubscribeCtl  subscribe_ctl=59;
@@ -671,6 +669,8 @@ message QueryFTSResponse {
 
 message TimeSlicesRequest  {
 	optional bool	get_disk_usage=1[default=false];
+	optional bool	get_all_engines=2[default=false];
+	optional bool	get_total_window=3[default=false];
 }
 
 message TimeSlicesResponse  {
@@ -683,7 +683,8 @@ message TimeSlicesResponse  {
 		optional string         path=5;
 	};
 
-	repeated SliceT		slices=1;
+	repeated SliceT		    slices=1;
+    optional TimeInterval   total_window=2;
 }
 
 

@@ -340,8 +340,6 @@ module TRP
     optional ::TRP::QueryResourcesResponse, :query_resources_response, 48
     optional ::TRP::GrepRequest, :grep_request, 51
     optional ::TRP::GrepResponse, :grep_response, 52
-    optional ::TRP::KeySpaceRequest, :keyspace_request, 53
-    optional ::TRP::KeySpaceResponse, :keyspace_response, 54
     optional ::TRP::TopperTrendRequest, :topper_trend_request, 55
     optional ::TRP::TopperTrendResponse, :topper_trend_response, 56
     optional ::TRP::SubscribeCtl, :subscribe_ctl, 59
@@ -736,6 +734,8 @@ module TRP
     set_fully_qualified_name "TRP.TimeSlicesRequest"
 
     optional :bool, :get_disk_usage, 1, :default => false
+    optional :bool, :get_all_engines, 2, :default => false
+    optional :bool, :get_total_window, 3, :default => false
   end
 
   class TimeSlicesResponse < ::ProtocolBuffers::Message
@@ -756,6 +756,7 @@ module TRP
     end
 
     repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
+    optional ::TRP::TimeInterval, :total_window, 2
   end
 
   class DeleteAlertsRequest < ::ProtocolBuffers::Message

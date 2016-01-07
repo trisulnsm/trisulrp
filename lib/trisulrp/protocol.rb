@@ -215,8 +215,8 @@ module TrisulRP::Protocol
   def get_available_time(conn)
     
     from_tm=to_tm=nil
-    req=mk_request(TRP::Message::Command::COUNTER_GROUP_INFO_REQUEST,
-                    :counter_group => TrisulRP::Guids::CG_AGGREGATE)
+    req=mk_request(TRP::Message::Command::TIMESLICES_REQUEST,
+                    :get_total_window => true )
 
 	if conn.is_a?(String)
 		resp = get_response_zmq(conn,req) 
@@ -225,8 +225,8 @@ module TrisulRP::Protocol
 	end 
 
 
-    from_tm =  Time.at(resp.group_details[0].time_interval.from.tv_sec)
-    to_tm =  Time.at(resp.group_details[0].time_interval.to.tv_sec)
+    from_tm =  Time.at(resp.total_window.from.tv_sec)
+    to_tm =  Time.at(resp.total_window.to.tv_sec)
 
     return [from_tm,to_tm]
 
@@ -277,6 +277,8 @@ module TrisulRP::Protocol
 				params[k] = v.to_i
 			elsif f.is_a? ProtocolBuffers::Field::StringField and f.otype == :repeated  
 				params[k] = v.split(',') 
+            elsif f.is_a? ProtocolBuffers::Field::BoolField
+				params[k] = ( v == "true")
 			end
 		end
 
