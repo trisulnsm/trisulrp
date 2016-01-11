@@ -627,6 +627,7 @@ module TRP
     optional :string, :pattern_text, 6
     optional :string, :pattern_file, 7
     repeated :string, :md5list, 8
+    optional :bool, :resolve_keys, 9, :default => true
   end
 
   class GrepResponse < ::ProtocolBuffers::Message
