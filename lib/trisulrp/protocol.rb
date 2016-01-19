@@ -280,6 +280,10 @@ module TrisulRP::Protocol
             elsif f.is_a? ProtocolBuffers::Field::BoolField
 				params[k] = ( v == "true")
 			end
+        elsif v.is_a? BigDecimal 
+			if f.is_a? ProtocolBuffers::Field::Int64Field 
+			    params[k] = v.to_i
+            end
 		end
 
 	end
