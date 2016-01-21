@@ -6,6 +6,7 @@
 require 'openssl'
 require 'socket'
 require 'time'
+require 'bigdecimal'
 
 begin
 FFI_RZMQ_AVAIL=true
@@ -280,7 +281,7 @@ module TrisulRP::Protocol
             elsif f.is_a? ProtocolBuffers::Field::BoolField
 				params[k] = ( v == "true")
 			end
-        elsif v.is_a? BigDecimal 
+        elsif v.is_a? BigDecimal  or v.is_a? Float 
 			if f.is_a? ProtocolBuffers::Field::Int64Field 
 			    params[k] = v.to_i
             end
