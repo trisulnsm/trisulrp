@@ -185,6 +185,22 @@ enum  PcapFormat {
     UNSNIFF=2;
 }
 
+enum DomainNodeType
+{
+	HUB=0;
+	PROBE=1;
+	CONFIG=2;
+	ROUTER=3;
+	WEB=4;
+	MONITOR=5;
+}
+
+enum DomainOperation {
+	GETNODES=1;
+	HEARTBEAT=2;
+	REGISTER=3;
+}
+
 //
 // Top level message is TRP::Message
 //  - wraps the actual request or response 
@@ -230,6 +246,23 @@ message Message {
                     DELETE_ALERTS_REQUEST=94;
                     METRICS_SUMMARY_REQUEST=95;
                     METRICS_SUMMARY_RESPONSE=96;
+                    PCAP_SLICES_REQUEST=97;
+                    SERVICE_REQUEST=101;
+                    SERVICE_RESPONSE=102;
+                    CONFIG_REQUEST=103;
+                    CONFIG_RESPONSE=104;
+                    LOG_REQUEST=105;
+                    LOG_RESPONSE=106;
+					CONTEXT_CREATE_REQUEST=108;
+					CONTEXT_DELETE_REQUEST=109;
+					CONTEXT_START_REQUEST=110;
+					CONTEXT_STOP_REQUEST=111;
+					CONTEXT_INFO_REQUEST=112;
+					CONTEXT_INFO_RESPONSE=113;
+					CONTEXT_CONFIG_REQUEST=114;
+					CONTEXT_CONFIG_RESPONSE=115;
+					DOMAIN_REQUEST=116;
+					DOMAIN_RESPONSE=117;
     }
 
     required Command    trp_command=1;
@@ -272,6 +305,22 @@ message Message {
 	optional MetricsSummaryResponse metrics_summary_response=66;
 	optional KeySpaceRequest key_space_request=67;
 	optional KeySpaceResponse  key_space_response=68;
+	optional PcapSlicesRequest  pcap_slices_request=69;
+	optional ServiceRequest  service_request=101;
+	optional LogRequest  log_request=105;
+	optional LogResponse  log_response=106;
+	optional ContextCreateRequest  context_create_request=108;
+	optional ContextDeleteRequest  context_delete_request=109;
+	optional ContextStartRequest  context_start_request=110;
+	optional ContextStopRequest  context_stop_request=111;
+	optional ContextConfigRequest  context_config_request=112;
+	optional ContextConfigResponse  context_config_response=113;
+	optional ContextInfoRequest   context_info_request=114;
+	optional ContextInfoResponse   context_info_response=115;
+	optional DomainRequest   domain_request=116;
+	optional DomainResponse   domain_response=117;
+    optional string     destination_node=200; 	// todo move 2nd
+    optional string     layer=201;			    // todo move 3rd 
 
 }
 
@@ -288,16 +337,13 @@ message Message {
 // Hello 
 message HelloRequest{
   required string   station_id=1;
+  optional string	message=2;
 }       
 
 message HelloResponse{
-  required string       trisul_id=1;
-  required string       trisul_description=2;
-  required string       connection_id=3;
-  required string       version_string=4;
-  required Timestamp    connection_start_time=5;
-  required Timestamp    connection_up_time=6;
-  required AuthLevel    current_auth_level=7;   
+  required string       station_id=1;
+  optional string       station_id_request=2;
+  optional string       message=3;
 }
 
 ///////////////////////////////
@@ -354,31 +400,6 @@ message  CounterGroupTopperResponse{
     repeated KeyT     keys=6;
 }
 
-
-///////////////////////////////
-// PcapReqiest
-//  NOTE - only one of the various filters are supported
-//  sending > 1 will result in error 
-// 
-message PcapRequest {
-    optional int64              max_bytes=1[default=100000000]; // 100MB , can increase to 0.75 Filesystem freespace
-    optional CompressionType    compress_type=2[default=UNCOMPRESSED];              
-    optional string             save_file=3;
-	required TimeInterval       time_interval=4;                   
-	required string             filter_expression=5;
-}
-
-/////////////////////////////////////
-// FileredDatagaramResponse
-message PcapResponse  {
-    optional PcapFormat     format=1[default=LIBPCAP];                                 
-    optional CompressionType compress_type=2[default=UNCOMPRESSED];                   
-    optional TimeInterval   time_interval=3;                
-    optional int64          num_bytes=4;      
-    optional string         sha1=5;
-    optional bytes          contents=6;
-	optional string			save_file=7;
-}
 
 ///////////////////////////////////////
 // SearchkeysRequest
@@ -476,26 +497,6 @@ message SessionTrackerResponse{
     optional int64          tracker_id=4;
 }
 
-//////////////////////////////////
-// ProbeStatsRequest
-message ProbeStatsRequest{
-     optional  string         param=1;
-}
-
-//////////////////////////////////
-// ProbeStatsResponse
-message ProbeStatsResponse {
-    required string         instance_name=1;
-    required int64          connections=2;
-    required int64          uptime_seconds=3;
-    required double         cpu_usage_percent_trisul=4;
-    required double         cpu_usage_percent_total=5;
-    required double         mem_usage_trisul=6;
-    required double         mem_usage_total=7;
-    required double         mem_total=8;
-    required double         drop_percent_cap=11;
-    required double         drop_percent_trisul=12;
-}
 ////////////////////////////////////
 // QueryAlertsRequest 
 message QueryAlertsRequest  {
@@ -552,26 +553,6 @@ message QueryResourcesResponse {
     repeated ResourceT     	resources=3;
 }
 
-
-////////////////////////////////////
-// GrepRequest
-message GrepRequest {
-    required TimeInterval   time_interval=2;
-    optional int64          maxitems=3 [default=100];
-    optional int64          flowcutoff_bytes=4;
-    optional string         pattern_hex=5;
-    optional string         pattern_text=6;
-    optional string         pattern_file=7;
-	repeated string         md5list=8;
-    optional bool           resolve_keys=9 [default=true];
-}
-
-/////////////////////////////////////
-// GrepResponse  
-message GrepResponse  {
-    repeated SessionT       sessions=2;
-    repeated string         hints=3;
-}
 
 
 ////////////////////////////////////
@@ -667,11 +648,19 @@ message QueryFTSResponse {
 
 // Timeslices
 //
+// get the METERS METASLICE info 
+// .. response = TimeSlicesResponse
 
 message TimeSlicesRequest  {
 	optional bool	get_disk_usage=1[default=false];
 	optional bool	get_all_engines=2[default=false];
 	optional bool	get_total_window=3[default=false];
+}
+
+// .. response = TimeSlicesResponse
+// get the PCAP METASLICE based info 
+message PcapSlicesRequest {
+	optional bool	get_total_window=1[default=false];
 }
 
 message TimeSlicesResponse  {
@@ -720,3 +709,240 @@ message MetricsSummaryResponse {
     repeated  StatsTuple     vals=3;
 }
 
+
+//////////////////////////////////
+// ServiceRequest - start stop status 
+// 	OK or ERROR response 
+//  Status = OK if running with PID etc in message text 
+message ServiceRequest {
+	enum ServiceType
+	{
+		ST_START=0;
+		ST_STOP=1;
+		ST_STATUS=2; 
+		ST_RESTART=3;
+	}
+
+     optional  string         context=1;
+	 required  ServiceType	  service_type=2;
+     required  string         service_name=3;
+     optional  string         service_options=4;
+}
+
+
+
+
+//////////////////////////////////
+// LogRequest  - want log file 
+message LogRequest  {
+
+     required  string         context=1;
+     required  string         log_name=2;
+     optional  string         level=4;
+     optional  int64          maxlines=5[default=10000];
+}
+
+
+message LogResponse  {
+
+     required  string         context=1;
+     required  string         log_name=2;
+     required  string         log_blob=4; // compressed gz 
+}
+
+
+// messages to routerX backend 
+message DomainRequest {
+	required 	DomainOperation cmd=1;
+	optional	string	station_id=2;
+	optional	string	params=3;
+	optional 	DomainNodeType nodetype=4;
+}
+
+message DomainResponse {
+
+
+	message Node {
+
+		required string	id=1;
+		required DomainNodeType  nodetype=2;
+		optional string station_id=3; 
+		optional string extra_info=4;
+		optional Timestamp register_time=5; 
+		optional Timestamp heartbeat_time=6; 
+
+	}
+
+	required DomainOperation	cmd=1;
+	repeated Node nodes=2;
+	optional string req_params=3;
+	optional string params=4;
+}
+
+
+
+
+
+//////////////////////////////////
+// ContextRequest  - Context methods 
+// 	response Ok or Error, follow up with ContextInfo to print details 
+// 
+message ContextCreateRequest  {
+     required  string         context_name=1;
+     optional  string         clone_from=2;
+}
+
+//////////////////////////////////
+// ContextInfo : one or all contexts
+//	use is_init to prime with config 
+message ContextInfoRequest {
+     optional   string         context_name=1; // if not  set all context get in 
+}
+
+message ContextInfoResponse {
+
+	message Item
+	{
+	required string 		context_name=1;
+	required bool			is_initialized=2;
+	required bool   		is_running=3;
+	optional int64			size_on_disk=4;
+	optional TimeInterval	time_interval=5;
+	optional bool   		is_clean=6;
+	optional string			extrainfo=7;
+	}
+
+	repeated  Item 	items=1;
+}
+
+//////////////////////////////////
+// ContextDelete  : initialize 
+//		reset data only .. 
+message ContextDeleteRequest   {
+     required   string         context_name=1; 		// if not  set all context get in 
+	 optional   bool		   reset_data=2;	// reset data dont delete everything
+}
+
+// ContextStart  : run 
+//		run data only .. 
+message ContextStartRequest   {
+     required   string         context_name=1; 		// if not  set all context get in 
+	 optional   string		   mode=2;
+	 optional   bool           background=3;
+	 optional   string		   pcap_path=4;
+	 optional   string		   run_tool=5;			// snort, suricata supported..
+	 optional   string		   tool_ids_config=6;
+	 optional   string		   tool_av_config=7;
+
+}
+
+// ContextSttop  : kill 
+message ContextStopRequest   {
+     required   string         context_name=1; 		// if not  set all context get in 
+}
+
+
+//////////////////////////////////
+// ContextConfigRequest - start stop status 
+// 	OK or ERROR response 
+//  Status = OK if running with PID etc in message text 
+message ContextConfigRequest {
+     required  string         context_name=1;
+     optional  string         profile=2;
+     optional  string         params=3;
+	 optional  string		  push_config_blob=4;    // push this .. 
+	 optional  string		  query_config=5;  // push this .. 
+	 optional  string		  set_config=6;    // push this .. 
+}
+
+
+message ContextConfigResponse {
+
+     required  string         context_name=1;
+     optional  string         profile=2;
+	 optional  string		  params=3;	   				// what kind of config you want 
+	 optional  string		  pull_config_blob=4;	// config 
+     optional  string         config_blob=5; 			// compress tar.gz ..
+	 repeated  string		  endpoints_flush=6;
+	 repeated  string		  endpoints_query=7;
+	 repeated  string		  endpoints_pub=8;
+	 repeated  string		  endpoints_sub=9;
+	 optional  string		  config_value=10;  // response to query config .. 
+
+}
+
+///////////////////////////////
+// PcapReqiest
+//  NOTE - only one of the various filters are supported
+//  sending > 1 will result in error 
+// 
+message PcapRequest {
+	required string				context_name=1;
+    optional int64              max_bytes=2[default=100000000]; // 100MB , can increase to 0.75 Filesystem freespace
+    optional CompressionType    compress_type=3[default=UNCOMPRESSED];              
+    optional string             save_file=4;
+	required TimeInterval       time_interval=5;                   
+	required string             filter_expression=6;
+}
+
+/////////////////////////////////////
+// FileredDatagaramResponse
+message PcapResponse  {
+	required string			context_name=1;
+    optional PcapFormat     format=2[default=LIBPCAP];                                 
+    optional CompressionType compress_type=3[default=UNCOMPRESSED];                   
+    optional TimeInterval   time_interval=4;                
+    optional int64          num_bytes=5;      
+    optional string         sha1=6;
+    optional bytes          contents=7;
+	optional string			save_file=8;
+}
+
+////////////////////////////////////
+// GrepRequest
+message GrepRequest {
+	required string			context_name=1;
+    required TimeInterval   time_interval=2;
+    optional int64          maxitems=3 [default=100];
+    optional int64          flowcutoff_bytes=4;
+    optional string         pattern_hex=5;
+    optional string         pattern_text=6;
+    optional string         pattern_file=7;
+	repeated string         md5list=8;
+    optional bool           resolve_keys=9 [default=true];
+}
+
+/////////////////////////////////////
+// GrepResponse  
+message GrepResponse  {
+	required string			context_name=1;
+    repeated SessionT       sessions=2;
+    repeated string         hints=3;
+}
+
+//////////////////////////////////
+// ProbeStatsRequest
+message ProbeStatsRequest{
+	 required  string		context_name=1;
+     optional  string       param=2;
+}
+
+//////////////////////////////////
+// ProbeStatsResponse
+message ProbeStatsResponse {
+	required string			context_name=1;
+    required string         instance_name=2;
+    required int64          connections=3;
+    required int64          uptime_seconds=4;
+    required double         cpu_usage_percent_trisul=5;
+    required double         cpu_usage_percent_total=6;
+    required double         mem_usage_trisul=7;
+    required double         mem_usage_total=8;
+    required double         mem_total=9;
+    required double         drop_percent_cap=10;
+    required double         drop_percent_trisul=11;
+	optional int64			proc_bytes=12;
+	optional int64			proc_packets=13;
+	optional string			offline_pcap_file=14;
+	optional bool			is_running=15;
+}
