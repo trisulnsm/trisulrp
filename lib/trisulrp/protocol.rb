@@ -419,6 +419,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::CONTEXT_STOP_REQUEST
 	  fix_TRP_Fields( TRP::ContextStopRequest, params)
       req.context_stop_request = TRP::ContextStopRequest.new(params)
+    when TRP::Message::Command::DOMAIN_REQUEST
+	  fix_TRP_Fields( TRP::DomainRequest, params)
+      req.domain_request = TRP::DomainRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -506,6 +509,8 @@ module TrisulRP::Protocol
         resp.context_config_response
     when TRP::Message::Command::LOG_RESPONSE
         resp.log_response
+    when TRP::Message::Command::DOMAIN_RESPONSE
+        resp.domain_response
     else
      
       raise "#{resp.trp_command} Unknown TRP command ID"
