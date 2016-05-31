@@ -660,7 +660,8 @@ message TimeSlicesRequest  {
 // .. response = TimeSlicesResponse
 // get the PCAP METASLICE based info 
 message PcapSlicesRequest {
-	optional bool	get_total_window=1[default=false];
+	required string context_name=1;
+	optional bool	get_total_window=2[default=false];
 }
 
 message TimeSlicesResponse  {
@@ -675,6 +676,7 @@ message TimeSlicesResponse  {
 
 	repeated SliceT		    slices=1;
     optional TimeInterval   total_window=2;
+	optional string			context_name=3;
 }
 
 
@@ -736,18 +738,22 @@ message ServiceRequest {
 // LogRequest  - want log file 
 message LogRequest  {
 
-     required  string         context=1;
-     required  string         log_name=2;
-     optional  string         level=4;
-     optional  int64          maxlines=5[default=10000];
+     required  string         context_name=1;
+     required  string         log_type=2;
+     optional  string         regex_filter=4;
+     optional  int64          maxlines=5[default=1000];
+	 optional  string		  continue_logfilename=6;
+	 optional  int64		  continue_seekpos=7;
+	 optional  bool			  latest_run_only=8[default=false];
 }
 
 
 message LogResponse  {
 
-     required  string         context=1;
-     required  string         log_name=2;
-     required  string         log_blob=4; // compressed gz 
+     required  string         context_name=1;
+	 optional  string		  logfilename=6;
+	 optional  int64		  seekpos=7;
+     repeated  string         log_lines=8; // compressed gz 
 }
 
 
@@ -801,15 +807,17 @@ message ContextInfoRequest {
 
 message ContextInfoResponse {
 
+
 	message Item
 	{
-	required string 		context_name=1;
-	required bool			is_initialized=2;
-	required bool   		is_running=3;
-	optional int64			size_on_disk=4;
-	optional TimeInterval	time_interval=5;
-	optional bool   		is_clean=6;
-	optional string			extrainfo=7;
+		required string 		context_name=1;
+		required bool			is_initialized=2;
+		required bool   		is_running=3;
+		optional int64			size_on_disk=4;
+		optional TimeInterval	time_interval=5;
+		optional bool   		is_clean=6;
+		optional string			extrainfo=7;
+		repeated Timestamp      run_history=8;
 	}
 
 	repeated  Item 	items=1;
@@ -858,16 +866,24 @@ message ContextConfigRequest {
 
 message ContextConfigResponse {
 
-     required  string         context_name=1;
-     optional  string         profile=2;
-	 optional  string		  params=3;	   				// what kind of config you want 
-	 optional  string		  pull_config_blob=4;	// config 
-     optional  string         config_blob=5; 			// compress tar.gz ..
-	 repeated  string		  endpoints_flush=6;
-	 repeated  string		  endpoints_query=7;
-	 repeated  string		  endpoints_pub=8;
-	 repeated  string		  endpoints_sub=9;
-	 optional  string		  config_value=10;  // response to query config .. 
+	message Layer
+	{
+		required int64	layer=1;
+		required string probe_id=2;
+		optional string probe_description=3;
+	}
+
+	required  string         	context_name=1;
+	optional  string         	profile=2;
+	optional  string		  	params=3;	   				// what kind of config you want 
+	optional  string		  	pull_config_blob=4;	// config 
+	optional  string          	config_blob=5; 			// compress tar.gz ..
+	repeated  string		  	endpoints_flush=6;
+	repeated  string		  	endpoints_query=7;
+	repeated  string		  	endpoints_pub=8;
+	repeated  string		  	endpoints_sub=9;
+	optional  string		  	config_value=10;  // response to query config .. 
+	repeated  Layer 		  	layers=11;
 
 }
 

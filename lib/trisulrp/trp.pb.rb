@@ -26,8 +26,6 @@ module TRP
   class CounterItemResponse < ::ProtocolBuffers::Message; end
   class CounterGroupTopperRequest < ::ProtocolBuffers::Message; end
   class CounterGroupTopperResponse < ::ProtocolBuffers::Message; end
-  class PcapRequest < ::ProtocolBuffers::Message; end
-  class PcapResponse < ::ProtocolBuffers::Message; end
   class SearchKeysRequest < ::ProtocolBuffers::Message; end
   class SearchKeysResponse < ::ProtocolBuffers::Message; end
   class CounterGroupInfoRequest < ::ProtocolBuffers::Message; end
@@ -37,14 +35,10 @@ module TRP
   class UpdateKeyRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerRequest < ::ProtocolBuffers::Message; end
   class SessionTrackerResponse < ::ProtocolBuffers::Message; end
-  class ProbeStatsRequest < ::ProtocolBuffers::Message; end
-  class ProbeStatsResponse < ::ProtocolBuffers::Message; end
   class QueryAlertsRequest < ::ProtocolBuffers::Message; end
   class QueryAlertsResponse < ::ProtocolBuffers::Message; end
   class QueryResourcesRequest < ::ProtocolBuffers::Message; end
   class QueryResourcesResponse < ::ProtocolBuffers::Message; end
-  class GrepRequest < ::ProtocolBuffers::Message; end
-  class GrepResponse < ::ProtocolBuffers::Message; end
   class KeySpaceRequest < ::ProtocolBuffers::Message; end
   class KeySpaceResponse < ::ProtocolBuffers::Message; end
   class TopperTrendRequest < ::ProtocolBuffers::Message; end
@@ -53,10 +47,30 @@ module TRP
   class QueryFTSRequest < ::ProtocolBuffers::Message; end
   class QueryFTSResponse < ::ProtocolBuffers::Message; end
   class TimeSlicesRequest < ::ProtocolBuffers::Message; end
+  class PcapSlicesRequest < ::ProtocolBuffers::Message; end
   class TimeSlicesResponse < ::ProtocolBuffers::Message; end
   class DeleteAlertsRequest < ::ProtocolBuffers::Message; end
   class MetricsSummaryRequest < ::ProtocolBuffers::Message; end
   class MetricsSummaryResponse < ::ProtocolBuffers::Message; end
+  class ServiceRequest < ::ProtocolBuffers::Message; end
+  class LogRequest < ::ProtocolBuffers::Message; end
+  class LogResponse < ::ProtocolBuffers::Message; end
+  class DomainRequest < ::ProtocolBuffers::Message; end
+  class DomainResponse < ::ProtocolBuffers::Message; end
+  class ContextCreateRequest < ::ProtocolBuffers::Message; end
+  class ContextInfoRequest < ::ProtocolBuffers::Message; end
+  class ContextInfoResponse < ::ProtocolBuffers::Message; end
+  class ContextDeleteRequest < ::ProtocolBuffers::Message; end
+  class ContextStartRequest < ::ProtocolBuffers::Message; end
+  class ContextStopRequest < ::ProtocolBuffers::Message; end
+  class ContextConfigRequest < ::ProtocolBuffers::Message; end
+  class ContextConfigResponse < ::ProtocolBuffers::Message; end
+  class PcapRequest < ::ProtocolBuffers::Message; end
+  class PcapResponse < ::ProtocolBuffers::Message; end
+  class GrepRequest < ::ProtocolBuffers::Message; end
+  class GrepResponse < ::ProtocolBuffers::Message; end
+  class ProbeStatsRequest < ::ProtocolBuffers::Message; end
+  class ProbeStatsResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -86,6 +100,29 @@ module TRP
 
     LIBPCAP = 1
     UNSNIFF = 2
+  end
+
+  module DomainNodeType
+    include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.DomainNodeType"
+
+    HUB = 0
+    PROBE = 1
+    CONFIG = 2
+    ROUTER = 3
+    WEB = 4
+    MONITOR = 5
+  end
+
+  module DomainOperation
+    include ::ProtocolBuffers::Enum
+
+    set_fully_qualified_name "TRP.DomainOperation"
+
+    GETNODES = 1
+    HEARTBEAT = 2
+    REGISTER = 3
   end
 
   class Timestamp < ::ProtocolBuffers::Message
@@ -308,6 +345,23 @@ module TRP
       DELETE_ALERTS_REQUEST = 94
       METRICS_SUMMARY_REQUEST = 95
       METRICS_SUMMARY_RESPONSE = 96
+      PCAP_SLICES_REQUEST = 97
+      SERVICE_REQUEST = 101
+      SERVICE_RESPONSE = 102
+      CONFIG_REQUEST = 103
+      CONFIG_RESPONSE = 104
+      LOG_REQUEST = 105
+      LOG_RESPONSE = 106
+      CONTEXT_CREATE_REQUEST = 108
+      CONTEXT_DELETE_REQUEST = 109
+      CONTEXT_START_REQUEST = 110
+      CONTEXT_STOP_REQUEST = 111
+      CONTEXT_INFO_REQUEST = 112
+      CONTEXT_INFO_RESPONSE = 113
+      CONTEXT_CONFIG_REQUEST = 114
+      CONTEXT_CONFIG_RESPONSE = 115
+      DOMAIN_REQUEST = 116
+      DOMAIN_RESPONSE = 117
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -352,24 +406,37 @@ module TRP
     optional ::TRP::MetricsSummaryResponse, :metrics_summary_response, 66
     optional ::TRP::KeySpaceRequest, :key_space_request, 67
     optional ::TRP::KeySpaceResponse, :key_space_response, 68
+    optional ::TRP::PcapSlicesRequest, :pcap_slices_request, 69
+    optional ::TRP::ServiceRequest, :service_request, 101
+    optional ::TRP::LogRequest, :log_request, 105
+    optional ::TRP::LogResponse, :log_response, 106
+    optional ::TRP::ContextCreateRequest, :context_create_request, 108
+    optional ::TRP::ContextDeleteRequest, :context_delete_request, 109
+    optional ::TRP::ContextStartRequest, :context_start_request, 110
+    optional ::TRP::ContextStopRequest, :context_stop_request, 111
+    optional ::TRP::ContextConfigRequest, :context_config_request, 112
+    optional ::TRP::ContextConfigResponse, :context_config_response, 113
+    optional ::TRP::ContextInfoRequest, :context_info_request, 114
+    optional ::TRP::ContextInfoResponse, :context_info_response, 115
+    optional ::TRP::DomainRequest, :domain_request, 116
+    optional ::TRP::DomainResponse, :domain_response, 117
+    optional :string, :destination_node, 200
+    optional :string, :layer, 201
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.HelloRequest"
 
     required :string, :station_id, 1
+    optional :string, :message, 2
   end
 
   class HelloResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.HelloResponse"
 
-    required :string, :trisul_id, 1
-    required :string, :trisul_description, 2
-    required :string, :connection_id, 3
-    required :string, :version_string, 4
-    required ::TRP::Timestamp, :connection_start_time, 5
-    required ::TRP::Timestamp, :connection_up_time, 6
-    required ::TRP::AuthLevel, :current_auth_level, 7
+    required :string, :station_id, 1
+    optional :string, :station_id_request, 2
+    optional :string, :message, 3
   end
 
   class ErrorResponse < ::ProtocolBuffers::Message
@@ -422,28 +489,6 @@ module TRP
     required :int64, :meter, 3
     optional :int64, :sysgrouptotal, 4
     repeated ::TRP::KeyT, :keys, 6
-  end
-
-  class PcapRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.PcapRequest"
-
-    optional :int64, :max_bytes, 1, :default => 100000000
-    optional ::TRP::CompressionType, :compress_type, 2, :default => ::TRP::CompressionType::UNCOMPRESSED
-    optional :string, :save_file, 3
-    required ::TRP::TimeInterval, :time_interval, 4
-    required :string, :filter_expression, 5
-  end
-
-  class PcapResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.PcapResponse"
-
-    optional ::TRP::PcapFormat, :format, 1, :default => ::TRP::PcapFormat::LIBPCAP
-    optional ::TRP::CompressionType, :compress_type, 2, :default => ::TRP::CompressionType::UNCOMPRESSED
-    optional ::TRP::TimeInterval, :time_interval, 3
-    optional :int64, :num_bytes, 4
-    optional :string, :sha1, 5
-    optional :bytes, :contents, 6
-    optional :string, :save_file, 7
   end
 
   class SearchKeysRequest < ::ProtocolBuffers::Message
@@ -539,27 +584,6 @@ module TRP
     optional :int64, :tracker_id, 4
   end
 
-  class ProbeStatsRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ProbeStatsRequest"
-
-    optional :string, :param, 1
-  end
-
-  class ProbeStatsResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.ProbeStatsResponse"
-
-    required :string, :instance_name, 1
-    required :int64, :connections, 2
-    required :int64, :uptime_seconds, 3
-    required :double, :cpu_usage_percent_trisul, 4
-    required :double, :cpu_usage_percent_total, 5
-    required :double, :mem_usage_trisul, 6
-    required :double, :mem_usage_total, 7
-    required :double, :mem_total, 8
-    required :double, :drop_percent_cap, 11
-    required :double, :drop_percent_trisul, 12
-  end
-
   class QueryAlertsRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.QueryAlertsRequest"
 
@@ -615,26 +639,6 @@ module TRP
 
     required :string, :resource_group, 2
     repeated ::TRP::ResourceT, :resources, 3
-  end
-
-  class GrepRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.GrepRequest"
-
-    required ::TRP::TimeInterval, :time_interval, 2
-    optional :int64, :maxitems, 3, :default => 100
-    optional :int64, :flowcutoff_bytes, 4
-    optional :string, :pattern_hex, 5
-    optional :string, :pattern_text, 6
-    optional :string, :pattern_file, 7
-    repeated :string, :md5list, 8
-    optional :bool, :resolve_keys, 9, :default => true
-  end
-
-  class GrepResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "TRP.GrepResponse"
-
-    repeated ::TRP::SessionT, :sessions, 2
-    repeated :string, :hints, 3
   end
 
   class KeySpaceRequest < ::ProtocolBuffers::Message
@@ -739,6 +743,13 @@ module TRP
     optional :bool, :get_total_window, 3, :default => false
   end
 
+  class PcapSlicesRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PcapSlicesRequest"
+
+    required :string, :context_name, 1
+    optional :bool, :get_total_window, 2, :default => false
+  end
+
   class TimeSlicesResponse < ::ProtocolBuffers::Message
     # forward declarations
     class SliceT < ::ProtocolBuffers::Message; end
@@ -758,6 +769,7 @@ module TRP
 
     repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
     optional ::TRP::TimeInterval, :total_window, 2
+    optional :string, :context_name, 3
   end
 
   class DeleteAlertsRequest < ::ProtocolBuffers::Message
@@ -789,6 +801,256 @@ module TRP
 
     required :string, :metric_name, 2
     repeated ::TRP::StatsTuple, :vals, 3
+  end
+
+  class ServiceRequest < ::ProtocolBuffers::Message
+    # forward declarations
+
+    # enums
+    module ServiceType
+      include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "TRP.ServiceRequest.ServiceType"
+
+      ST_START = 0
+      ST_STOP = 1
+      ST_STATUS = 2
+      ST_RESTART = 3
+    end
+
+    set_fully_qualified_name "TRP.ServiceRequest"
+
+    optional :string, :context, 1
+    required ::TRP::ServiceRequest::ServiceType, :service_type, 2
+    required :string, :service_name, 3
+    optional :string, :service_options, 4
+  end
+
+  class LogRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.LogRequest"
+
+    required :string, :context_name, 1
+    required :string, :log_type, 2
+    optional :string, :regex_filter, 4
+    optional :int64, :maxlines, 5, :default => 1000
+    optional :string, :continue_logfilename, 6
+    optional :int64, :continue_seekpos, 7
+    optional :bool, :latest_run_only, 8, :default => false
+  end
+
+  class LogResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.LogResponse"
+
+    required :string, :context_name, 1
+    optional :string, :logfilename, 6
+    optional :int64, :seekpos, 7
+    repeated :string, :log_lines, 8
+  end
+
+  class DomainRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.DomainRequest"
+
+    required ::TRP::DomainOperation, :cmd, 1
+    optional :string, :station_id, 2
+    optional :string, :params, 3
+    optional ::TRP::DomainNodeType, :nodetype, 4
+  end
+
+  class DomainResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class Node < ::ProtocolBuffers::Message; end
+
+    set_fully_qualified_name "TRP.DomainResponse"
+
+    # nested messages
+    class Node < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.DomainResponse.Node"
+
+      required :string, :id, 1
+      required ::TRP::DomainNodeType, :nodetype, 2
+      optional :string, :station_id, 3
+      optional :string, :extra_info, 4
+      optional ::TRP::Timestamp, :register_time, 5
+      optional ::TRP::Timestamp, :heartbeat_time, 6
+    end
+
+    required ::TRP::DomainOperation, :cmd, 1
+    repeated ::TRP::DomainResponse::Node, :nodes, 2
+    optional :string, :req_params, 3
+    optional :string, :params, 4
+  end
+
+  class ContextCreateRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextCreateRequest"
+
+    required :string, :context_name, 1
+    optional :string, :clone_from, 2
+  end
+
+  class ContextInfoRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextInfoRequest"
+
+    optional :string, :context_name, 1
+  end
+
+  class ContextInfoResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class Item < ::ProtocolBuffers::Message; end
+
+    set_fully_qualified_name "TRP.ContextInfoResponse"
+
+    # nested messages
+    class Item < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.ContextInfoResponse.Item"
+
+      required :string, :context_name, 1
+      required :bool, :is_initialized, 2
+      required :bool, :is_running, 3
+      optional :int64, :size_on_disk, 4
+      optional ::TRP::TimeInterval, :time_interval, 5
+      optional :bool, :is_clean, 6
+      optional :string, :extrainfo, 7
+      repeated ::TRP::Timestamp, :run_history, 8
+    end
+
+    repeated ::TRP::ContextInfoResponse::Item, :items, 1
+  end
+
+  class ContextDeleteRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextDeleteRequest"
+
+    required :string, :context_name, 1
+    optional :bool, :reset_data, 2
+  end
+
+  class ContextStartRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextStartRequest"
+
+    required :string, :context_name, 1
+    optional :string, :mode, 2
+    optional :bool, :background, 3
+    optional :string, :pcap_path, 4
+    optional :string, :run_tool, 5
+    optional :string, :tool_ids_config, 6
+    optional :string, :tool_av_config, 7
+  end
+
+  class ContextStopRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextStopRequest"
+
+    required :string, :context_name, 1
+  end
+
+  class ContextConfigRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ContextConfigRequest"
+
+    required :string, :context_name, 1
+    optional :string, :profile, 2
+    optional :string, :params, 3
+    optional :string, :push_config_blob, 4
+    optional :string, :query_config, 5
+    optional :string, :set_config, 6
+  end
+
+  class ContextConfigResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class Layer < ::ProtocolBuffers::Message; end
+
+    set_fully_qualified_name "TRP.ContextConfigResponse"
+
+    # nested messages
+    class Layer < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.ContextConfigResponse.Layer"
+
+      required :int64, :layer, 1
+      required :string, :probe_id, 2
+      optional :string, :probe_description, 3
+    end
+
+    required :string, :context_name, 1
+    optional :string, :profile, 2
+    optional :string, :params, 3
+    optional :string, :pull_config_blob, 4
+    optional :string, :config_blob, 5
+    repeated :string, :endpoints_flush, 6
+    repeated :string, :endpoints_query, 7
+    repeated :string, :endpoints_pub, 8
+    repeated :string, :endpoints_sub, 9
+    optional :string, :config_value, 10
+    repeated ::TRP::ContextConfigResponse::Layer, :layers, 11
+  end
+
+  class PcapRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PcapRequest"
+
+    required :string, :context_name, 1
+    optional :int64, :max_bytes, 2, :default => 100000000
+    optional ::TRP::CompressionType, :compress_type, 3, :default => ::TRP::CompressionType::UNCOMPRESSED
+    optional :string, :save_file, 4
+    required ::TRP::TimeInterval, :time_interval, 5
+    required :string, :filter_expression, 6
+  end
+
+  class PcapResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.PcapResponse"
+
+    required :string, :context_name, 1
+    optional ::TRP::PcapFormat, :format, 2, :default => ::TRP::PcapFormat::LIBPCAP
+    optional ::TRP::CompressionType, :compress_type, 3, :default => ::TRP::CompressionType::UNCOMPRESSED
+    optional ::TRP::TimeInterval, :time_interval, 4
+    optional :int64, :num_bytes, 5
+    optional :string, :sha1, 6
+    optional :bytes, :contents, 7
+    optional :string, :save_file, 8
+  end
+
+  class GrepRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.GrepRequest"
+
+    required :string, :context_name, 1
+    required ::TRP::TimeInterval, :time_interval, 2
+    optional :int64, :maxitems, 3, :default => 100
+    optional :int64, :flowcutoff_bytes, 4
+    optional :string, :pattern_hex, 5
+    optional :string, :pattern_text, 6
+    optional :string, :pattern_file, 7
+    repeated :string, :md5list, 8
+    optional :bool, :resolve_keys, 9, :default => true
+  end
+
+  class GrepResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.GrepResponse"
+
+    required :string, :context_name, 1
+    repeated ::TRP::SessionT, :sessions, 2
+    repeated :string, :hints, 3
+  end
+
+  class ProbeStatsRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ProbeStatsRequest"
+
+    required :string, :context_name, 1
+    optional :string, :param, 2
+  end
+
+  class ProbeStatsResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.ProbeStatsResponse"
+
+    required :string, :context_name, 1
+    required :string, :instance_name, 2
+    required :int64, :connections, 3
+    required :int64, :uptime_seconds, 4
+    required :double, :cpu_usage_percent_trisul, 5
+    required :double, :cpu_usage_percent_total, 6
+    required :double, :mem_usage_trisul, 7
+    required :double, :mem_usage_total, 8
+    required :double, :mem_total, 9
+    required :double, :drop_percent_cap, 10
+    required :double, :drop_percent_trisul, 11
+    optional :int64, :proc_bytes, 12
+    optional :int64, :proc_packets, 13
+    optional :string, :offline_pcap_file, 14
+    optional :bool, :is_running, 15
   end
 
 end

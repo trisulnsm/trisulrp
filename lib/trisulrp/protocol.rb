@@ -327,8 +327,19 @@ module TrisulRP::Protocol
   #
   #
   def mk_request(cmd_id,params={})
+   if params.has_key?(:destination_node)
+     destination_node = params.delete(:destination_node)
+   end
+   if params.has_key?(:layer)
+     layer= params.delete(:layer)
+   end
+   if destination_node and layer
+    req = TRP::Message.new(:trp_command => cmd_id, :destination_node=>destination_node)
+   elsif destination_node
+    req = TRP::Message.new(:trp_command => cmd_id, :destination_node=>destination_node)
+   else
     req = TRP::Message.new(:trp_command => cmd_id)
-
+   end
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
 	  fix_TRP_Fields( TRP::HelloRequest, params)
@@ -390,6 +401,24 @@ module TrisulRP::Protocol
     when TRP::Message::Command::METRICS_SUMMARY_REQUEST
 	  fix_TRP_Fields( TRP::MetricsSummaryRequest, params)
       req.metrics_summary_request = TRP::MetricsSummaryRequest.new(params)
+    when TRP::Message::Command::CONTEXT_INFO_REQUEST
+	  fix_TRP_Fields( TRP::ContextInfoRequest, params)
+      req.context_info_request = TRP::ContextInfoRequest.new(params)
+    when TRP::Message::Command::CONTEXT_CONFIG_REQUEST
+	  fix_TRP_Fields( TRP::ContextConfigRequest, params)
+      req.context_config_request = TRP::ContextConfigRequest.new(params)
+    when TRP::Message::Command::PCAP_SLICES_REQUEST
+	  fix_TRP_Fields( TRP::PcapSlicesRequest, params)
+      req.pcap_slices_request = TRP::PcapSlicesRequest.new(params)
+    when TRP::Message::Command::LOG_REQUEST
+	  fix_TRP_Fields( TRP::LogRequest, params)
+      req.log_request = TRP::LogRequest.new(params)
+    when TRP::Message::Command::CONTEXT_START_REQUEST
+	  fix_TRP_Fields( TRP::ContextStartRequest, params)
+      req.context_start_request = TRP::ContextStartRequest.new(params)
+    when TRP::Message::Command::CONTEXT_STOP_REQUEST
+	  fix_TRP_Fields( TRP::ContextStopRequest, params)
+      req.context_stop_request = TRP::ContextStopRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -471,8 +500,15 @@ module TrisulRP::Protocol
         resp.time_slices_response 
     when TRP::Message::Command::METRICS_SUMMARY_RESPONSE
         resp.metrics_summary_response  
+    when TRP::Message::Command::CONTEXT_INFO_RESPONSE
+        resp.context_info_response
+    when TRP::Message::Command::CONTEXT_CONFIG_RESPONSE
+        resp.context_config_response
+    when TRP::Message::Command::LOG_RESPONSE
+        resp.log_response
     else
-      raise "Unknown TRP command ID"
+     
+      raise "#{resp.trp_command} Unknown TRP command ID"
     end
   end
 end
