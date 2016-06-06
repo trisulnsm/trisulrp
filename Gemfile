@@ -9,6 +9,6 @@ gem "ruby-protocol-buffers"
 group :development do
   gem "shoulda" 
   gem "bundler"
-  gem "jeweler"
+  gem "juwelier"
   gem "simplecov" 
 end

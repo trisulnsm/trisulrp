@@ -422,6 +422,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::DOMAIN_REQUEST
 	  fix_TRP_Fields( TRP::DomainRequest, params)
       req.domain_request = TRP::DomainRequest.new(params)
+    when TRP::Message::Command::NODE_CONFIG_REQUEST
+	  fix_TRP_Fields( TRP::NodeConfigRequest, params)
+      req.node_config_request = TRP::NodeConfigRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -511,6 +514,8 @@ module TrisulRP::Protocol
         resp.log_response
     when TRP::Message::Command::DOMAIN_RESPONSE
         resp.domain_response
+    when TRP::Message::Command::NODE_CONFIG_RESPONSE
+        resp.node_config_response
     else
      
       raise "#{resp.trp_command} Unknown TRP command ID"
