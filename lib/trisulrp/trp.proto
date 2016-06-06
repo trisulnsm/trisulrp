@@ -911,7 +911,6 @@ message ContextConfigResponse {
 	repeated  string		  	endpoints_flush=6;
 	repeated  string		  	endpoints_query=7;
 	repeated  string		  	endpoints_pub=8;
-	repeated  string		  	endpoints_sub=9;
 	optional  string		  	config_value=10;  // response to query config .. 
 	repeated  Layer 		  	layers=11;
 

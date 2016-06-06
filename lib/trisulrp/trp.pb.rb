@@ -17,6 +17,7 @@ module TRP
   class AlertT < ::ProtocolBuffers::Message; end
   class ResourceT < ::ProtocolBuffers::Message; end
   class DocumentT < ::ProtocolBuffers::Message; end
+  class NameValue < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
   class HelloRequest < ::ProtocolBuffers::Message; end
   class HelloResponse < ::ProtocolBuffers::Message; end
@@ -57,6 +58,8 @@ module TRP
   class LogResponse < ::ProtocolBuffers::Message; end
   class DomainRequest < ::ProtocolBuffers::Message; end
   class DomainResponse < ::ProtocolBuffers::Message; end
+  class NodeConfigRequest < ::ProtocolBuffers::Message; end
+  class NodeConfigResponse < ::ProtocolBuffers::Message; end
   class ContextCreateRequest < ::ProtocolBuffers::Message; end
   class ContextInfoRequest < ::ProtocolBuffers::Message; end
   class ContextInfoResponse < ::ProtocolBuffers::Message; end
@@ -296,6 +299,13 @@ module TRP
     repeated ::TRP::DocumentT::Flow, :flows, 4
   end
 
+  class NameValue < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.NameValue"
+
+    required :string, :name, 1
+    optional :string, :value, 2
+  end
+
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -362,6 +372,8 @@ module TRP
       CONTEXT_CONFIG_RESPONSE = 115
       DOMAIN_REQUEST = 116
       DOMAIN_RESPONSE = 117
+      NODE_CONFIG_REQUEST = 118
+      NODE_CONFIG_RESPONSE = 119
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -420,6 +432,8 @@ module TRP
     optional ::TRP::ContextInfoResponse, :context_info_response, 115
     optional ::TRP::DomainRequest, :domain_request, 116
     optional ::TRP::DomainResponse, :domain_response, 117
+    optional ::TRP::NodeConfigRequest, :node_config_request, 118
+    optional ::TRP::NodeConfigResponse, :node_config_response, 119
     optional :string, :destination_node, 200
     optional :string, :layer, 201
   end
@@ -712,6 +726,7 @@ module TRP
 
     set_fully_qualified_name "TRP.SubscribeCtl"
 
+    required :string, :context_name, 1
     required ::TRP::SubscribeCtl::CtlType, :ctl, 2
     required ::TRP::SubscribeCtl::StabberType, :type, 3
     optional :string, :guid, 4
@@ -880,6 +895,33 @@ module TRP
     optional :string, :params, 4
   end
 
+  class NodeConfigRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.NodeConfigRequest"
+
+    optional :string, :message, 1
+  end
+
+  class NodeConfigResponse < ::ProtocolBuffers::Message
+    # forward declarations
+    class Node < ::ProtocolBuffers::Message; end
+
+    set_fully_qualified_name "TRP.NodeConfigResponse"
+
+    # nested messages
+    class Node < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.NodeConfigResponse.Node"
+
+      required :string, :id, 1
+      required ::TRP::DomainNodeType, :nodetype, 2
+      required :string, :description, 3
+      required :string, :public_key, 4
+    end
+
+    repeated ::TRP::NodeConfigResponse::Node, :domains, 1
+    repeated ::TRP::NodeConfigResponse::Node, :hubs, 2
+    repeated ::TRP::NodeConfigResponse::Node, :probes, 3
+  end
+
   class ContextCreateRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.ContextCreateRequest"
 
@@ -911,6 +953,7 @@ module TRP
       optional :bool, :is_clean, 6
       optional :string, :extrainfo, 7
       repeated ::TRP::Timestamp, :run_history, 8
+      optional :string, :profile, 9
     end
 
     repeated ::TRP::ContextInfoResponse::Item, :items, 1
@@ -949,7 +992,7 @@ module TRP
     optional :string, :params, 3
     optional :string, :push_config_blob, 4
     optional :string, :query_config, 5
-    optional :string, :set_config, 6
+    repeated ::TRP::NameValue, :set_config_values, 6
   end
 
   class ContextConfigResponse < ::ProtocolBuffers::Message
@@ -975,7 +1018,6 @@ module TRP
     repeated :string, :endpoints_flush, 6
     repeated :string, :endpoints_query, 7
     repeated :string, :endpoints_pub, 8
-    repeated :string, :endpoints_sub, 9
     optional :string, :config_value, 10
     repeated ::TRP::ContextConfigResponse::Layer, :layers, 11
   end
