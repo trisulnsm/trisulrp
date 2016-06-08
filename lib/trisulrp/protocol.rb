@@ -159,7 +159,8 @@ module TrisulRP::Protocol
   # raises an error if the server returns an ErrorResponse - this contains an error_message field
   # which can tell you what went wrong
   #
-  def get_response_zmq(endpoint, trp_request)
+  def get_response_zmq(endpoint, trp_request, timeout_seconds = -1 )
+
 
     outbuf=""
 
@@ -171,23 +172,35 @@ module TrisulRP::Protocol
 	sock.send_string(outbuf)
 
 
-	#in 
-	dataarray=""
-	sock.recv_string(dataarray)
-    resp =TRP::Message.new
-    resp.parse dataarray
-    if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
-		print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
-		sock.close
+
+	# Initialize a poll set
+	poller = ZMQ::Poller.new
+	poller.register(sock, ZMQ::POLLIN)
+
+	ret = poller.poll(timeout_seconds * 1_000 )
+	raise "zeromq poll error " if  ret == -1 
+
+	poller.readables.each do |rsock|
+
+		#in 
+		dataarray=""
+		rsock.recv_string(dataarray)
+		resp =TRP::Message.new
+		resp.parse dataarray
+		if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
+			print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
+			rsock.close
+			ctx.terminate 
+			raise resp.error_response.error_message
+		end
+
+		rsock.close
 		ctx.terminate 
-		raise resp.error_response.error_message
-	end
 
-	sock.close
-	ctx.terminate 
+		yield unwrap_response(resp) if block_given?
+		return unwrap_response(resp)
 
-    yield unwrap_response(resp) if block_given?
-    return unwrap_response(resp)
+    end
 
   end
 
