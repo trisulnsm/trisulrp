@@ -244,6 +244,7 @@ module TRP
     optional :int64, :setup_rtt, 21
     optional :int64, :retransmissions, 22
     optional :int64, :tracker_statval, 23
+    optional :string, :probe_id, 24
   end
 
   class AlertT < ::ProtocolBuffers::Message
@@ -264,6 +265,7 @@ module TRP
     optional :string, :aux_message2, 13
     optional :int64, :occurrances, 14, :default => 1
     optional :string, :group_by_key, 15
+    optional :string, :probe_id, 16
   end
 
   class ResourceT < ::ProtocolBuffers::Message
@@ -277,6 +279,7 @@ module TRP
     optional ::TRP::KeyT, :destination_port, 6
     optional :string, :uri, 7
     optional :string, :userlabel, 8
+    optional :string, :probe_id, 9
   end
 
   class DocumentT < ::ProtocolBuffers::Message
@@ -435,7 +438,7 @@ module TRP
     optional ::TRP::NodeConfigRequest, :node_config_request, 118
     optional ::TRP::NodeConfigResponse, :node_config_response, 119
     optional :string, :destination_node, 200
-    optional :string, :layer, 201
+    optional :string, :probe_id, 201
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -893,6 +896,7 @@ module TRP
     repeated ::TRP::DomainResponse::Node, :nodes, 2
     optional :string, :req_params, 3
     optional :string, :params, 4
+    optional :bool, :need_reconnect, 5, :default => false
   end
 
   class NodeConfigRequest < ::ProtocolBuffers::Message
@@ -952,7 +956,7 @@ module TRP
       optional ::TRP::TimeInterval, :time_interval, 5
       optional :bool, :is_clean, 6
       optional :string, :extrainfo, 7
-      repeated ::TRP::Timestamp, :run_history, 8
+      repeated ::TRP::TimeInterval, :run_history, 8
       optional :string, :profile, 9
     end
 
@@ -982,6 +986,7 @@ module TRP
     set_fully_qualified_name "TRP.ContextStopRequest"
 
     required :string, :context_name, 1
+    optional :string, :run_tool, 5
   end
 
   class ContextConfigRequest < ::ProtocolBuffers::Message
