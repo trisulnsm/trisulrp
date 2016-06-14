@@ -118,27 +118,6 @@ module TrisulRP::Protocol
   # raises an error if the server returns an ErrorResponse - this contains an error_message field
   # which can tell you what went wrong
   #
-  def get_response(conn,trp_request)
-    outbuf=""
-    outbuf=trp_request.serialize_to_string
-
-	conn.write([outbuf.length].pack("N*"))
-	conn.write(outbuf)
-
-    inbuf=""
-	inbuf = conn.read(4)
-    buflenarr=inbuf.unpack("N*")
-    datalen=buflenarr[0]
-    dataarray=conn.read(datalen)
-    resp =TRP::Message.new
-    resp.parse dataarray
-    if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
-		print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
-		raise resp.error_response.error_message
-	end
-    yield unwrap_response(resp) if block_given?
-    return unwrap_response(resp)
-  end
 
   # Using ZMQ to Dispatch request to server & get response 
   #
@@ -178,7 +157,16 @@ module TrisulRP::Protocol
 	poller.register(sock, ZMQ::POLLIN)
 
 	ret = poller.poll(timeout_seconds * 1_000 )
-	raise "zeromq poll error " if  ret == -1 
+  if  ret == -1 
+    raise "zeromq poll error #{endpoint} " 
+		sock.close
+		ctx.terminate 
+  end
+  if  ret == 0
+    raise "zeromq socket read error #{endpoint} " 
+		sock.close
+		ctx.terminate 
+ end
 
 	poller.readables.each do |rsock|
 
@@ -343,12 +331,7 @@ module TrisulRP::Protocol
    if params.has_key?(:destination_node)
      destination_node = params.delete(:destination_node)
    end
-   if params.has_key?(:layer)
-     layer= params.delete(:layer)
-   end
-   if destination_node and layer
-    req = TRP::Message.new(:trp_command => cmd_id, :destination_node=>destination_node)
-   elsif destination_node
+   if destination_node
     req = TRP::Message.new(:trp_command => cmd_id, :destination_node=>destination_node)
    else
     req = TRP::Message.new(:trp_command => cmd_id)
