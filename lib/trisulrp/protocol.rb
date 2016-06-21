@@ -329,7 +329,8 @@ module TrisulRP::Protocol
   # </code>
   #
   #
-  def mk_request(cmd_id,params={})
+  def mk_request(cmd_id,in_params={})
+   params  =in_params.dup
    opts = {:trp_command=> cmd_id}
    if params.has_key?(:destination_node)
      opts[:destination_node] = params.delete(:destination_node)
