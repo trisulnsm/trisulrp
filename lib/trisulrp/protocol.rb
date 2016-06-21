@@ -328,14 +328,14 @@ module TrisulRP::Protocol
   #
   #
   def mk_request(cmd_id,params={})
+   opts = {:trp_command=> cmd_id}
    if params.has_key?(:destination_node)
-     destination_node = params.delete(:destination_node)
+     opts[:destination_node] = params.delete(:destination_node)
    end
-   if destination_node
-    req = TRP::Message.new(:trp_command => cmd_id, :destination_node=>destination_node)
-   else
-    req = TRP::Message.new(:trp_command => cmd_id)
+   if params.has_key?(:probe_id)
+     opts[:probe_id] = params.delete(:probe_id)
    end
+    req = TRP::Message.new(opts)
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
 	  fix_TRP_Fields( TRP::HelloRequest, params)
