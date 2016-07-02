@@ -531,6 +531,7 @@ message QueryAlertsRequest  {
     optional KeyT           any_ip=18;
     optional KeyT           any_port=19;
 	repeated KeyT           ip_pair=20;			     // array of 2 ips 
+	optional string			message_regex=21;		// searech via regex 
 }
 
 /////////////////////////////////////
