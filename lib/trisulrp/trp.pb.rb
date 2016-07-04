@@ -622,6 +622,7 @@ module TRP
     optional ::TRP::KeyT, :any_ip, 18
     optional ::TRP::KeyT, :any_port, 19
     repeated ::TRP::KeyT, :ip_pair, 20
+    optional :string, :message_regex, 21
   end
 
   class QueryAlertsResponse < ::ProtocolBuffers::Message

@@ -148,17 +148,18 @@ module TrisulRP::Protocol
 	ctx=ZMQ::Context.new
 	sock = ctx.socket(ZMQ::REQ)
 
-
+  # time out for context termination
+  sock.setsockopt(ZMQ::LINGER, 5*1_000)
 
 	# Initialize a poll set
 	poller = ZMQ::Poller.new
 	poller.register(sock, ZMQ::POLLIN)
+  
 
 	sock.connect(endpoint)
 	sock.send_string(outbuf)
 
 	ret = poller.poll(timeout_seconds * 1_000 )
-
 	  if  ret == -1 
 			sock.close
 			ctx.terminate 
