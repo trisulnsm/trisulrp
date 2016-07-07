@@ -851,6 +851,7 @@ message ContextInfoResponse {
 		optional string			extrainfo=7;
 		repeated TimeInterval   run_history=8;
 		optional string			profile=9;
+		optional string			runmode=10;
 	}
 
 	repeated  Item 	items=1;

@@ -959,6 +959,7 @@ module TRP
       optional :string, :extrainfo, 7
       repeated ::TRP::TimeInterval, :run_history, 8
       optional :string, :profile, 9
+      optional :string, :runmode, 10
     end
 
     repeated ::TRP::ContextInfoResponse::Item, :items, 1
