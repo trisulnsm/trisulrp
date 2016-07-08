@@ -959,6 +959,7 @@ module TRP
       optional :string, :extrainfo, 7
       repeated ::TRP::TimeInterval, :run_history, 8
       optional :string, :profile, 9
+      optional :string, :runmode, 10
     end
 
     repeated ::TRP::ContextInfoResponse::Item, :items, 1
@@ -996,7 +997,7 @@ module TRP
     required :string, :context_name, 1
     optional :string, :profile, 2
     optional :string, :params, 3
-    optional :string, :push_config_blob, 4
+    optional :bytes, :push_config_blob, 4
     optional :string, :query_config, 5
     repeated ::TRP::NameValue, :set_config_values, 6
   end
@@ -1019,8 +1020,8 @@ module TRP
     required :string, :context_name, 1
     optional :string, :profile, 2
     optional :string, :params, 3
-    optional :string, :pull_config_blob, 4
-    optional :string, :config_blob, 5
+    optional :bytes, :pull_config_blob, 4
+    optional :bytes, :config_blob, 5
     repeated :string, :endpoints_flush, 6
     repeated :string, :endpoints_query, 7
     repeated :string, :endpoints_pub, 8
