@@ -709,6 +709,7 @@ message DeleteAlertsRequest  {
     optional KeyT     		priority=12;
     optional KeyT     		any_ip=18;
     optional KeyT     		any_port=19;
+	optional string			message_regex=21;		// delete using regex 
 } 
 
 //////////////////////////////////

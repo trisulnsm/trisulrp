@@ -805,6 +805,7 @@ module TRP
     optional ::TRP::KeyT, :priority, 12
     optional ::TRP::KeyT, :any_ip, 18
     optional ::TRP::KeyT, :any_port, 19
+    optional :string, :message_regex, 21
   end
 
   class MetricsSummaryRequest < ::ProtocolBuffers::Message
