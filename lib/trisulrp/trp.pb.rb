@@ -53,7 +53,6 @@ module TRP
   class DeleteAlertsRequest < ::ProtocolBuffers::Message; end
   class MetricsSummaryRequest < ::ProtocolBuffers::Message; end
   class MetricsSummaryResponse < ::ProtocolBuffers::Message; end
-  class ServiceRequest < ::ProtocolBuffers::Message; end
   class LogRequest < ::ProtocolBuffers::Message; end
   class LogResponse < ::ProtocolBuffers::Message; end
   class DomainRequest < ::ProtocolBuffers::Message; end
@@ -74,6 +73,10 @@ module TRP
   class GrepResponse < ::ProtocolBuffers::Message; end
   class ProbeStatsRequest < ::ProtocolBuffers::Message; end
   class ProbeStatsResponse < ::ProtocolBuffers::Message; end
+  class AsyncResponse < ::ProtocolBuffers::Message; end
+  class AsyncRequest < ::ProtocolBuffers::Message; end
+  class FileRequest < ::ProtocolBuffers::Message; end
+  class FileResponse < ::ProtocolBuffers::Message; end
 
   # enums
   module AuthLevel
@@ -377,6 +380,12 @@ module TRP
       DOMAIN_RESPONSE = 117
       NODE_CONFIG_REQUEST = 118
       NODE_CONFIG_RESPONSE = 119
+      ASYNC_REQUEST = 120
+      ASYNC_RESPONSE = 121
+      FILE_REQUEST = 122
+      FILE_RESPONSE = 123
+      SUBSYSTEM_INIT = 124
+      SUBSYSTEM_EXIT = 125
     end
 
     set_fully_qualified_name "TRP.Message"
@@ -422,7 +431,6 @@ module TRP
     optional ::TRP::KeySpaceRequest, :key_space_request, 67
     optional ::TRP::KeySpaceResponse, :key_space_response, 68
     optional ::TRP::PcapSlicesRequest, :pcap_slices_request, 69
-    optional ::TRP::ServiceRequest, :service_request, 101
     optional ::TRP::LogRequest, :log_request, 105
     optional ::TRP::LogResponse, :log_response, 106
     optional ::TRP::ContextCreateRequest, :context_create_request, 108
@@ -437,8 +445,13 @@ module TRP
     optional ::TRP::DomainResponse, :domain_response, 117
     optional ::TRP::NodeConfigRequest, :node_config_request, 118
     optional ::TRP::NodeConfigResponse, :node_config_response, 119
+    optional ::TRP::AsyncRequest, :async_request, 120
+    optional ::TRP::AsyncResponse, :async_response, 121
+    optional ::TRP::FileRequest, :file_request, 122
+    optional ::TRP::FileResponse, :file_response, 123
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
+    optional :bool, :run_async, 202
   end
 
   class HelloRequest < ::ProtocolBuffers::Message
@@ -823,29 +836,6 @@ module TRP
     repeated ::TRP::StatsTuple, :vals, 3
   end
 
-  class ServiceRequest < ::ProtocolBuffers::Message
-    # forward declarations
-
-    # enums
-    module ServiceType
-      include ::ProtocolBuffers::Enum
-
-      set_fully_qualified_name "TRP.ServiceRequest.ServiceType"
-
-      ST_START = 0
-      ST_STOP = 1
-      ST_STATUS = 2
-      ST_RESTART = 3
-    end
-
-    set_fully_qualified_name "TRP.ServiceRequest"
-
-    optional :string, :context, 1
-    required ::TRP::ServiceRequest::ServiceType, :service_type, 2
-    required :string, :service_name, 3
-    optional :string, :service_options, 4
-  end
-
   class LogRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "TRP.LogRequest"
 
@@ -902,9 +892,24 @@ module TRP
   end
 
   class NodeConfigRequest < ::ProtocolBuffers::Message
+    # forward declarations
+    class IntelFeed < ::ProtocolBuffers::Message; end
+
     set_fully_qualified_name "TRP.NodeConfigRequest"
 
+    # nested messages
+    class IntelFeed < ::ProtocolBuffers::Message
+      set_fully_qualified_name "TRP.NodeConfigRequest.IntelFeed"
+
+      required :string, :guid, 1
+      optional :string, :name, 2
+      optional :string, :download_rules, 3
+      repeated :string, :uris, 4
+    end
+
     optional :string, :message, 1
+    optional ::TRP::NodeConfigRequest::IntelFeed, :add_feed, 2
+    optional ::TRP::NodeConfigRequest::IntelFeed, :on_feed_refresh, 3
   end
 
   class NodeConfigResponse < ::ProtocolBuffers::Message
@@ -926,6 +931,7 @@ module TRP
     repeated ::TRP::NodeConfigResponse::Node, :domains, 1
     repeated ::TRP::NodeConfigResponse::Node, :hubs, 2
     repeated ::TRP::NodeConfigResponse::Node, :probes, 3
+    repeated :string, :feeds, 4
   end
 
   class ContextCreateRequest < ::ProtocolBuffers::Message
@@ -1101,6 +1107,39 @@ module TRP
     optional :int64, :proc_packets, 13
     optional :string, :offline_pcap_file, 14
     optional :bool, :is_running, 15
+  end
+
+  class AsyncResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AsyncResponse"
+
+    required :int64, :token, 1
+    optional :string, :response_message, 3
+    optional ::TRP::Message, :response, 4
+  end
+
+  class AsyncRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.AsyncRequest"
+
+    required :int64, :token, 1
+    optional :string, :request_message, 2
+  end
+
+  class FileRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.FileRequest"
+
+    required :string, :uri, 1
+    required :int64, :position, 2
+    optional :string, :params, 3
+  end
+
+  class FileResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "TRP.FileResponse"
+
+    required :string, :uri, 1
+    required :bool, :eof, 2
+    optional :int64, :position, 3
+    optional :bytes, :content, 4
+    optional :string, :request_params, 5
   end
 
 end

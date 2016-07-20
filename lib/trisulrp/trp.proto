@@ -273,6 +273,12 @@ message Message {
 					DOMAIN_RESPONSE=117;
 					NODE_CONFIG_REQUEST=118;
 					NODE_CONFIG_RESPONSE=119;
+					ASYNC_REQUEST=120;
+					ASYNC_RESPONSE=121;
+					FILE_REQUEST=122;
+					FILE_RESPONSE=123;
+					SUBSYSTEM_INIT=124;			// init msg  used to prepare services 
+					SUBSYSTEM_EXIT=125;
 
     }
 
@@ -317,7 +323,6 @@ message Message {
 	optional KeySpaceRequest key_space_request=67;
 	optional KeySpaceResponse  key_space_response=68;
 	optional PcapSlicesRequest  pcap_slices_request=69;
-	optional ServiceRequest  service_request=101;
 	optional LogRequest  log_request=105;
 	optional LogResponse  log_response=106;
 	optional ContextCreateRequest  context_create_request=108;
@@ -332,8 +337,13 @@ message Message {
 	optional DomainResponse   domain_response=117;
 	optional NodeConfigRequest   node_config_request=118;
 	optional NodeConfigResponse   node_config_response=119;
+	optional AsyncRequest   async_request=120;
+	optional AsyncResponse   async_response=121;
+	optional FileRequest   file_request=122;
+	optional FileResponse    file_response=123;
     optional string     destination_node=200; 	// todo move 2nd
     optional string     probe_id=201;			// todo move 3rd 
+    optional bool       run_async=202;			// todo move 3rd 
 
 }
 
@@ -728,27 +738,6 @@ message MetricsSummaryResponse {
 }
 
 
-//////////////////////////////////
-// ServiceRequest - start stop status 
-// 	OK or ERROR response 
-//  Status = OK if running with PID etc in message text 
-message ServiceRequest {
-	enum ServiceType
-	{
-		ST_START=0;
-		ST_STOP=1;
-		ST_STATUS=2; 
-		ST_RESTART=3;
-	}
-
-     optional  string         context=1;
-	 required  ServiceType	  service_type=2;
-     required  string         service_name=3;
-     optional  string         service_options=4;
-}
-
-
-
 
 //////////////////////////////////
 // LogRequest  - want log file 
@@ -805,6 +794,16 @@ message DomainResponse {
 
 message NodeConfigRequest {
 	optional string message=1;
+
+	message IntelFeed {
+		required string		guid=1; 			// identifying feed group (eg Geo, Badfellas)
+		optional string		name=2; 			// name
+		optional string		download_rules=3;	// xml file with feed update instructions
+		repeated string	 	uris=4;				// individual files in config//.. for FileRequest download 
+	}
+
+	optional IntelFeed add_feed=2;
+	optional IntelFeed on_feed_refresh=3;
 }
 
 message NodeConfigResponse {
@@ -819,6 +818,7 @@ message NodeConfigResponse {
 	repeated Node		domains=1;
 	repeated Node		hubs=2;
 	repeated Node		probes=3;
+	repeated string		feeds=4;
 }
 
 
@@ -998,3 +998,41 @@ message ProbeStatsResponse {
 	optional string			offline_pcap_file=14;
 	optional bool			is_running=15;
 }
+
+/////////////////////////////////////
+// AsyncResponse  
+message AsyncResponse  {
+    required int64          token=1;
+	optional string 		response_message=3;
+	optional Message		response=4;
+}
+
+//////////////////////////////////
+// AsyncRequest
+//		response taken from original (if ready) or not_ready flag set 	
+message AsyncRequest {
+	 required  int64		token=1;
+     optional  string       request_message =2; // basically extra text for logging 
+}
+
+/////////////////////////////////////
+// FileRequest  
+message FileRequest  {
+	required string 		uri=1;
+    required int64          position=2;
+	optional string			params=3;	// local meaning sentback n response
+}
+
+//////////////////////////////////
+// FileResponse
+//		one chunk at at time, Trisul has slightly inefficient File Transfer
+// 		for very large files, since most files are data feeds  < 100MB fine for now
+message FileResponse  {
+	 required  string 		uri=1;
+	 required  bool		    eof=2;
+     optional  int64        position=3;
+     optional  bytes        content=4;
+     optional  string       request_params =5; 
+}
+
+

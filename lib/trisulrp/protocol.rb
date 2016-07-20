@@ -339,6 +339,9 @@ module TrisulRP::Protocol
    if params.has_key?(:probe_id)
      opts[:probe_id] = params.delete(:probe_id)
    end
+   if params.has_key?(:run_async)
+     opts[:run_async] = params.delete(:run_async)
+   end
     req = TRP::Message.new(opts)
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
@@ -422,6 +425,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::DOMAIN_REQUEST
 	  fix_TRP_Fields( TRP::DomainRequest, params)
       req.domain_request = TRP::DomainRequest.new(params)
+    when TRP::Message::Command::ASYNC_REQUEST
+	  fix_TRP_Fields( TRP::AsyncRequest, params)
+      req.async_request = TRP::AsyncRequest.new(params)
     when TRP::Message::Command::NODE_CONFIG_REQUEST
 	  fix_TRP_Fields( TRP::NodeConfigRequest, params)
       req.node_config_request = TRP::NodeConfigRequest.new(params)
@@ -516,6 +522,8 @@ module TrisulRP::Protocol
         resp.domain_response
     when TRP::Message::Command::NODE_CONFIG_RESPONSE
         resp.node_config_response
+    when TRP::Message::Command::ASYNC_RESPONSE
+        resp.async_response
     else
      
       raise "#{resp.trp_command} Unknown TRP command ID"
