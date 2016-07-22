@@ -187,9 +187,10 @@ module TrisulRP::Protocol
 
 		rsock.close
 		ctx.terminate 
-
-		yield unwrap_response(resp) if block_given?
-		return unwrap_response(resp)
+    unwrap_resp = unwrap_response(resp)
+    unwrap_resp.instance_variable_set("@trp_resp_command_id",resp.trp_command)
+		yield unwrap_resp if block_given?
+		return unwrap_resp
 
     end
 
