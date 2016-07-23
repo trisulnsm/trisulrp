@@ -165,6 +165,7 @@ message DocumentT  {
     }
 
     repeated Flow          flows=4;
+	optional string		   probe_id=5;
 }
 
 
@@ -697,6 +698,7 @@ message TimeSlicesResponse  {
 		optional string 		status=3;
 		optional int64          disk_size=4;
 		optional string         path=5;
+		optional bool			available=6;
 	};
 
 	repeated SliceT		    slices=1;
@@ -799,11 +801,11 @@ message NodeConfigRequest {
 		required string		guid=1; 			// identifying feed group (eg Geo, Badfellas)
 		optional string		name=2; 			// name
 		optional string		download_rules=3;	// xml file with feed update instructions
-		repeated string	 	uris=4;				// individual files in config//.. for FileRequest download 
+		repeated string	 	uri=4;				// individual files in config//.. for FileRequest download 
 	}
 
 	optional IntelFeed add_feed=2;
-	optional IntelFeed on_feed_refresh=3;
+	optional IntelFeed process_new_feed=3;
 }
 
 message NodeConfigResponse {

@@ -303,6 +303,7 @@ module TRP
     optional :string, :fts_attributes, 2
     optional :string, :fullcontent, 3
     repeated ::TRP::DocumentT::Flow, :flows, 4
+    optional :string, :probe_id, 5
   end
 
   class NameValue < ::ProtocolBuffers::Message
@@ -797,6 +798,7 @@ module TRP
       optional :string, :status, 3
       optional :int64, :disk_size, 4
       optional :string, :path, 5
+      optional :bool, :available, 6
     end
 
     repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
@@ -904,12 +906,12 @@ module TRP
       required :string, :guid, 1
       optional :string, :name, 2
       optional :string, :download_rules, 3
-      repeated :string, :uris, 4
+      repeated :string, :uri, 4
     end
 
     optional :string, :message, 1
     optional ::TRP::NodeConfigRequest::IntelFeed, :add_feed, 2
-    optional ::TRP::NodeConfigRequest::IntelFeed, :on_feed_refresh, 3
+    optional ::TRP::NodeConfigRequest::IntelFeed, :process_new_feed, 3
   end
 
   class NodeConfigResponse < ::ProtocolBuffers::Message
