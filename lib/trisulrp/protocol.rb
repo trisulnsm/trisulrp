@@ -144,7 +144,7 @@ module TrisulRP::Protocol
     outbuf=""
 
 	# out
-    outbuf=trp_request.serialize_to_string
+   outbuf=trp_request.encode
 	ctx=ZMQ::Context.new
 	sock = ctx.socket(ZMQ::REQ)
 
@@ -177,8 +177,8 @@ module TrisulRP::Protocol
 		dataarray=""
 		rsock.recv_string(dataarray)
 		resp =TRP::Message.new
-		resp.parse dataarray
-		if resp.trp_command == TRP::Message::Command::ERROR_RESPONSE
+		resp.decode dataarray
+		if resp.trp_command.to_i == TRP::Message::Command::ERROR_RESPONSE
 			print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
 			rsock.close
 			ctx.terminate 
@@ -188,7 +188,7 @@ module TrisulRP::Protocol
 		rsock.close
 		ctx.terminate 
     unwrap_resp = unwrap_response(resp)
-    unwrap_resp.instance_variable_set("@trp_resp_command_id",resp.trp_command)
+    unwrap_resp.instance_variable_set("@trp_resp_command_id",resp.trp_command.to_i)
 		yield unwrap_resp if block_given?
 		return unwrap_resp
 
@@ -275,19 +275,19 @@ module TrisulRP::Protocol
 	end
 
   	params.each do |k,v|
-		f = msg.field_for_name(k)
+		f = msg.get_field(k)
 		if v.is_a? String 
-			if f.is_a? ProtocolBuffers::Field::MessageField and f.proxy_class.to_s == "TRP::KeyT"
+			if f.is_a? Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
 				params[k] = TRP::KeyT.new( :label => v )
-			elsif f.is_a? ProtocolBuffers::Field::Int64Field 
+			elsif f.is_a? Protobuf::Field::Int64Field 
 				params[k] = v.to_i
-			elsif f.is_a? ProtocolBuffers::Field::StringField and f.otype == :repeated  
+			elsif f.is_a? Protobuf::Field::StringField and f.rule == :repeated  
 				params[k] = v.split(',') 
-            elsif f.is_a? ProtocolBuffers::Field::BoolField
+            elsif f.is_a? Protobuf::Field::BoolField
 				params[k] = ( v == "true")
 			end
         elsif v.is_a? BigDecimal  or v.is_a? Float 
-			if f.is_a? ProtocolBuffers::Field::Int64Field 
+			if f.is_a? Protobuf::Field::Int64Field 
 			    params[k] = v.to_i
             end
 		end
@@ -474,7 +474,7 @@ module TrisulRP::Protocol
   #
   #
   def unwrap_response(resp)
-    case resp.trp_command
+    case resp.trp_command.to_i
     when TRP::Message::Command::HELLO_RESPONSE
       resp.hello_response
     when TRP::Message::Command::COUNTER_GROUP_TOPPER_RESPONSE
@@ -527,7 +527,7 @@ module TrisulRP::Protocol
         resp.async_response
     else
      
-      raise "#{resp.trp_command} Unknown TRP command ID"
+      raise "#{resp.trp_commandi.to_i} Unknown TRP command ID"
     end
   end
 end

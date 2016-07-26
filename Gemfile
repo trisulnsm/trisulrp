@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 # Add dependencies required to use your gem here.
-gem "ruby-protocol-buffers"
+gem "protobuf"
 
 
 # Add dependencies to develop your gem here.
