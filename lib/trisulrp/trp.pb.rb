@@ -49,6 +49,7 @@ module TRP
   class Timestamp < ::Protobuf::Message; end
   class TimeInterval < ::Protobuf::Message; end
   class StatsTuple < ::Protobuf::Message; end
+  class StatsArray < ::Protobuf::Message; end
   class MeterValues < ::Protobuf::Message; end
   class MeterInfo < ::Protobuf::Message
     class MeterType < ::Protobuf::Enum
@@ -269,6 +270,11 @@ module TRP
     required :int64, :val, 2
   end
 
+  class StatsArray
+    required :int64, :ts_tv_sec, 1
+    repeated :int64, :values, 2
+  end
+
   class MeterValues
     required :int32, :meter, 1
     repeated ::TRP::StatsTuple, :values, 2
@@ -480,7 +486,10 @@ module TRP
   end
 
   class CounterItemResponse
-    required ::TRP::KeyStats, :stats, 1
+    required :string, :counter_group, 1
+    required ::TRP::KeyT, :key, 2
+    optional ::TRP::StatsArray, :totals, 3
+    repeated ::TRP::StatsArray, :stats, 4
   end
 
   class CounterGroupTopperRequest

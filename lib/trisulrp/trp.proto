@@ -26,6 +26,11 @@ message StatsTuple {
     required int64          val=2; 
 }
 
+message StatsArray {
+    required int64      	ts_tv_sec=1; 
+    repeated int64          values=2; 
+}
+
 message MeterValues {
     required int32          meter=1;
     repeated StatsTuple     values=2;
@@ -399,7 +404,10 @@ message CounterItemRequest{
 ///////////////////////////////
 // CounterItemResponse  
 message CounterItemResponse{
-    required KeyStats       stats=1;
+	required string			counter_group=1;
+	required KeyT			key=2;
+    optional StatsArray     totals=3;
+    repeated StatsArray     stats=4;
 }
 
 
