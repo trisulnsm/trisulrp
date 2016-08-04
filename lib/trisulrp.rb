@@ -10,6 +10,10 @@ module TrisulRP
 end
 
 require 'rubygems'
+
+require 'protobuf'
+::Protobuf.ignore_unknown_fields=true
+
 require 'trisulrp/trp.pb'
 require 'trisulrp/guids.rb'
 require 'trisulrp/keys.rb'

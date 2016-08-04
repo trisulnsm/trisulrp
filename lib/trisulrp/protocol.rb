@@ -432,6 +432,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::NODE_CONFIG_REQUEST
 	  fix_TRP_Fields( TRP::NodeConfigRequest, params)
       req.node_config_request = TRP::NodeConfigRequest.new(params)
+    when TRP::Message::Command::FILE_REQUEST
+	  fix_TRP_Fields( TRP::FileRequest, params)
+      req.file_request = TRP::FileRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -525,6 +528,8 @@ module TrisulRP::Protocol
         resp.node_config_response
     when TRP::Message::Command::ASYNC_RESPONSE
         resp.async_response
+    when TRP::Message::Command::FILE_RESPONSE
+        resp.file_response
     else
      
       raise "#{resp.trp_commandi.to_i} Unknown TRP command ID"
