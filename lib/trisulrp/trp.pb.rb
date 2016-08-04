@@ -916,6 +916,7 @@ module TRP
     required :string, :context_name, 1
     repeated ::TRP::SessionT, :sessions, 2
     repeated :string, :hints, 3
+    optional :string, :probe_id, 4
   end
 
   class ProbeStatsRequest
