@@ -275,24 +275,27 @@ module TrisulRP::Protocol
 	end
 
   	params.each do |k,v|
-		f = msg.get_field(k)
-		if v.is_a? String 
-			if f.is_a? Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
-				params[k] = TRP::KeyT.new( :label => v )
-			elsif f.is_a? Protobuf::Field::Int64Field 
-				params[k] = v.to_i
-			elsif f.is_a? Protobuf::Field::StringField and f.rule == :repeated  
-				params[k] = v.split(',') 
-            elsif f.is_a? Protobuf::Field::BoolField
-				params[k] = ( v == "true")
-			end
-        elsif v.is_a? BigDecimal  or v.is_a? Float 
-			if f.is_a? Protobuf::Field::Int64Field 
-			    params[k] = v.to_i
-            end
-		end
-
-	end
+      f = msg.get_field(k)
+      if v.is_a? String 
+        if f.is_a? Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
+          params[k] = TRP::KeyT.new( :label => v )
+        elsif f.is_a? Protobuf::Field::Int64Field 
+          params[k] = v.to_i
+        elsif f.is_a? Protobuf::Field::StringField and f.rule == :repeated  
+          params[k] = v.split(',') 
+        elsif f.is_a? Protobuf::Field::BoolField
+          params[k] = ( v == "true")
+        end
+      elsif v.is_a? BigDecimal  or v.is_a? Float 
+        if f.is_a? Protobuf::Field::Int64Field 
+            params[k] = v.to_i
+        end
+      elsif v.is_a?Array and f.is_a?Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
+        v.each_with_index do |v1,idx|
+          v[idx]= TRP::KeyT.new( :label => v1 ) if v1.is_a?String
+        end
+      end
+	 end
 
   end
 
