@@ -937,15 +937,22 @@ message ContextConfigResponse {
 // PcapReqiest
 //  NOTE - only one of the various filters are supported
 //  sending > 1 will result in error 
+//	
+// Modes
+//	1.  nothing set => PCAP file in contents
+//	2.  save_file_prefix set =>  file download token
+//	3.  merge_pcap_files => file download token 
 // 
 message PcapRequest {
 	required string				context_name=1;
     optional int64              max_bytes=2[default=100000000]; // 100MB , can increase to 0.75 Filesystem freespace
     optional CompressionType    compress_type=3[default=UNCOMPRESSED];              
-    optional string             save_file=4;
-	required TimeInterval       time_interval=5;                   
+	required TimeInterval       time_interval=4;                   
+    optional string             save_file_prefix=5;
 	required string             filter_expression=6;
+	repeated string				merge_pcap_files=7;
 }
+
 
 /////////////////////////////////////
 // FileredDatagaramResponse
@@ -957,7 +964,7 @@ message PcapResponse  {
     optional int64          num_bytes=5;      
     optional string         sha1=6;
     optional bytes          contents=7;
-	optional string			save_file=8;
+	optional string			save_file=8;		//use FileRequest framework to download 
 }
 
 ////////////////////////////////////
@@ -1032,6 +1039,7 @@ message FileRequest  {
 	required string 		uri=1;
     required int64          position=2;
 	optional string			params=3;	// local meaning sentback n response
+	optional string			context_name=4;
 }
 
 //////////////////////////////////
@@ -1044,6 +1052,7 @@ message FileResponse  {
      optional  int64        position=3;
      optional  bytes        content=4;
      optional  string       request_params =5; 
+	 optional string		context_name=6;
 }
 
 
