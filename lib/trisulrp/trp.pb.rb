@@ -884,10 +884,11 @@ module TRP
     required :string, :context_name, 1
     optional :int64, :max_bytes, 2, :default => 100000000
     optional ::TRP::CompressionType, :compress_type, 3, :default => ::TRP::CompressionType::UNCOMPRESSED
-    required ::TRP::TimeInterval, :time_interval, 4
+    optional ::TRP::TimeInterval, :time_interval, 4
     optional :string, :save_file_prefix, 5
-    required :string, :filter_expression, 6
+    optional :string, :filter_expression, 6
     repeated :string, :merge_pcap_files, 7
+    optional :bool, :delete_after_merge, 8, :default => true
   end
 
   class PcapResponse
@@ -959,6 +960,7 @@ module TRP
     required :int64, :position, 2
     optional :string, :params, 3
     optional :string, :context_name, 4
+    optional :bool, :delete_on_eof, 5, :default => false
   end
 
   class FileResponse
