@@ -196,6 +196,47 @@ module TrisulRP::Protocol
 
   end
 
+  # returns response str 
+  def get_response_zmq_raw(endpoint, trp_request_buf , timeout_seconds = -1 )
+
+
+	ctx=ZMQ::Context.new
+	sock = ctx.socket(ZMQ::REQ)
+
+	# time out for context termination
+	sock.setsockopt(ZMQ::LINGER, 5*1_000)
+
+	# Initialize a poll set
+	poller = ZMQ::Poller.new
+	poller.register(sock, ZMQ::POLLIN)
+  
+	sock.connect(endpoint)
+	sock.send_string(trp_request_buf)
+
+	ret = poller.poll(timeout_seconds * 1_000 )
+	  if  ret == -1 
+			sock.close
+			ctx.terminate 
+			raise "zeromq poll error #{endpoint} " 
+	  end
+	  if  ret == 0 
+			sock.close
+			ctx.terminate 
+			raise "no registerted sockets #{endpoint} " 
+	  end
+
+	poller.readables.each do |rsock|
+
+		#in 
+		dataarray=""
+		rsock.recv_string(dataarray)
+		rsock.close
+		ctx.terminate 
+		return dataarray
+    end
+
+  end
+
 
 
   # Query the total time window available in Trisul
