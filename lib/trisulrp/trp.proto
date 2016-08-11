@@ -373,6 +373,7 @@ message HelloResponse{
   required string       station_id=1;
   optional string       station_id_request=2;
   optional string       message=3;
+  optional int64		local_timestamp=4;
 }
 
 ///////////////////////////////
@@ -812,8 +813,11 @@ message NodeConfigRequest {
 		repeated string	 	uri=4;				// individual files in config//.. for FileRequest download 
 	}
 
-	optional IntelFeed add_feed=2;
-	optional IntelFeed process_new_feed=3;
+	optional IntelFeed 		add_feed=2;
+	optional IntelFeed 		process_new_feed=3;
+	optional bool	   		get_all_nodes=4[default=true];
+	repeated NameValue	   	query_config=5;
+
 }
 
 message NodeConfigResponse {
@@ -825,10 +829,11 @@ message NodeConfigResponse {
 		required string	public_key=4;
 	}
 
-	repeated Node		domains=1;
-	repeated Node		hubs=2;
-	repeated Node		probes=3;
-	repeated string		feeds=4;
+	repeated Node				domains=1;
+	repeated Node				hubs=2;
+	repeated Node				probes=3;
+	repeated string				feeds=4;
+	repeated NameValue	   		config_values=5;
 }
 
 
@@ -905,8 +910,7 @@ message ContextConfigRequest {
      optional  string         profile=2;
      optional  string         params=3;
 	 optional  bytes		  push_config_blob=4;     // push this .. 
-	 optional  string		  query_config=5;  		  // push this .. 
-
+	 repeated  NameValue	  query_config=5;    	  // query, leave the .value field blank
 	 repeated  NameValue	  set_config_values=6;    // push this ..  (name=value;name=value ..)
 }
 
@@ -928,7 +932,7 @@ message ContextConfigResponse {
 	repeated  string		  	endpoints_flush=6;
 	repeated  string		  	endpoints_query=7;
 	repeated  string		  	endpoints_pub=8;
-	optional  string		  	config_value=10;  // response to query config .. 
+	repeated  NameValue	  		config_values=10;    	  // query, leave the .value field blank
 	repeated  Layer 		  	layers=11;
 
 }

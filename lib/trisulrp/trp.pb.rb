@@ -464,6 +464,7 @@ module TRP
     required :string, :station_id, 1
     optional :string, :station_id_request, 2
     optional :string, :message, 3
+    optional :int64, :local_timestamp, 4
   end
 
   class ErrorResponse
@@ -790,6 +791,8 @@ module TRP
     optional :string, :message, 1
     optional ::TRP::NodeConfigRequest::IntelFeed, :add_feed, 2
     optional ::TRP::NodeConfigRequest::IntelFeed, :process_new_feed, 3
+    optional :bool, :get_all_nodes, 4, :default => true
+    repeated ::TRP::NameValue, :query_config, 5
   end
 
   class NodeConfigResponse
@@ -804,6 +807,7 @@ module TRP
     repeated ::TRP::NodeConfigResponse::Node, :hubs, 2
     repeated ::TRP::NodeConfigResponse::Node, :probes, 3
     repeated :string, :feeds, 4
+    repeated ::TRP::NameValue, :config_values, 5
   end
 
   class ContextCreateRequest
@@ -857,7 +861,7 @@ module TRP
     optional :string, :profile, 2
     optional :string, :params, 3
     optional :bytes, :push_config_blob, 4
-    optional :string, :query_config, 5
+    repeated ::TRP::NameValue, :query_config, 5
     repeated ::TRP::NameValue, :set_config_values, 6
   end
 
@@ -876,7 +880,7 @@ module TRP
     repeated :string, :endpoints_flush, 6
     repeated :string, :endpoints_query, 7
     repeated :string, :endpoints_pub, 8
-    optional :string, :config_value, 10
+    repeated ::TRP::NameValue, :config_values, 10
     repeated ::TRP::ContextConfigResponse::Layer, :layers, 11
   end
 
