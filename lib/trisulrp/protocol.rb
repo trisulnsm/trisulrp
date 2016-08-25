@@ -379,13 +379,13 @@ module TrisulRP::Protocol
    params  =in_params.dup
    opts = {:trp_command=> cmd_id}
    if params.has_key?(:destination_node)
-     opts[:destination_node] = params.delete(:destination_node)
+     opts[:destination_node] = params[:destination_node]
    end
    if params.has_key?(:probe_id)
-     opts[:probe_id] = params.delete(:probe_id)
+     opts[:probe_id] = params[:probe_id]
    end
    if params.has_key?(:run_async)
-     opts[:run_async] = params.delete(:run_async)
+     opts[:run_async] = params[:run_async]
    end
     req = TRP::Message.new(opts)
     case cmd_id
