@@ -196,6 +196,47 @@ module TrisulRP::Protocol
 
   end
 
+  # returns response str 
+  def get_response_zmq_raw(endpoint, trp_request_buf , timeout_seconds = -1 )
+
+
+	ctx=ZMQ::Context.new
+	sock = ctx.socket(ZMQ::REQ)
+
+	# time out for context termination
+	sock.setsockopt(ZMQ::LINGER, 5*1_000)
+
+	# Initialize a poll set
+	poller = ZMQ::Poller.new
+	poller.register(sock, ZMQ::POLLIN)
+  
+	sock.connect(endpoint)
+	sock.send_string(trp_request_buf)
+
+	ret = poller.poll(timeout_seconds * 1_000 )
+	  if  ret == -1 
+			sock.close
+			ctx.terminate 
+			raise "zeromq poll error #{endpoint} " 
+	  end
+	  if  ret == 0 
+			sock.close
+			ctx.terminate 
+			raise "no registerted sockets #{endpoint} " 
+	  end
+
+	poller.readables.each do |rsock|
+
+		#in 
+		dataarray=""
+		rsock.recv_string(dataarray)
+		rsock.close
+		ctx.terminate 
+		return dataarray
+    end
+
+  end
+
 
 
   # Query the total time window available in Trisul
@@ -218,18 +259,20 @@ module TrisulRP::Protocol
   #
   # </code>
   #
-  def get_available_time(conn)
+  def get_available_time(conn,timeout=-1)
     
     from_tm=to_tm=nil
     req=mk_request(TRP::Message::Command::TIMESLICES_REQUEST,
                     :get_total_window => true )
-
-	if conn.is_a?(String)
-		resp = get_response_zmq(conn,req) 
-	else
-		resp = get_response(conn,req) 
-	end 
-
+    begin
+      if conn.is_a?(String)
+        resp = get_response_zmq(conn,req,timeout) 
+      else
+        resp = get_response(conn,req) 
+      end 
+    rescue Exception=>ex
+     raise ex
+    end
 
     from_tm =  Time.at(resp.total_window.from.tv_sec)
     to_tm =  Time.at(resp.total_window.to.tv_sec)
@@ -338,13 +381,13 @@ module TrisulRP::Protocol
    params  =in_params.dup
    opts = {:trp_command=> cmd_id}
    if params.has_key?(:destination_node)
-     opts[:destination_node] = params.delete(:destination_node)
+     opts[:destination_node] = params[:destination_node]
    end
    if params.has_key?(:probe_id)
-     opts[:probe_id] = params.delete(:probe_id)
+     opts[:probe_id] = params[:probe_id]
    end
    if params.has_key?(:run_async)
-     opts[:run_async] = params.delete(:run_async)
+     opts[:run_async] = params[:run_async]
    end
     req = TRP::Message.new(opts)
     case cmd_id
