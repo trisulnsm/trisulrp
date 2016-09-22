@@ -817,6 +817,7 @@ module TRP
 
   class ContextInfoRequest
     optional :string, :context_name, 1
+    optional :bool, :get_size_on_disk, 2, :default => false
   end
 
   class ContextInfoResponse
