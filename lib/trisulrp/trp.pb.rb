@@ -353,11 +353,13 @@ module TRP
     optional ::TRP::KeyT, :classification, 9
     optional ::TRP::KeyT, :priority, 10
     optional ::TRP::Timestamp, :dispatch_time, 11
-    optional :string, :aux_message1, 12
-    optional :string, :aux_message2, 13
+    optional :string, :dispatch_message1, 12
+    optional :string, :dispatch_message2, 13
     optional :int64, :occurrances, 14, :default => 1
     optional :string, :group_by_key, 15
     optional :string, :probe_id, 16
+    optional :string, :alert_status, 17
+    optional :int64, :acknowledge_flag, 18
   end
 
   class ResourceT
