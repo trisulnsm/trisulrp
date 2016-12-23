@@ -237,6 +237,34 @@ module TrisulRP::Protocol
 
   end
 
+  # used in Trisul Domain
+  # send trp_request as async, then poll for completion and return
+  # this does not block the domain network
+  #
+  def get_response_zmq_async(endpoint, trp_request, timeout_seconds = -1 )
+
+		# first get a  resp.token ASYNC, then poll for it 
+		resp=get_response_zmq(endpoint, trp_request, timeout_seconds)
+
+		trp_resp_command_id = resp.instance_variable_get("@trp_resp_command_id")
+
+		while trp_resp_command_id == TRP::Message::Command::ASYNC_RESPONSE do
+			async_req = TrisulRP::Protocol.mk_request(
+							TRP::Message::Command::ASYNC_REQUEST,
+							{
+								token:resp.token,
+								destination_node:item.probe_id,
+								sleep:2 
+							}
+						)
+			resp=get_response_zmq(endpoint,async_req, timeout_seconds)
+			trp_resp_command_id = resp.instance_variable_get("@trp_resp_command_id")
+		end
+
+		return resp
+
+  end
+
 
 
   # Query the total time window available in Trisul

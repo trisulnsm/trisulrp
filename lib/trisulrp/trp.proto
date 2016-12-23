@@ -194,6 +194,7 @@ enum CompressionType {
 enum  PcapFormat {
     LIBPCAP=1;
     UNSNIFF=2;
+    LIBPCAPNOFILEHEADER=3;
 }
 
 enum DomainNodeType
@@ -959,6 +960,7 @@ message PcapRequest {
 	optional string             filter_expression=6;
 	repeated string				merge_pcap_files=7;
 	optional bool			    delete_after_merge=8[default=true];
+    optional PcapFormat         format=9[default=LIBPCAP];                                 
 }
 
 

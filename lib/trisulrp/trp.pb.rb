@@ -25,6 +25,7 @@ module TRP
   class PcapFormat < ::Protobuf::Enum
     define :LIBPCAP, 1
     define :UNSNIFF, 2
+    define :LIBPCAPNOFILEHEADER, 3
   end
 
   class DomainNodeType < ::Protobuf::Enum
@@ -896,6 +897,7 @@ module TRP
     optional :string, :filter_expression, 6
     repeated :string, :merge_pcap_files, 7
     optional :bool, :delete_after_merge, 8, :default => true
+    optional ::TRP::PcapFormat, :format, 9, :default => ::TRP::PcapFormat::LIBPCAP
   end
 
   class PcapResponse
