@@ -244,6 +244,7 @@ module TrisulRP::Protocol
   def get_response_zmq_async(endpoint, trp_request, timeout_seconds = -1 )
 
 		# first get a  resp.token ASYNC, then poll for it 
+		trp_request.run_async=true
 		resp=get_response_zmq(endpoint, trp_request, timeout_seconds)
 
 		trp_resp_command_id = resp.instance_variable_get("@trp_resp_command_id")
@@ -253,7 +254,7 @@ module TrisulRP::Protocol
 							TRP::Message::Command::ASYNC_REQUEST,
 							{
 								token:resp.token,
-								destination_node:item.probe_id,
+								destination_node:trp_request.destination_node,
 								sleep:2 
 							}
 						)
