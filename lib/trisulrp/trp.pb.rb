@@ -835,6 +835,7 @@ module TRP
       repeated ::TRP::TimeInterval, :run_history, 8
       optional :string, :profile, 9
       optional :string, :runmode, 10
+      optional :string, :node_version, 11
     end
 
     repeated ::TRP::ContextInfoResponse::Item, :items, 1
