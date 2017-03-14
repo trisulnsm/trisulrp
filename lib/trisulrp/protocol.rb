@@ -168,7 +168,7 @@ module TrisulRP::Protocol
 	  if  ret == 0 
 			sock.close
 			ctx.terminate 
-			raise "no registerted sockets #{endpoint} " 
+			raise "no registered sockets #{endpoint} " 
 	  end
 
 	poller.readables.each do |rsock|
@@ -222,7 +222,7 @@ module TrisulRP::Protocol
 	  if  ret == 0 
 			sock.close
 			ctx.terminate 
-			raise "no registerted sockets #{endpoint} " 
+			raise "no registered sockets #{endpoint} " 
 	  end
 
 	poller.readables.each do |rsock|
