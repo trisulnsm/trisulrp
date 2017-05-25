@@ -854,6 +854,9 @@ module TRP
     optional :string, :run_tool, 5
     optional :string, :tool_ids_config, 6
     optional :string, :tool_av_config, 7
+    optional :string, :cmd_in, 8
+    optional :string, :cmd_out, 9
+    optional :string, :cmd_args, 10
   end
 
   class ContextStopRequest
