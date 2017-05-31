@@ -248,14 +248,11 @@ module TrisulRP::Protocol
 		resp=get_response_zmq(endpoint, trp_request, timeout_seconds)
 
 		trp_resp_command_id = resp.instance_variable_get("@trp_resp_command_id")
-
+    sleep_time = [1,1,1,1,1,1,1,2,2,2,2,2]
+    count = 0
 		while trp_resp_command_id == TRP::Message::Command::ASYNC_RESPONSE do
-      @sleep = @sleep || 1
-      if @sleep >=4 
-         @sleep = 5
-      else
-         @sleep = @sleep *2
-      end
+      @sleep = sleep_time[count] || 5
+      count = count +1
 			async_req = TrisulRP::Protocol.mk_request(
 							TRP::Message::Command::ASYNC_REQUEST,
 							{
