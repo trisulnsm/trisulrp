@@ -64,6 +64,7 @@ module TRP
       define :VT_AUTO, 7
       define :VT_RUNNING_COUNTER, 8
       define :VT_AVERAGE, 9
+      define :VT_DELTA_RATE_COUNTER, 10
     end
 
   end
