@@ -80,6 +80,8 @@ module TRP
 
   end
 
+  class VertexGroupT < ::Protobuf::Message; end
+  class EdgeGraphT < ::Protobuf::Message; end
   class NameValue < ::Protobuf::Message; end
   class Message < ::Protobuf::Message
     class Command < ::Protobuf::Enum
@@ -148,6 +150,8 @@ module TRP
       define :FILE_RESPONSE, 123
       define :SUBSYSTEM_INIT, 124
       define :SUBSYSTEM_EXIT, 125
+      define :GRAPH_REQUEST, 130
+      define :GRAPH_RESPONSE, 131
     end
 
   end
@@ -252,6 +256,8 @@ module TRP
   class AsyncRequest < ::Protobuf::Message; end
   class FileRequest < ::Protobuf::Message; end
   class FileResponse < ::Protobuf::Message; end
+  class GraphRequest < ::Protobuf::Message; end
+  class GraphResponse < ::Protobuf::Message; end
 
 
   ##
@@ -389,6 +395,18 @@ module TRP
     optional :string, :probe_id, 5
   end
 
+  class VertexGroupT
+    required :string, :vertex_group, 1
+    repeated :string, :vertex_keys, 2
+  end
+
+  class EdgeGraphT
+    required :string, :subject_guid, 1
+    required :string, :subject_key, 2
+    repeated ::TRP::VertexGroupT, :vertex_groups, 3
+    optional ::TRP::TimeInterval, :time_interval, 4
+  end
+
   class NameValue
     required :string, :name, 1
     optional :string, :value, 2
@@ -454,6 +472,8 @@ module TRP
     optional ::TRP::AsyncResponse, :async_response, 121
     optional ::TRP::FileRequest, :file_request, 122
     optional ::TRP::FileResponse, :file_response, 123
+    optional ::TRP::GraphRequest, :graph_request, 130
+    optional ::TRP::GraphResponse, :graph_response, 131
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -984,6 +1004,16 @@ module TRP
     optional :bytes, :content, 4
     optional :string, :request_params, 5
     optional :string, :context_name, 6
+  end
+
+  class GraphRequest
+    required ::TRP::TimeInterval, :time_interval, 1
+    required :string, :subject_group, 2
+    required :string, :subject_key, 3
+  end
+
+  class GraphResponse
+    repeated ::TRP::EdgeGraphT, :graphs, 1
   end
 
 end

@@ -198,6 +198,23 @@ message DocumentT  {
     optional string         probe_id=5;             
 }
 
+/// VertexGroupT : a group of vertices 
+/// 
+message VertexGroupT {
+    required string         vertex_group=1;      /// GUID of vertices in this message
+    repeated string         vertex_keys=2;       /// list of vertices 
+}
+
+
+/// EdgeGraphT : a graph
+///     subjectnode -> vertices(of a particular type) 
+message EdgeGraphT  {
+    required string         subject_guid=1;      /// subject type 
+    required string         subject_key=2;       /// subject key 
+    repeated VertexGroupT   vertex_groups=3;     /// vertices grouped by type 
+	optional TimeInterval  	time_interval=4;     /// covers this window 
+}
+
 
 /// Enums
 ///  Auth Level 
@@ -314,7 +331,8 @@ message Message {
                     FILE_RESPONSE=123;
                     SUBSYSTEM_INIT=124;         // init msg  used to prepare services 
                     SUBSYSTEM_EXIT=125;
-
+                    GRAPH_REQUEST=130;
+                    GRAPH_RESPONSE=131;
     }
 
     required Command    trp_command=1;
@@ -376,6 +394,8 @@ message Message {
     optional AsyncResponse   async_response=121;
     optional FileRequest   file_request=122;
     optional FileResponse    file_response=123;
+    optional GraphRequest   graph_request=130;
+    optional GraphResponse    graph_response=131;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -1082,4 +1102,17 @@ message FileResponse  {
      optional string        context_name=6;
 }
 
+/// GraphRequest
+///		given a subject node, retrive a  graph for a given time window 
+message GraphRequest {
+	required TimeInterval	time_interval=1;  /// time window 
+	required string			subject_group=2;  /// guid of subject, eg counter or alert guid 
+	required string			subject_key=3;	  /// key
+}
+
+
+message GraphResponse {
+	repeated EdgeGraphT		graphs=1;		  /// graphs - an EdgeGraphT message 
+											  /// repeated because returned in time chunks 
+}
 
