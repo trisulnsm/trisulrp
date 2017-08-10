@@ -615,8 +615,7 @@ module TrisulRP::Protocol
     when TRP::Message::Command::GRAPH_RESPONSE
         resp.graph_response
     else
-     
-      raise "#{resp.trp_commandi.to_i} Unknown TRP command ID"
+      raise "#{resp.trp_command.to_i} Unknown TRP command ID"
     end
   end
 end
