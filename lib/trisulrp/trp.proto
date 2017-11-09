@@ -194,7 +194,7 @@ message DocumentT  {
         required string     key=2;
     }
 
-    repeated Flow           flows=4;                /// list of flows where this doc was seen 
+    repeated Flow           flows=4;             /// list of flows where this doc was seen 
     optional string         probe_id=5;             
 }
 
@@ -202,17 +202,15 @@ message DocumentT  {
 /// 
 message VertexGroupT {
     required string         vertex_group=1;      /// GUID of vertices in this message
-    repeated string         vertex_keys=2;       /// list of vertices 
+    repeated KeyT           vertex_keys=2;       /// list of vertices 
 }
 
 
 /// EdgeGraphT : a graph
 ///     subjectnode -> vertices(of a particular type) 
 message EdgeGraphT  {
-    required string         subject_guid=1;      /// subject type 
-    required string         subject_key=2;       /// subject key 
+	required TimeInterval  	time_interval=4;     /// covers this window 
     repeated VertexGroupT   vertex_groups=3;     /// vertices grouped by type 
-	optional TimeInterval  	time_interval=4;     /// covers this window 
 }
 
 
@@ -464,7 +462,7 @@ message CounterGroupTopperRequest{
     required string         counter_group=2;                /// guid of CG 
     optional int64          meter=3 [default=0];            /// meter; eg to get Top Hosts By Connections use cg=Hosts meter = 6(connections)
     optional int64          maxitems=4 [default=100];       /// number of top items to retreive 
-    optional TimeInterval   time_interval=5;                /// time interval 
+    optional TimeInterval   time_interval=5;                /// time interval , leave blank for latest interval 
     optional Timestamp      time_instant=6;                 /// 
     optional int64          flags=7;                        
     optional bool           resolve_keys=8 [default=true];  /// retrieve labels as set in the response for each key 
@@ -1107,12 +1105,14 @@ message FileResponse  {
 message GraphRequest {
 	required TimeInterval	time_interval=1;  /// time window 
 	required string			subject_group=2;  /// guid of subject, eg counter or alert guid 
-	required string			subject_key=3;	  /// key
+    required KeyT           subject_key=3;    /// key (can specify key.key, key.label, etc too 
+	optional string			vertex_group=4;	  /// optional vertex group (only get vertices in this group) 
 }
 
-
 message GraphResponse {
-	repeated EdgeGraphT		graphs=1;		  /// graphs - an EdgeGraphT message 
+	required string			subject_group=1;  /// from request
+    required KeyT           subject_key=2;    /// from request 
+	repeated EdgeGraphT		graphs=3;		  /// graphs - an EdgeGraphT message 
 											  /// repeated because returned in time chunks 
 }
 

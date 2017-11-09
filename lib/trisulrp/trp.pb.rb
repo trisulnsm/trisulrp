@@ -397,14 +397,12 @@ module TRP
 
   class VertexGroupT
     required :string, :vertex_group, 1
-    repeated :string, :vertex_keys, 2
+    repeated ::TRP::KeyT, :vertex_keys, 2
   end
 
   class EdgeGraphT
-    required :string, :subject_guid, 1
-    required :string, :subject_key, 2
+    required ::TRP::TimeInterval, :time_interval, 4
     repeated ::TRP::VertexGroupT, :vertex_groups, 3
-    optional ::TRP::TimeInterval, :time_interval, 4
   end
 
   class NameValue
@@ -1009,11 +1007,14 @@ module TRP
   class GraphRequest
     required ::TRP::TimeInterval, :time_interval, 1
     required :string, :subject_group, 2
-    required :string, :subject_key, 3
+    required ::TRP::KeyT, :subject_key, 3
+    optional :string, :vertex_group, 4
   end
 
   class GraphResponse
-    repeated ::TRP::EdgeGraphT, :graphs, 1
+    required :string, :subject_group, 1
+    required ::TRP::KeyT, :subject_key, 2
+    repeated ::TRP::EdgeGraphT, :graphs, 3
   end
 
 end
