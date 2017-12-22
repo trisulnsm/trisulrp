@@ -70,7 +70,11 @@ module TRP
   end
 
   class KeyStats < ::Protobuf::Message; end
-  class KeyT < ::Protobuf::Message; end
+  class KeyT < ::Protobuf::Message
+    class NameValueT < ::Protobuf::Message; end
+
+  end
+
   class CounterGroupT < ::Protobuf::Message; end
   class SessionT < ::Protobuf::Message; end
   class AlertT < ::Protobuf::Message; end
@@ -306,11 +310,17 @@ module TRP
   end
 
   class KeyT
+    class NameValueT
+      required :string, :attr_name, 1
+      required :string, :attr_value, 2
+    end
+
     optional :string, :key, 1
     optional :string, :readable, 2
     optional :string, :label, 3
     optional :string, :description, 4
     optional :int64, :metric, 5
+    repeated ::TRP::KeyT::NameValueT, :attributes, 6
   end
 
   class CounterGroupT
@@ -540,6 +550,7 @@ module TRP
     repeated :string, :keys, 6
     optional :int64, :offset, 7, :default => 0
     optional :bool, :get_totals, 8, :default => false
+    optional :bool, :get_attributes, 9, :default => false
   end
 
   class SearchKeysResponse
@@ -595,10 +606,11 @@ module TRP
 
   class SessionTrackerRequest
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
-    required :int64, :tracker_id, 3, :default => 1
+    optional :int64, :tracker_id, 3
     optional :int64, :maxitems, 4, :default => 100
     required ::TRP::TimeInterval, :time_interval, 5
     optional :bool, :resolve_keys, 6, :default => true
+    optional :string, :tracker_name, 7
   end
 
   class SessionTrackerResponse

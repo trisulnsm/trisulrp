@@ -89,6 +89,7 @@ message KeyStats {
 }
 
 
+
 /// KeyT : Represents a Key 
 /// Top level objects are named ObjT 
 ///   eg KeyT - Key Type, SessionT - Session Type etc.
@@ -98,6 +99,12 @@ message KeyT {
     optional string         label=3;                /// a user label eg, a hostname or manually assigned name 
     optional string         description=4;          /// description 
     optional int64          metric=5;               /// optional : a single metric value - relevant to the query used 
+
+	message  NameValueT {
+		required string		attr_name=1;
+		required string		attr_value=2;
+	}
+	repeated NameValueT		attributes=6;			/// New: Attributes are NVP for keys 
 }
 
 
@@ -486,6 +493,7 @@ message SearchKeysRequest{
     repeated string         keys=6;
     optional int64          offset=7[default=0];
     optional bool           get_totals=8[default=false];
+	optional bool			get_attributes=9[default=false];
 } 
 
 /// SearchKeysResponse
@@ -548,7 +556,7 @@ message QuerySessionsResponse {
 /// Response = OKResponse or ErrorResponse
 message UpdateKeyRequest{
     required string         counter_group=2;
-    repeated KeyT           keys=4;  /// key  : if you set both key and label, the DB label will be updated 
+    repeated KeyT           keys=4;  		/// key  : if you set both key and label, the DB label will be updated 
 }
 
 /// SessionTrackerRequest  - query session trackers 
@@ -556,10 +564,11 @@ message UpdateKeyRequest{
 ///     They are Top Sessions fulfilling a particular preset criterion 
 message SessionTrackerRequest {
     optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
-    required int64          tracker_id=3 [default=1];       /// session tracker id 
+    optional int64          tracker_id=3;       /// session tracker id 
     optional int64          maxitems=4 [default=100];       
     required TimeInterval   time_interval=5;
     optional bool           resolve_keys=6 [default=true];
+    optional string         tracker_name=7;       /// query by tracker name for auto generated trackers
 }
 
 /// SessionTrackerResponse - results of tracker
