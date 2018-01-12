@@ -604,13 +604,15 @@ message QueryAlertsRequest  {
     optional KeyT           any_port=19;            /// search by any_port (source_dest) 
     repeated KeyT           ip_pair=20;             /// array of 2 ips 
     optional string         message_regex=21;       /// searech via regex of the dispatch message 
+	optional bool			approx_count_only=22[default=false];	/// approx count per alert group 
 }
 
 /// QueryAlertsResponse - response 
 /// if you used group_by_fieldname then AlertT.occurrances would contain the count 
 message QueryAlertsResponse {
     required string         alert_group=2;
-    repeated AlertT         alerts=3;       /// array of matching alerts 
+    repeated AlertT         alerts=3;       		/// array of matching alerts 
+	optional int64			approx_count=4; 		/// approx count 
 }
 
 
@@ -631,12 +633,14 @@ message QueryResourcesRequest {
     optional KeyT           any_port=15;
     optional KeyT           any_ip=16;
     repeated KeyT           ip_pair=17;              // array of 2 ips 
+	optional bool			approx_count_only=18[default=false];	 // count-star  only  over time interval 
 }
 
 /// QueryResourceResponse  
 message QueryResourcesResponse {
     required string         resource_group=2;
     repeated ResourceT      resources=3;
+	optional int64			approx_count=4;
 }
 
 
@@ -719,6 +723,7 @@ message QueryFTSRequest  {
     required string             fts_group=3;
     required string             keywords=4;
     optional int64              maxitems=5[default=100];
+	optional bool               approx_count_only=6[default=false];
 }
 
 
@@ -726,6 +731,7 @@ message QueryFTSResponse {
 
     required string             fts_group=2;
     repeated DocumentT          documents=3;   
+	optional int64			    approx_count=4; 		/// approx count 
 
 }
 

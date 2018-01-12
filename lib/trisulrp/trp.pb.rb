@@ -639,11 +639,13 @@ module TRP
     optional ::TRP::KeyT, :any_port, 19
     repeated ::TRP::KeyT, :ip_pair, 20
     optional :string, :message_regex, 21
+    optional :bool, :approx_count_only, 22, :default => false
   end
 
   class QueryAlertsResponse
     required :string, :alert_group, 2
     repeated ::TRP::AlertT, :alerts, 3
+    optional :int64, :approx_count, 4
   end
 
   class QueryResourcesRequest
@@ -662,11 +664,13 @@ module TRP
     optional ::TRP::KeyT, :any_port, 15
     optional ::TRP::KeyT, :any_ip, 16
     repeated ::TRP::KeyT, :ip_pair, 17
+    optional :bool, :approx_count_only, 18, :default => false
   end
 
   class QueryResourcesResponse
     required :string, :resource_group, 2
     repeated ::TRP::ResourceT, :resources, 3
+    optional :int64, :approx_count, 4
   end
 
   class KeySpaceRequest
@@ -714,11 +718,13 @@ module TRP
     required :string, :fts_group, 3
     required :string, :keywords, 4
     optional :int64, :maxitems, 5, :default => 100
+    optional :bool, :approx_count_only, 6, :default => false
   end
 
   class QueryFTSResponse
     required :string, :fts_group, 2
     repeated ::TRP::DocumentT, :documents, 3
+    optional :int64, :approx_count, 4
   end
 
   class TimeSlicesRequest
