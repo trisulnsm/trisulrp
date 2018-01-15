@@ -625,15 +625,17 @@ message QueryResourcesRequest {
     optional KeyT           source_port=6;
     optional KeyT           destination_ip=7; 
     optional KeyT           destination_port=8;
-    optional string         uri_pattern=9;
-    optional string         userlabel_pattern=10;
-    repeated string         regex_uri=12;            // cant be combined with others 
-    repeated string         idlist=13;               // resource ID list 
+    optional string         uri_pattern=9;			 /// DEPRECATED: use regex_uri for everything
+    optional string         userlabel_pattern=10;	 /// DEPRECATED: uri_pattern will search both URI and USERLABEL 
+    repeated string         regex_uri=12;            /// cant be combined with others 
+    repeated string         idlist=13;               /// resource ID list 
     optional bool           resolve_keys=14 [default=true];
     optional KeyT           any_port=15;
     optional KeyT           any_ip=16;
     repeated KeyT           ip_pair=17;              // array of 2 ips 
 	optional bool			approx_count_only=18[default=false];	 // count-star  only  over time interval 
+	repeated string 		exclude_iplist=19;		 /// Exclude these IPs, cant be used with other IP fields 
+	optional bool			invert_regex=20[default=false]; /// Invert the regex RE2 cant reject 
 }
 
 /// QueryResourceResponse  

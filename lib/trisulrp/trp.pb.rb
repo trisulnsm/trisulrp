@@ -665,6 +665,8 @@ module TRP
     optional ::TRP::KeyT, :any_ip, 16
     repeated ::TRP::KeyT, :ip_pair, 17
     optional :bool, :approx_count_only, 18, :default => false
+    repeated :string, :exclude_iplist, 19
+    optional :bool, :invert_regex, 20, :default => false
   end
 
   class QueryResourcesResponse
