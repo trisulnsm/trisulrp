@@ -686,11 +686,13 @@ module TRP
     optional :int64, :maxitems, 4, :default => 100
     repeated ::TRP::KeySpaceRequest::KeySpace, :spaces, 5
     optional :bool, :resolve_keys, 6, :default => true
+    optional :bool, :totals_only, 7, :default => false
   end
 
   class KeySpaceResponse
     optional :string, :counter_group, 2
     repeated ::TRP::KeyT, :hits, 3
+    optional :int64, :total_hits, 4
   end
 
   class TopperTrendRequest
@@ -888,7 +890,7 @@ module TRP
   class ContextStartRequest
     required :string, :context_name, 1
     optional :string, :mode, 2
-    optional :bool, :background, 3
+    optional :bool, :background, 3, :default => true
     optional :string, :pcap_path, 4
     optional :string, :run_tool, 5
     optional :string, :tool_ids_config, 6

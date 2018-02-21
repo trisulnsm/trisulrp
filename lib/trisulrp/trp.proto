@@ -660,14 +660,16 @@ message KeySpaceRequest {
         required KeyT   to_key=2;       /// end of key space 
     }
 
-    repeated KeySpace       spaces=5;
-    optional bool           resolve_keys=6[default=true];
+    repeated KeySpace       spaces=5;	                   /// space1 OR space2 OR ..
+    optional bool           resolve_keys=6[default=true];  /// resolve names 
+	optional bool           totals_only=7[default=false];  /// if set, only totals returned
 }
 
 /// KeySpaceResponse  
 message KeySpaceResponse  {
-    optional string         counter_group=2;
+    optional string         counter_group=2;    /// counter group 
     repeated KeyT           hits=3;             /// array of keys in the requested space 
+	optional int64          total_hits=4;           /// if totals_only() this contains total(hits) 
 }
 
 /// TopperTrendRequest - raw top-K at each topper snapshot interval
@@ -938,7 +940,7 @@ message ContextDeleteRequest   {
 message ContextStartRequest   {
      required   string         context_name=1;      /// if not  set all context get in 
      optional   string         mode=2;				/// same as trisul cmdline run mode 
-     optional   bool           background=3;
+     optional   bool           background=3[default=true];
      optional   string         pcap_path=4;
      optional   string         run_tool=5;          /// snort, suricata supported..
      optional   string         tool_ids_config=6;
