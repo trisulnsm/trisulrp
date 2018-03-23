@@ -669,7 +669,7 @@ message KeySpaceRequest {
 message KeySpaceResponse  {
     optional string         counter_group=2;    /// counter group 
     repeated KeyT           hits=3;             /// array of keys in the requested space 
-	optional int64          total_hits=4;           /// if totals_only() this contains total(hits) 
+	optional int64          total_hits=4;       /// if totals_only() this contains total(hits) 
 }
 
 /// TopperTrendRequest - raw top-K at each topper snapshot interval
