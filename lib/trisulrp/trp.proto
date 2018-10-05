@@ -69,6 +69,8 @@ message MeterInfo {
         VT_RUNNING_COUNTER=8;                 ///  running counter, no delta calc 
         VT_AVERAGE=9;                         ///  average of samples, total/sampl uses 32bt|32bit
         VT_DELTA_RATE_COUNTER=10;             ///  link snmp running counter 
+		VT_MAX=11;                 		      /// max of samples 
+		VT_MIN=12;                 		      /// min of samples 
     }
 
 
