@@ -3,9 +3,10 @@
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf/message'
+require 'protobuf'
 
 module TRP
+  ::Protobuf::Optionable.inject(self) { ::Google::Protobuf::FileOptions }
 
   ##
   # Enum Classes
@@ -65,6 +66,8 @@ module TRP
       define :VT_RUNNING_COUNTER, 8
       define :VT_AVERAGE, 9
       define :VT_DELTA_RATE_COUNTER, 10
+      define :VT_MAX, 11
+      define :VT_MIN, 12
     end
 
   end
@@ -262,6 +265,12 @@ module TRP
   class FileResponse < ::Protobuf::Message; end
   class GraphRequest < ::Protobuf::Message; end
   class GraphResponse < ::Protobuf::Message; end
+
+
+  ##
+  # File Options
+  #
+  set_option :optimize_for, ::Google::Protobuf::FileOptions::OptimizeMode::LITE_RUNTIME
 
 
   ##
