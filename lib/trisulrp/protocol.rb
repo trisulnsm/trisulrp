@@ -460,6 +460,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::QUERY_SESSIONS_REQUEST 
 	  fix_TRP_Fields( TRP::QuerySessionsRequest, params)
       req.query_sessions_request = TRP::QuerySessionsRequest.new(params)
+    when TRP::Message::Command::AGGREGATE_SESSIONS_REQUEST 
+	  fix_TRP_Fields( TRP::AggregateSessionsRequest, params)
+      req.aggregate_sessions_response = TRP::AggregateSessionsRequest.new(params)
     when TRP::Message::Command::GREP_REQUEST
 	  fix_TRP_Fields( TRP::GrepRequest, params)
       req.grep_request  = TRP::GrepRequest.new(params)
@@ -586,6 +589,8 @@ module TrisulRP::Protocol
         resp.session_tracker_response 
     when TRP::Message::Command::QUERY_SESSIONS_RESPONSE
         resp.query_sessions_response 
+    when TRP::Message::Command::AGGREGATE_SESSIONS_RESPONSE
+        resp.aggregate_sessions_response 
     when TRP::Message::Command::GREP_RESPONSE
         resp.grep_response  
     when TRP::Message::Command::KEYSPACE_RESPONSE

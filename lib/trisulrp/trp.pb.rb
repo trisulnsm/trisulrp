@@ -159,6 +159,8 @@ module TRP
       define :SUBSYSTEM_EXIT, 125
       define :GRAPH_REQUEST, 130
       define :GRAPH_RESPONSE, 131
+      define :AGGREGATE_SESSIONS_REQUEST, 132
+      define :AGGREGATE_SESSIONS_RESPONSE, 133
     end
 
   end
@@ -177,6 +179,12 @@ module TRP
   class CounterGroupInfoResponse < ::Protobuf::Message; end
   class QuerySessionsRequest < ::Protobuf::Message; end
   class QuerySessionsResponse < ::Protobuf::Message; end
+  class AggregateSessionsRequest < ::Protobuf::Message; end
+  class AggregateSessionsResponse < ::Protobuf::Message
+    class KeyTCount < ::Protobuf::Message; end
+
+  end
+
   class UpdateKeyRequest < ::Protobuf::Message; end
   class SessionTrackerRequest < ::Protobuf::Message; end
   class SessionTrackerResponse < ::Protobuf::Message; end
@@ -184,6 +192,12 @@ module TRP
   class QueryAlertsResponse < ::Protobuf::Message; end
   class QueryResourcesRequest < ::Protobuf::Message; end
   class QueryResourcesResponse < ::Protobuf::Message; end
+  class AggregateResourcesRequest < ::Protobuf::Message; end
+  class AggregateResourcesResponse < ::Protobuf::Message
+    class KeyTCount < ::Protobuf::Message; end
+
+  end
+
   class KeySpaceRequest < ::Protobuf::Message
     class KeySpace < ::Protobuf::Message; end
 
@@ -491,6 +505,10 @@ module TRP
     optional ::TRP::FileResponse, :file_response, 123
     optional ::TRP::GraphRequest, :graph_request, 130
     optional ::TRP::GraphResponse, :graph_response, 131
+    optional ::TRP::AggregateSessionsRequest, :aggregate_sessions_request, 140
+    optional ::TRP::AggregateSessionsResponse, :aggregate_sessions_response, 141
+    optional ::TRP::AggregateResourcesRequest, :aggregate_resources_request, 142
+    optional ::TRP::AggregateResourcesResponse, :aggregate_resources_response, 143
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -608,6 +626,34 @@ module TRP
     optional :string, :outputpath, 4
   end
 
+  class AggregateSessionsRequest
+    optional ::TRP::QuerySessionsRequest, :query, 1
+    optional :int64, :aggregate_topcount, 2, :default => 100
+  end
+
+  class AggregateSessionsResponse
+    class KeyTCount
+      required ::TRP::KeyT, :key, 1
+      required :int64, :count, 2
+    end
+
+    required :string, :session_group, 2
+    optional ::TRP::TimeInterval, :time_interval, 3
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :source_ip, 5
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :source_port, 6
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :dest_ip, 7
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :dest_port, 8
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :any_ip, 9
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :any_port, 10
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :ip_pair, 11
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :protocol, 12
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :flowtag, 13
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :nf_routerid, 14
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :nf_ifindex_in, 15
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :nf_ifindex_out, 16
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :subnet_24, 17
+  end
+
   class UpdateKeyRequest
     required :string, :counter_group, 2
     repeated ::TRP::KeyT, :keys, 4
@@ -682,6 +728,25 @@ module TRP
     required :string, :resource_group, 2
     repeated ::TRP::ResourceT, :resources, 3
     optional :int64, :approx_count, 4
+  end
+
+  class AggregateResourcesRequest
+    required ::TRP::QueryResourcesRequest, :query, 1
+    optional :int64, :aggregate_topcount, 2, :default => 100
+  end
+
+  class AggregateResourcesResponse
+    class KeyTCount
+      required ::TRP::KeyT, :key, 1
+      required :int64, :count, 2
+    end
+
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :source_ip, 5
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :source_port, 6
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :destination_ip, 7
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :destination_port, 8
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :uri, 9
+    repeated ::TRP::AggregateResourcesResponse::KeyTCount, :userlabel, 10
   end
 
   class KeySpaceRequest
