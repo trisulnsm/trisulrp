@@ -462,7 +462,7 @@ module TrisulRP::Protocol
       req.query_sessions_request = TRP::QuerySessionsRequest.new(params)
     when TRP::Message::Command::AGGREGATE_SESSIONS_REQUEST 
 	  fix_TRP_Fields( TRP::AggregateSessionsRequest, params)
-      req.aggregate_sessions_response = TRP::AggregateSessionsRequest.new(params)
+      req.aggregate_sessions_request = TRP::AggregateSessionsRequest.new(params)
     when TRP::Message::Command::GREP_REQUEST
 	  fix_TRP_Fields( TRP::GrepRequest, params)
       req.grep_request  = TRP::GrepRequest.new(params)

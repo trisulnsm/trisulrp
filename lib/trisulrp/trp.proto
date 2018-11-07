@@ -565,8 +565,24 @@ message QuerySessionsResponse {
 ///   query flow and then count the numbers 
 ///   by default aggregate on ALL fields
 message AggregateSessionsRequest {
-	optional QuerySessionsRequest  query=1;					/// the wrapper query 
-    optional int64                 aggregate_topcount=2[default=100];   	/// number of count-star per field 
+    optional string         session_group=2[default="{99A78737-4B41-4387-8F31-8077DB917336}"];
+    optional TimeInterval   time_interval=3;
+    optional KeyT           source_ip=5;
+    optional KeyT           source_port=6;
+    optional KeyT           dest_ip=7;
+    optional KeyT           dest_port=8;
+    optional KeyT           any_ip=9;           /// source or dest match
+    optional KeyT           any_port=10;            /// source or dest match
+    repeated KeyT           ip_pair=11;         /// array of 2 ips 
+    optional KeyT           protocol=12;
+    optional string         flowtag=13;         /// string flow tagger text 
+    optional KeyT           nf_routerid=14;
+    optional KeyT           nf_ifindex_in=15;
+    optional KeyT           nf_ifindex_out=16;
+    optional string         subnet_24=17;       /// ip /24 subnet  matching 
+    optional string         subnet_16=18;       /// ip /16 subnet 
+    optional int64          aggregate_topcount=19[default=100];   	/// number of count-star per field 
+	optional string         group_by_fields=20; /// list of field names 
 }
 
 /// AggregateSessionsResponse 
@@ -574,16 +590,17 @@ message AggregateSessionsRequest {
 message AggregateSessionsResponse {
 
 	message KeyTCount {
-		required KeyT	key=1;
-		required int64  count=2;
+		required KeyT	key=1;                  ///  aggregate key 
+		required int64  count=2;                ///  number of matching flows
+		required int64  metric=3;               ///  aggregated metrics, eg total bytes 
 	}
 
     required string         session_group=2;
     optional TimeInterval   time_interval=3;
     repeated KeyTCount      source_ip=5;        /// top IPs 
-    repeated KeyTCount      source_port=6;      /// top IPs 
-    repeated KeyTCount      dest_ip=7;
-    repeated KeyTCount      dest_port=8;
+    repeated KeyTCount      source_port=6;      /// top ports 
+    repeated KeyTCount      dest_ip=7;	        /// dest IPs
+    repeated KeyTCount      dest_port=8;	    /// dest ports 
     repeated KeyTCount      any_ip=9;           /// source or dest match
     repeated KeyTCount      any_port=10;        /// source or dest match
     repeated KeyTCount      ip_pair=11;         /// array of 2 ips 

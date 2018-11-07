@@ -627,14 +627,31 @@ module TRP
   end
 
   class AggregateSessionsRequest
-    optional ::TRP::QuerySessionsRequest, :query, 1
-    optional :int64, :aggregate_topcount, 2, :default => 100
+    optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
+    optional ::TRP::TimeInterval, :time_interval, 3
+    optional ::TRP::KeyT, :source_ip, 5
+    optional ::TRP::KeyT, :source_port, 6
+    optional ::TRP::KeyT, :dest_ip, 7
+    optional ::TRP::KeyT, :dest_port, 8
+    optional ::TRP::KeyT, :any_ip, 9
+    optional ::TRP::KeyT, :any_port, 10
+    repeated ::TRP::KeyT, :ip_pair, 11
+    optional ::TRP::KeyT, :protocol, 12
+    optional :string, :flowtag, 13
+    optional ::TRP::KeyT, :nf_routerid, 14
+    optional ::TRP::KeyT, :nf_ifindex_in, 15
+    optional ::TRP::KeyT, :nf_ifindex_out, 16
+    optional :string, :subnet_24, 17
+    optional :string, :subnet_16, 18
+    optional :int64, :aggregate_topcount, 19, :default => 100
+    optional :string, :group_by_fields, 20
   end
 
   class AggregateSessionsResponse
     class KeyTCount
       required ::TRP::KeyT, :key, 1
       required :int64, :count, 2
+      required :int64, :metric, 3
     end
 
     required :string, :session_group, 2
