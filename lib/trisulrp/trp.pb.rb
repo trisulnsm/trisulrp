@@ -669,6 +669,7 @@ module TRP
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :nf_ifindex_in, 15
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :nf_ifindex_out, 16
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :subnet_24, 17
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :internal_port, 18
   end
 
   class UpdateKeyRequest

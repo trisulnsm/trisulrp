@@ -610,6 +610,7 @@ message AggregateSessionsResponse {
     repeated KeyTCount      nf_ifindex_in=15;
     repeated KeyTCount      nf_ifindex_out=16;
     repeated KeyTCount      subnet_24=17;       /// ip /24 subnet  matching 
+    repeated KeyTCount      internal_port=18;   /// internal IP ports
 }
 
 /// UpdatekeysRequest
