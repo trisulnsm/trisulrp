@@ -604,13 +604,15 @@ message AggregateSessionsResponse {
     repeated KeyTCount      any_ip=9;           /// source or dest match
     repeated KeyTCount      any_port=10;        /// source or dest match
     repeated KeyTCount      ip_pair=11;         /// array of 2 ips 
-    repeated KeyTCount      protocol=12;
+    repeated KeyTCount      protocol=12;        /// protocols 
     repeated KeyTCount      flowtag=13;         /// string flow tagger text 
     repeated KeyTCount      nf_routerid=14;
     repeated KeyTCount      nf_ifindex_in=15;
     repeated KeyTCount      nf_ifindex_out=16;
     repeated KeyTCount      subnet_24=17;       /// ip /24 subnet  matching 
     repeated KeyTCount      internal_port=18;   /// internal IP ports
+    repeated KeyTCount      internal_ip=19;     /// internal IPs 
+    repeated KeyTCount      external_ip=20;     /// external IPs
 }
 
 /// UpdatekeysRequest
