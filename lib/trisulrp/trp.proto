@@ -119,6 +119,14 @@ message CounterGroupT {
     optional TimeInterval   time_interval=4;        /// total time interval available in DB 
     optional int64          topper_bucket_size=5;   /// topper bucketsize (streaming analytics window)
     repeated MeterInfo      meters=6;               /// array of meter information (m0, m1, .. mn) 
+
+	message Crosskey {
+		required string		parentguid=1;			/// parent GUID of ckey counter group
+		required string		crosskeyguid_1=2;		/// crosskey 1 guid - required 
+		optional string		crosskeyguid_2=3;		/// crosskey 2 guid - optional 
+	}
+	optional Crosskey		crosskey=7;				/// for cross key counter group
+
 }
 
 /// SessionT : an IP flow 

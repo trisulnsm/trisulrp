@@ -78,7 +78,11 @@ module TRP
 
   end
 
-  class CounterGroupT < ::Protobuf::Message; end
+  class CounterGroupT < ::Protobuf::Message
+    class Crosskey < ::Protobuf::Message; end
+
+  end
+
   class SessionT < ::Protobuf::Message; end
   class AlertT < ::Protobuf::Message; end
   class ResourceT < ::Protobuf::Message; end
@@ -347,12 +351,19 @@ module TRP
   end
 
   class CounterGroupT
+    class Crosskey
+      required :string, :parentguid, 1
+      required :string, :crosskeyguid_1, 2
+      optional :string, :crosskeyguid_2, 3
+    end
+
     required :string, :guid, 1
     required :string, :name, 2
     optional :int64, :bucket_size, 3
     optional ::TRP::TimeInterval, :time_interval, 4
     optional :int64, :topper_bucket_size, 5
     repeated ::TRP::MeterInfo, :meters, 6
+    optional ::TRP::CounterGroupT::Crosskey, :crosskey, 7
   end
 
   class SessionT
