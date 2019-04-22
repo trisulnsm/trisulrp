@@ -571,6 +571,8 @@ module TRP
     optional ::TRP::Timestamp, :time_instant, 6
     optional :int64, :flags, 7
     optional :bool, :resolve_keys, 8, :default => true
+    optional :string, :key_filter, 9
+    optional :string, :inverse_key_filter, 10
   end
 
   class CounterGroupTopperResponse
@@ -935,6 +937,7 @@ module TRP
       optional :string, :name, 2
       optional :string, :download_rules, 3
       repeated :string, :uri, 4
+      repeated :string, :usernodes, 5
     end
 
     optional :string, :message, 1
@@ -942,6 +945,7 @@ module TRP
     optional ::TRP::NodeConfigRequest::IntelFeed, :process_new_feed, 3
     optional :bool, :get_all_nodes, 4, :default => true
     repeated ::TRP::NameValue, :query_config, 5
+    optional ::TRP::NodeConfigRequest::IntelFeed, :remove_feed, 6
   end
 
   class NodeConfigResponse
