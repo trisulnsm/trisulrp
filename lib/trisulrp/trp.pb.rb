@@ -165,6 +165,8 @@ module TRP
       define :GRAPH_RESPONSE, 131
       define :AGGREGATE_SESSIONS_REQUEST, 132
       define :AGGREGATE_SESSIONS_RESPONSE, 133
+      define :RUNTOOL_REQUEST, 134
+      define :RUNTOOL_RESPONSE, 135
     end
 
   end
@@ -283,6 +285,17 @@ module TRP
   class FileResponse < ::Protobuf::Message; end
   class GraphRequest < ::Protobuf::Message; end
   class GraphResponse < ::Protobuf::Message; end
+  class RunToolRequest < ::Protobuf::Message
+    class NodeTool < ::Protobuf::Enum
+      define :PING, 1
+      define :DF, 2
+      define :GEOQUERY, 3
+      define :TOP, 4
+    end
+
+  end
+
+  class RunToolResponse < ::Protobuf::Message; end
 
 
   ##
@@ -520,6 +533,8 @@ module TRP
     optional ::TRP::AggregateSessionsResponse, :aggregate_sessions_response, 141
     optional ::TRP::AggregateResourcesRequest, :aggregate_resources_request, 142
     optional ::TRP::AggregateResourcesResponse, :aggregate_resources_response, 143
+    optional ::TRP::RunToolRequest, :run_tool_request, 144
+    optional ::TRP::RunToolResponse, :run_tool_response, 145
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -1146,6 +1161,17 @@ module TRP
     required :string, :subject_group, 1
     required ::TRP::KeyT, :subject_key, 2
     repeated ::TRP::EdgeGraphT, :graphs, 3
+  end
+
+  class RunToolRequest
+    required :string, :context_name, 1
+    required ::TRP::RunToolRequest::NodeTool, :tool, 2
+    optional :string, :tool_input, 3
+  end
+
+  class RunToolResponse
+    required :string, :context_name, 1
+    optional :string, :tool_output, 2
   end
 
 end

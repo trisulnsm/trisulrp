@@ -350,6 +350,8 @@ message Message {
                     GRAPH_RESPONSE=131;
                     AGGREGATE_SESSIONS_REQUEST=132;                     
                     AGGREGATE_SESSIONS_RESPONSE=133;
+                    RUNTOOL_REQUEST=134;
+                    RUNTOOL_RESPONSE=135;
     }
 
     required Command    trp_command=1;
@@ -417,6 +419,8 @@ message Message {
     optional AggregateSessionsResponse  aggregate_sessions_response=141;
     optional AggregateResourcesRequest  aggregate_resources_request=142;
     optional AggregateResourcesResponse  aggregate_resources_response=143;
+    optional RunToolRequest  run_tool_request=144;
+    optional RunToolResponse  run_tool_response=145;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -1233,5 +1237,24 @@ message GraphResponse {
     required KeyT           subject_key=2;    /// from request 
 	repeated EdgeGraphT		graphs=3;		  /// graphs - an EdgeGraphT message 
 											  /// repeated because returned in time chunks 
+}
+
+/// RunToolRequest  : run  set of named tools 
+message RunToolRequest   {
+     required   string         context_name=1;      /// if not  set all context get in 
+	 enum NodeTool {
+	 	PING=1;
+		DF=2;
+		GEOQUERY=3;
+		TOP=4;
+	 }
+	 required  NodeTool 		tool=2;				/// which of these tools you want to run on node
+	 optional  string           tool_input=3;		/// input 
+}
+
+/// RunToolResponse  : ouput 
+message RunToolResponse   {
+     required   string         context_name=1;      /// if not  set all context get in 
+     optional   string         tool_output=2;       /// cmd lines 
 }
 
