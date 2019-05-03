@@ -188,6 +188,7 @@ module TRP
   class AggregateSessionsRequest < ::Protobuf::Message; end
   class AggregateSessionsResponse < ::Protobuf::Message
     class KeyTCount < ::Protobuf::Message; end
+    class TagGroup < ::Protobuf::Message; end
 
   end
 
@@ -672,7 +673,7 @@ module TRP
     optional :string, :subnet_24, 17
     optional :string, :subnet_16, 18
     optional :int64, :aggregate_topcount, 19, :default => 100
-    optional :string, :group_by_fields, 20
+    repeated :string, :group_by_fields, 20
   end
 
   class AggregateSessionsResponse
@@ -680,6 +681,11 @@ module TRP
       required ::TRP::KeyT, :key, 1
       required :int64, :count, 2
       required :int64, :metric, 3
+    end
+
+    class TagGroup
+      required :string, :group_name, 1
+      repeated ::TRP::AggregateSessionsResponse::KeyTCount, :tag_metrics, 2
     end
 
     required :string, :session_group, 2
@@ -700,6 +706,7 @@ module TRP
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :internal_port, 18
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :internal_ip, 19
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :external_ip, 20
+    repeated ::TRP::AggregateSessionsResponse::TagGroup, :tag_group, 21
   end
 
   class UpdateKeyRequest

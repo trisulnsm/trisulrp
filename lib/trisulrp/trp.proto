@@ -596,7 +596,7 @@ message AggregateSessionsRequest {
     optional string         subnet_24=17;       /// ip /24 subnet  matching 
     optional string         subnet_16=18;       /// ip /16 subnet 
     optional int64          aggregate_topcount=19[default=100];   	/// number of count-star per field 
-	optional string         group_by_fields=20; /// list of field names 
+	repeated string         group_by_fields=20; /// list of field names 
 }
 
 /// AggregateSessionsResponse 
@@ -607,6 +607,11 @@ message AggregateSessionsResponse {
 		required KeyT	key=1;                  ///  aggregate key 
 		required int64  count=2;                ///  number of matching flows
 		required int64  metric=3;               ///  aggregated metrics, eg total bytes 
+	}
+
+	message TagGroup {
+		required string 	group_name=1;
+		repeated KeyTCount	tag_metrics=2;
 	}
 
     required string         session_group=2;
@@ -627,7 +632,9 @@ message AggregateSessionsResponse {
     repeated KeyTCount      internal_port=18;   /// internal IP ports
     repeated KeyTCount      internal_ip=19;     /// internal IPs 
     repeated KeyTCount      external_ip=20;     /// external IPs
+	repeated TagGroup		tag_group=21;		/// tag groups 
 }
+
 
 /// UpdatekeysRequest
 /// Response = OKResponse or ErrorResponse
