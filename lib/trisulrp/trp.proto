@@ -107,6 +107,9 @@ message KeyT {
 		required string		attr_value=2;
 	}
 	repeated NameValueT		attributes=6;			/// New: Attributes are NVP for keys 
+    optional int64          metric_max=7;           /// optional : max observed value for metric  in context
+    optional int64          metric_min=8;           /// optional : max observed value for metric 
+    optional int64          metric_avg=9;           /// optional : max observed value for metric 
 }
 
 

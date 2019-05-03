@@ -362,6 +362,9 @@ module TRP
     optional :string, :description, 4
     optional :int64, :metric, 5
     repeated ::TRP::KeyT::NameValueT, :attributes, 6
+    optional :int64, :metric_max, 7
+    optional :int64, :metric_min, 8
+    optional :int64, :metric_avg, 9
   end
 
   class CounterGroupT
