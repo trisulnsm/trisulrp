@@ -450,6 +450,8 @@ message HelloResponse{
   optional string       station_id_request=2;   /// station id found in the request 
   optional string       message=3;              /// message found in the request 
   optional int64        local_timestamp=4;      /// local timestamp at server, used to detect drifts 
+  optional string       local_timestamp_string=5; /// on server with time zone, use this 
+  optional bool         is_primary=6;              /// is this a primary or HA node 
 }
 
 /// ErrorResponse
@@ -959,6 +961,7 @@ message DomainResponse {
         optional string             extra_info=4;
         optional Timestamp          register_time=5; 
         optional Timestamp          heartbeat_time=6; 
+		optional bool               is_primary=7[default=true]; /// primary or backup HA mode 
 
     }
 
@@ -1257,6 +1260,7 @@ message RunToolRequest   {
 		DF=2;
 		GEOQUERY=3;
 		TOP=4;
+		BGPQUERY=5;
 	 }
 	 required  NodeTool 		tool=2;				/// which of these tools you want to run on node
 	 optional  string           tool_input=3;		/// input 
