@@ -292,6 +292,7 @@ module TRP
       define :DF, 2
       define :GEOQUERY, 3
       define :TOP, 4
+      define :BGPQUERY, 5
     end
 
   end
@@ -554,6 +555,8 @@ module TRP
     optional :string, :station_id_request, 2
     optional :string, :message, 3
     optional :int64, :local_timestamp, 4
+    optional :string, :local_timestamp_string, 5
+    optional :bool, :is_primary, 6
   end
 
   class ErrorResponse
@@ -947,6 +950,7 @@ module TRP
       optional :string, :extra_info, 4
       optional ::TRP::Timestamp, :register_time, 5
       optional ::TRP::Timestamp, :heartbeat_time, 6
+      optional :bool, :is_primary, 7, :default => true
     end
 
     required ::TRP::DomainOperation, :cmd, 1
