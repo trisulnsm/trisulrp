@@ -355,6 +355,8 @@ message Message {
                     AGGREGATE_SESSIONS_RESPONSE=133;
                     RUNTOOL_REQUEST=134;
                     RUNTOOL_RESPONSE=135;
+                    HA_CONTROL_REQUEST=140;
+                    HA_CONTROL_RESPONSE=141;
     }
 
     required Command    trp_command=1;
@@ -424,6 +426,8 @@ message Message {
     optional AggregateResourcesResponse  aggregate_resources_response=143;
     optional RunToolRequest  run_tool_request=144;
     optional RunToolResponse  run_tool_response=145;
+    optional HAControlRequest  ha_control_request=150;
+    optional HAControlResponse  ha_control_response=151;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -645,7 +649,9 @@ message AggregateSessionsResponse {
 /// Response = OKResponse or ErrorResponse
 message UpdateKeyRequest{
     required string         counter_group=2;
-    repeated KeyT           keys=4;  		/// key  : if you set both key and label, the DB label will be updated 
+    repeated KeyT           keys=4;  		         /// key  : if you set both key and label, the DB label will be updated 
+	optional bool           remove_all_attributes=5; /// remove all key attributes from keys 
+	repeated string         remove_attributes=6;     /// remove these attributes only from keys 
 }
 
 /// SessionTrackerRequest  - query session trackers 
@@ -970,6 +976,29 @@ message DomainResponse {
     optional string                 req_params=3;
     optional string                 params=4;
     optional bool                   need_reconnect=5[default=false];
+}
+
+/// messages to HAControl
+message HAControlRequest {
+    enum HAOperation
+    {
+        HA_TEST_REACHABILITY=0;		///  test if primary or backup is reachable (test the other side)
+        HA_SWITCH_BACKUP=1;			///  switch all nodes to backup HA 
+        HA_SWITCH_PRIMARY=2;        ///  switch to primary HA 
+    }
+
+
+    required    HAOperation         cmd=1;
+    optional    string              station_id=2;
+    optional    string              params=3;
+}
+
+message HAControlResponse {
+    optional    bool                control_success=1;
+    optional    string              station_id=2;
+    optional    string              status_message=3;
+	optional    bool                primary_reachable=4;
+	optional    bool                backup_reachable=5;
 }
 
 

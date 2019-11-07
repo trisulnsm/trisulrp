@@ -167,6 +167,8 @@ module TRP
       define :AGGREGATE_SESSIONS_RESPONSE, 133
       define :RUNTOOL_REQUEST, 134
       define :RUNTOOL_RESPONSE, 135
+      define :HA_CONTROL_REQUEST, 140
+      define :HA_CONTROL_RESPONSE, 141
     end
 
   end
@@ -248,6 +250,16 @@ module TRP
 
   end
 
+  class HAControlRequest < ::Protobuf::Message
+    class HAOperation < ::Protobuf::Enum
+      define :HA_TEST_REACHABILITY, 0
+      define :HA_SWITCH_BACKUP, 1
+      define :HA_SWITCH_PRIMARY, 2
+    end
+
+  end
+
+  class HAControlResponse < ::Protobuf::Message; end
   class NodeConfigRequest < ::Protobuf::Message
     class IntelFeed < ::Protobuf::Message; end
 
@@ -540,6 +552,8 @@ module TRP
     optional ::TRP::AggregateResourcesResponse, :aggregate_resources_response, 143
     optional ::TRP::RunToolRequest, :run_tool_request, 144
     optional ::TRP::RunToolResponse, :run_tool_response, 145
+    optional ::TRP::HAControlRequest, :ha_control_request, 150
+    optional ::TRP::HAControlResponse, :ha_control_response, 151
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -718,6 +732,8 @@ module TRP
   class UpdateKeyRequest
     required :string, :counter_group, 2
     repeated ::TRP::KeyT, :keys, 4
+    optional :bool, :remove_all_attributes, 5
+    repeated :string, :remove_attributes, 6
   end
 
   class SessionTrackerRequest
@@ -958,6 +974,20 @@ module TRP
     optional :string, :req_params, 3
     optional :string, :params, 4
     optional :bool, :need_reconnect, 5, :default => false
+  end
+
+  class HAControlRequest
+    required ::TRP::HAControlRequest::HAOperation, :cmd, 1
+    optional :string, :station_id, 2
+    optional :string, :params, 3
+  end
+
+  class HAControlResponse
+    optional :bool, :control_success, 1
+    optional :string, :station_id, 2
+    optional :string, :status_message, 3
+    optional :bool, :primary_reachable, 4
+    optional :bool, :backup_reachable, 5
   end
 
   class NodeConfigRequest

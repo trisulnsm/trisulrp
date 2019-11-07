@@ -1,3 +1,4 @@
+$SAFE=0
 require 'rubygems'
 require 'bundler'
 begin
