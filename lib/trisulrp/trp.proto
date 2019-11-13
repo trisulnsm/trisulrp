@@ -357,6 +357,7 @@ message Message {
                     RUNTOOL_RESPONSE=135;
                     HA_CONTROL_REQUEST=140;
                     HA_CONTROL_RESPONSE=141;
+					DOMAIN_PING=142;
     }
 
     required Command    trp_command=1;

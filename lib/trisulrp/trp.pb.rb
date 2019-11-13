@@ -169,6 +169,7 @@ module TRP
       define :RUNTOOL_RESPONSE, 135
       define :HA_CONTROL_REQUEST, 140
       define :HA_CONTROL_RESPONSE, 141
+      define :DOMAIN_PING, 142
     end
 
   end
