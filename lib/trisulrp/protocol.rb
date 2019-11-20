@@ -523,6 +523,9 @@ module TrisulRP::Protocol
     when TRP::Message::Command::RUNTOOL_REQUEST
 	  fix_TRP_Fields( TRP::RunToolRequest, params)
       req.run_tool_request = TRP::RunToolRequest.new(params)
+    when TRP::Message::Command::TOOL_INFO_REQUEST
+	  fix_TRP_Fields( TRP::ToolInfoRequest, params)
+      req.tool_info_request = TRP::ToolInfoRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -624,6 +627,8 @@ module TrisulRP::Protocol
         resp.graph_response
     when TRP::Message::Command::RUNTOOL_RESPONSE
         resp.run_tool_response
+    when TRP::Message::Command::TOOL_INFO_RESPONSE
+        resp.tool_info_response
     else
       raise "#{resp.trp_command.to_i} Unknown TRP command ID"
     end

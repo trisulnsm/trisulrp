@@ -170,6 +170,8 @@ module TRP
       define :HA_CONTROL_REQUEST, 140
       define :HA_CONTROL_RESPONSE, 141
       define :DOMAIN_PING, 142
+      define :TOOL_INFO_REQUEST, 143
+      define :TOOL_INFO_RESPONSE, 144
     end
 
   end
@@ -261,6 +263,8 @@ module TRP
   end
 
   class HAControlResponse < ::Protobuf::Message; end
+  class ToolInfoRequest < ::Protobuf::Message; end
+  class ToolInfoResponse < ::Protobuf::Message; end
   class NodeConfigRequest < ::Protobuf::Message
     class IntelFeed < ::Protobuf::Message; end
 
@@ -555,6 +559,8 @@ module TRP
     optional ::TRP::RunToolResponse, :run_tool_response, 145
     optional ::TRP::HAControlRequest, :ha_control_request, 150
     optional ::TRP::HAControlResponse, :ha_control_response, 151
+    optional ::TRP::ToolInfoRequest, :tool_info_request, 152
+    optional ::TRP::ToolInfoResponse, :tool_info_response, 153
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -991,6 +997,16 @@ module TRP
     optional :bool, :backup_reachable, 5
   end
 
+  class ToolInfoRequest
+    optional :string, :context_name, 1
+    optional :string, :tool_name, 2
+    repeated :string, :tool_info_requested, 3
+  end
+
+  class ToolInfoResponse
+    repeated ::TRP::NameValue, :tool_info, 1
+  end
+
   class NodeConfigRequest
     class IntelFeed
       required :string, :guid, 1
@@ -1031,6 +1047,7 @@ module TRP
   class ContextInfoRequest
     optional :string, :context_name, 1
     optional :bool, :get_size_on_disk, 2, :default => false
+    optional :string, :tool_name, 3
   end
 
   class ContextInfoResponse
