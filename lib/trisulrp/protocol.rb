@@ -335,6 +335,32 @@ module TrisulRP::Protocol
     return  tint
   end
 
+
+  # Helper iterate through each time interval in reverse order 
+  #
+  # [endpoint]  - the ZMQ endpoint
+  #
+  # ==== Returns
+  # ==== Yields
+  # [time_interval,  id, total_intervals] A TRP::TimeInterval object which can be attached to any :time_interval field of a TRP request
+  #
+  #
+  def each_time_interval(zmq_endpt)
+
+    req=mk_request(TRP::Message::Command::TIMESLICES_REQUEST )
+    get_response_zmq(zmq_endpt,req) do |resp|
+
+     slice_id = 0
+     total_slices = resp.slices.size 
+
+     resp.slices.reverse_each do | slc |
+        yield slc.time_interval, slice_id, total_slices
+        slice_id=slice_id+1 
+      end 
+    end
+  end
+
+
   # Helper to allow assinging string to KeyT field
   #
   # instead of  

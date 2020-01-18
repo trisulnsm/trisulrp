@@ -1014,6 +1014,7 @@ module TRP
       optional :string, :download_rules, 3
       repeated :string, :uri, 4
       repeated :string, :usernodes, 5
+      optional :int64, :sub_feed_id, 6, :default => -1
     end
 
     optional :string, :message, 1

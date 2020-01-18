@@ -16,7 +16,7 @@ Key Features :
 
 * TRP Documentation and Tutorials  http://trisul.org/docs/trp/index.html
 * Getting started tutorial http://trisul.org/docs/trp/trpgemsteps.html
-* Github repo of sample scripts  https://github.com/vivekrajan/trisul-scripts
+* Github repo of sample scripts  https://github.com/trisulnsm/trisul-scripts/trp
 
 
 == Contributing to trisulrp

@@ -871,9 +871,16 @@ message QueryFTSResponse {
 /// get the METERS METASLICE info 
 /// .. response = TimeSlicesResponse
 message TimeSlicesRequest  {
-    optional bool   get_disk_usage=1[default=false];
-    optional bool   get_all_engines=2[default=false];
-    optional bool   get_total_window=3[default=false];
+    optional bool   get_disk_usage=1[default=false];     /// get disk usage per SLICE 
+
+    optional bool   get_all_engines=2[default=false];    /// by default (set to false) we only get instance-0 
+	                                                     /// because are interested in iterating over 
+														 /// the time interval rather then each slice
+														 /// inside the time interval. set this to true
+														 /// if you want each slice to be reported 
+
+    optional bool   get_total_window=3[default=false];   /// just get the total time window in the 
+	                                                     /// trisul database 
 }
 
 /// .. response = TimeSlicesResponse
@@ -1025,11 +1032,12 @@ message NodeConfigRequest {
     optional string message=1;
 
     message IntelFeed {
-        required string     guid=1;             /// identifying feed group (eg Geo, Badfellas)
-        optional string     name=2;             /// name
-        optional string     download_rules=3;   /// xml file with feed update instructions
-        repeated string     uri=4;              /// individual files in config//.. for FileRequest download 
-		repeated string     usernodes=5;        /// user requesting the feed, the probe0, probe1, etc 
+        required string     guid=1;                   /// identifying feed group (eg Geo, Badfellas)
+        optional string     name=2;                   /// feed name (eg badfellas) 
+        optional string     download_rules=3;         /// xml file with feed update instructions
+        repeated string     uri=4;                    /// individual files in config//.. for FileRequest download 
+		repeated string     usernodes=5;              /// user requesting the feed, the probe0, probe1, etc 
+		optional int64		sub_feed_id=6[default=-1];/// sub feed ID, when a feed consists of several sub-feeds 
     }
 
     optional IntelFeed      add_feed=2;
@@ -1037,7 +1045,6 @@ message NodeConfigRequest {
     optional bool           get_all_nodes=4[default=true];
     repeated NameValue      query_config=5;
     optional IntelFeed      remove_feed=6;
-
 }
 
 message NodeConfigResponse {
