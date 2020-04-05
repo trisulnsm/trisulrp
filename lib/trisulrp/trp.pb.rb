@@ -1014,6 +1014,7 @@ module TRP
       optional :string, :download_rules, 3
       repeated :string, :uri, 4
       repeated :string, :usernodes, 5
+      optional :int64, :sub_feed_id, 6, :default => -1
     end
 
     optional :string, :message, 1
@@ -1229,6 +1230,7 @@ module TRP
     required :string, :context_name, 1
     required ::TRP::RunToolRequest::NodeTool, :tool, 2
     optional :string, :tool_input, 3
+    optional :string, :tool_input_file_data, 4
   end
 
   class RunToolResponse
