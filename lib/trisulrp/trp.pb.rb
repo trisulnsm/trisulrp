@@ -674,6 +674,7 @@ module TRP
     optional :bool, :resolve_keys, 21, :default => true
     optional :string, :outputpath, 22
     repeated :string, :idlist, 23
+    optional ::TRP::KeyT, :any_nf_ifindex, 24
   end
 
   class QuerySessionsResponse
@@ -701,6 +702,7 @@ module TRP
     optional :string, :subnet_16, 18
     optional :int64, :aggregate_topcount, 19, :default => 100
     repeated :string, :group_by_fields, 20
+    optional ::TRP::KeyT, :any_nf_ifindex, 21
   end
 
   class AggregateSessionsResponse
@@ -858,6 +860,8 @@ module TRP
     optional :int64, :meter, 3, :default => 0
     optional :int64, :maxitems, 4, :default => 100
     optional ::TRP::TimeInterval, :time_interval, 5
+    optional :string, :key_filter, 6
+    optional :string, :inverse_key_filter, 7
   end
 
   class TopperTrendResponse
