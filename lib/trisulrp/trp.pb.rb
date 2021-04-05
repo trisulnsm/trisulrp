@@ -604,6 +604,9 @@ module TRP
     required ::TRP::KeyT, :key, 2
     optional ::TRP::StatsArray, :totals, 3
     repeated ::TRP::StatsArray, :stats, 4
+    optional ::TRP::StatsArray, :maximums, 5
+    optional ::TRP::StatsArray, :minimums, 6
+    optional ::TRP::StatsArray, :samples, 8
   end
 
   class CounterGroupTopperRequest
@@ -1019,6 +1022,7 @@ module TRP
       repeated :string, :uri, 4
       repeated :string, :usernodes, 5
       optional :int64, :sub_feed_id, 6, :default => -1
+      optional :bool, :restore_mode, 7, :default => false
     end
 
     optional :string, :message, 1
