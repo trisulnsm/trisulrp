@@ -488,6 +488,7 @@ message CounterItemRequest{
     required KeyT           key=4;                          /// key (can specify key.key, key.label, etc too 
     required TimeInterval   time_interval=5;                /// Time interval for query
     optional int64          volumes_only=6 [default=0];     /// if '1' ; then only retrieves totals for each meter 
+	optional bool			get_key_attributes=7 [default=false]; /// if true, response keys get key_attributes as well 
 }
 
 /// CounterItemResponse  - 
@@ -513,6 +514,9 @@ message CounterGroupTopperRequest{
     optional bool           resolve_keys=8 [default=true];  /// retrieve labels as set in the response for each key 
 	optional string			key_filter=9;					/// only get keys with this pattern and SYS:GROUP
 	optional string			inverse_key_filter=10;			/// only get keys without this pattern  NOT
+	optional bool			get_key_attributes=11 [default=false]; 
+															/// if true, response keys get key_attributes as well 
+
 }
 
 /// CounterGroupTopperResponse  

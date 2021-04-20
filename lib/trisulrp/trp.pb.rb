@@ -597,6 +597,7 @@ module TRP
     required ::TRP::KeyT, :key, 4
     required ::TRP::TimeInterval, :time_interval, 5
     optional :int64, :volumes_only, 6, :default => 0
+    optional :bool, :get_key_attributes, 7, :default => false
   end
 
   class CounterItemResponse
@@ -619,6 +620,7 @@ module TRP
     optional :bool, :resolve_keys, 8, :default => true
     optional :string, :key_filter, 9
     optional :string, :inverse_key_filter, 10
+    optional :bool, :get_key_attributes, 11, :default => false
   end
 
   class CounterGroupTopperResponse
