@@ -19,6 +19,9 @@ Key Features :
 * Github repo of sample scripts  https://github.com/trisulnsm/trisul-scripts/trp
 
 
+== Generating the ruby protobuf definitions 
+protoc --ruby_out=. trp.proto
+
 == Contributing to trisulrp
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
@@ -31,5 +34,6 @@ Key Features :
 
 == Copyright
 
-Copyright (c) 2010-12 Unleash Networks. See LICENSE.txt for further details.
+License MIT 
+Copyright (c) 2010-2021 Unleash Networks. See LICENSE.txt for further details.
 
