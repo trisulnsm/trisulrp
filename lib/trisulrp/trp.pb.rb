@@ -598,6 +598,7 @@ module TRP
     required ::TRP::TimeInterval, :time_interval, 5
     optional :int64, :volumes_only, 6, :default => 0
     optional :bool, :get_key_attributes, 7, :default => false
+    optional :int64, :get_percentile, 8, :default => 0
   end
 
   class CounterItemResponse
@@ -608,6 +609,7 @@ module TRP
     optional ::TRP::StatsArray, :maximums, 5
     optional ::TRP::StatsArray, :minimums, 6
     optional ::TRP::StatsArray, :samples, 8
+    optional ::TRP::StatsArray, :percentiles, 9
   end
 
   class CounterGroupTopperRequest

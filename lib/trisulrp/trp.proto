@@ -489,6 +489,7 @@ message CounterItemRequest{
     required TimeInterval   time_interval=5;                /// Time interval for query
     optional int64          volumes_only=6 [default=0];     /// if '1' ; then only retrieves totals for each meter 
 	optional bool			get_key_attributes=7 [default=false]; /// if true, response keys get key_attributes as well 
+    optional int64          get_percentile=8[default=0];    /// enter 95 here if you want 95th percentile (using streaming) 
 }
 
 /// CounterItemResponse  - 
@@ -500,6 +501,7 @@ message CounterItemResponse{
     optional StatsArray     maximums=5;                     /// if volumes_only = 1  this contains MAX(..) 
     optional StatsArray     minimums=6;                     /// if volumes_only = 1  this contains MIN(..)
     optional StatsArray     samples=8;                 		/// if volumes_only = 1  this contains SAMPLES(..) 
+    optional StatsArray     percentiles=9;                 		/// if volumes_only = 1  this contains SAMPLES(..) 
 }
 
 
