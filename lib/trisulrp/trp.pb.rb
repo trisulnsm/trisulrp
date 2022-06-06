@@ -75,6 +75,7 @@ module TRP
   class KeyStats < ::Protobuf::Message; end
   class KeyT < ::Protobuf::Message
     class NameValueT < ::Protobuf::Message; end
+    class PercentileT < ::Protobuf::Message; end
 
   end
 
@@ -374,6 +375,11 @@ module TRP
       required :string, :attr_value, 2
     end
 
+    class PercentileT
+      required :int64, :rank, 1
+      required :int64, :value, 2
+    end
+
     optional :string, :key, 1
     optional :string, :readable, 2
     optional :string, :label, 3
@@ -383,6 +389,7 @@ module TRP
     optional :int64, :metric_max, 7
     optional :int64, :metric_min, 8
     optional :int64, :metric_avg, 9
+    repeated ::TRP::KeyT::PercentileT, :percentiles, 10
   end
 
   class CounterGroupT
@@ -623,6 +630,7 @@ module TRP
     optional :string, :key_filter, 9
     optional :string, :inverse_key_filter, 10
     optional :bool, :get_key_attributes, 11, :default => false
+    repeated :int64, :get_percentiles, 12
   end
 
   class CounterGroupTopperResponse
@@ -869,6 +877,7 @@ module TRP
     optional ::TRP::TimeInterval, :time_interval, 5
     optional :string, :key_filter, 6
     optional :string, :inverse_key_filter, 7
+    optional :bool, :get_key_attributes, 8, :default => false
   end
 
   class TopperTrendResponse

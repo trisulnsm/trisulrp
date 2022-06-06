@@ -110,6 +110,12 @@ message KeyT {
     optional int64          metric_max=7;           /// optional : max observed value for metric  in context
     optional int64          metric_min=8;           /// optional : max observed value for metric 
     optional int64          metric_avg=9;           /// optional : max observed value for metric 
+
+	message  PercentileT {
+		required int64		rank=1;
+		required int64		value=2;
+	}
+	repeated PercentileT	percentiles=10;			/// requested percentile values 
 }
 
 
@@ -518,6 +524,7 @@ message CounterGroupTopperRequest{
 	optional string			inverse_key_filter=10;			/// only get keys without this pattern  NOT
 	optional bool			get_key_attributes=11 [default=false]; 
 															/// if true, response keys get key_attributes as well 
+	repeated int64			get_percentiles=12;				/// if you want 95th percentile .. add 95, can add multiple 
 
 }
 
