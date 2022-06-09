@@ -826,6 +826,7 @@ message TopperTrendRequest {
 	optional string			key_filter=6;					/// only get keys with this pattern and SYS:GROUP
 	optional string			inverse_key_filter=7;			/// only get keys without this pattern  NOT
 	optional bool			get_key_attributes=8 [default=false]; /// if true, response keys get key_attributes as well 
+	optional bool			resolve_keys=9[ default=true];  /// resolve all keys and label
 }
 
 /// TopperTrendResponse   

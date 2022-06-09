@@ -878,6 +878,7 @@ module TRP
     optional :string, :key_filter, 6
     optional :string, :inverse_key_filter, 7
     optional :bool, :get_key_attributes, 8, :default => false
+    optional :bool, :resolve_keys, 9, :default => true
   end
 
   class TopperTrendResponse
