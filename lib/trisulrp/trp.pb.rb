@@ -95,6 +95,7 @@ module TRP
   class VertexGroupT < ::Protobuf::Message; end
   class EdgeGraphT < ::Protobuf::Message; end
   class NameValue < ::Protobuf::Message; end
+  class ConfigBlob < ::Protobuf::Message; end
   class Message < ::Protobuf::Message
     class Command < ::Protobuf::Enum
       define :HELLO_REQUEST, 1
@@ -494,6 +495,11 @@ module TRP
   class NameValue
     required :string, :name, 1
     optional :string, :value, 2
+  end
+
+  class ConfigBlob
+    required :string, :filename, 1
+    required :bytes, :filecontents, 2
   end
 
   class Message
@@ -1121,6 +1127,8 @@ module TRP
     optional :bytes, :push_config_blob, 4
     repeated ::TRP::NameValue, :query_config, 5
     repeated ::TRP::NameValue, :set_config_values, 6
+    optional ::TRP::ConfigBlob, :get_generic_blob, 8
+    optional ::TRP::ConfigBlob, :push_generic_blob, 9
   end
 
   class ContextConfigResponse
@@ -1140,6 +1148,7 @@ module TRP
     repeated :string, :endpoints_pub, 8
     repeated ::TRP::NameValue, :config_values, 10
     repeated ::TRP::ContextConfigResponse::Layer, :layers, 11
+    optional ::TRP::ConfigBlob, :generic_blob, 12
   end
 
   class PcapRequest

@@ -283,6 +283,12 @@ message NameValue {
     optional string value=2;
 }
 
+/// these items go in the probe config directory, ignored by all other types of nodes 
+message	ConfigBlob {
+	required string		  filename=1;
+	required bytes		  filecontents=2;		
+}
+
 /// Top level message is TRP::Message
 /// wraps the actual request or response 
 /// 
@@ -1165,6 +1171,9 @@ message ContextConfigRequest {
      optional  bytes          push_config_blob=4;     /// push this .. 
      repeated  NameValue      query_config=5;         /// query, leave the .value field blank
      repeated  NameValue      set_config_values=6;    /// push this ..  (name=value;name=value ..)
+
+     optional  ConfigBlob     get_generic_blob=8;     /// push this .. send persist for snmp util to probe 
+     optional  ConfigBlob     push_generic_blob=9;     /// push this .. send persist for snmp util to probe 
 }
 
 
@@ -1187,6 +1196,7 @@ message ContextConfigResponse {
     repeated  string            endpoints_pub=8;
     repeated  NameValue         config_values=10;       /// query, leave the .value field blank
     repeated  Layer             layers=11;
+	optional  ConfigBlob		generic_blob=12;	    	/// use case is : persist file as a blob 
 
 }
 
