@@ -286,7 +286,7 @@ message NameValue {
 /// these items go in the probe config directory, ignored by all other types of nodes 
 message	ConfigBlob {
 	required string		  filename=1;
-	required bytes		  filecontents=2;		
+	optional bytes		  filecontents=2;		
 }
 
 /// Top level message is TRP::Message

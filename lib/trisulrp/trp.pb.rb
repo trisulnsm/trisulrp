@@ -499,7 +499,7 @@ module TRP
 
   class ConfigBlob
     required :string, :filename, 1
-    required :bytes, :filecontents, 2
+    optional :bytes, :filecontents, 2
   end
 
   class Message
