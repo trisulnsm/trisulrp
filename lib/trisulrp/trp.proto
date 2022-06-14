@@ -813,6 +813,7 @@ message KeySpaceRequest {
     repeated KeySpace       spaces=5;	                   /// space1 OR space2 OR ..
     optional bool           resolve_keys=6[default=true];  /// resolve names 
 	optional bool           totals_only=7[default=false];  /// if set, only totals returned
+	optional bool			get_key_attributes=8 [default=false]; /// if true, response keys get key_attributes as well 
 }
 
 /// KeySpaceResponse  

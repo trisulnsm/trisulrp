@@ -868,6 +868,7 @@ module TRP
     repeated ::TRP::KeySpaceRequest::KeySpace, :spaces, 5
     optional :bool, :resolve_keys, 6, :default => true
     optional :bool, :totals_only, 7, :default => false
+    optional :bool, :get_key_attributes, 8, :default => false
   end
 
   class KeySpaceResponse
