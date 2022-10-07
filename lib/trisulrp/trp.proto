@@ -514,6 +514,7 @@ message CounterItemResponse{
     optional StatsArray     minimums=6;                     /// if volumes_only = 1  this contains MIN(..)
     optional StatsArray     samples=8;                 		/// if volumes_only = 1  this contains SAMPLES(..) 
     optional StatsArray     percentiles=9;                  /// if get_percentile > 0   this contains PERCENTILE(..) stream approx 
+    optional StatsArray     latests=10;                     /// if volumes_only = 1  this contains LATEST(..)
 }
 
 

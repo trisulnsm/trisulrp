@@ -623,6 +623,7 @@ module TRP
     optional ::TRP::StatsArray, :minimums, 6
     optional ::TRP::StatsArray, :samples, 8
     optional ::TRP::StatsArray, :percentiles, 9
+    optional ::TRP::StatsArray, :latests, 10
   end
 
   class CounterGroupTopperRequest
