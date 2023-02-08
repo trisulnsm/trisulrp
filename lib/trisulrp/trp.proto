@@ -372,6 +372,8 @@ message Message {
 					DOMAIN_PING=142;
 					TOOL_INFO_REQUEST=143;
 					TOOL_INFO_RESPONSE=144;
+					DDOS_REPORT_REQUEST=153;
+					DDOS_REPORT_RESPONSE=154;
 
     }
 
@@ -446,6 +448,8 @@ message Message {
     optional HAControlResponse  ha_control_response=151;
     optional ToolInfoRequest  tool_info_request=152;
     optional ToolInfoResponse  tool_info_response=153;
+	optional DDosReportRequest  ddos_report_request=154;
+	optional DDosReportResponse  ddos_report_response=155;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -673,6 +677,7 @@ message AggregateSessionsResponse {
     repeated KeyTCount      internal_ip=19;     /// internal IPs 
     repeated KeyTCount      external_ip=20;     /// external IPs
 	repeated TagGroup		tag_group=21;		/// tag groups 
+    repeated KeyTCount      conversation=22;    /// conversation 
 }
 
 
@@ -1363,5 +1368,31 @@ message RunToolRequest   {
 message RunToolResponse   {
      required   string         context_name=1;      /// if not  set all context get in 
      optional   string         tool_output=2;       /// cmd lines 
+}
+
+/// DDosReportRequest  : request DDOS report
+message DDosReportRequest   {
+     required   string         context_name=1;      /// if not  set all context get in 
+	 required   string 		   report_name=2;		/// which of these tools you want to run on node
+	 optional	bool		   get_aggregations=3;
+	 optional	bool		   get_raw_flows=4;
+}
+
+/// DDosReportResponse 
+message DDosReportResponse    {
+     required   string         context_name=1;      /// if not  set all context get in 
+
+	 optional   string 		   agg_router=2;
+	 optional   string 		   agg_source_ip=3;
+	 optional   string 		   agg_source_port=4;
+	 optional   string 		   agg_source_protocol_port=5;
+	 optional   string 		   agg_dest_ip=6;
+	 optional   string 		   agg_dest_port=7;
+	 optional   string 		   agg_protocol=8;
+	 optional   string 		   agg_source_as=9;
+	 optional   string 		   agg_dest_as=10;
+	 optional   string 		   agg_if_in=11;
+	 optional   string 		   agg_if_out=12;
+
 }
 
