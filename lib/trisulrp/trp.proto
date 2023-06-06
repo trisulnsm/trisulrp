@@ -861,12 +861,14 @@ message SubscribeCtl  {
         ST_ALERT=1;         
         ST_FLOW=2;         
         ST_TOPPER=3;     
+		ST_ALL=4;
     }
 
     enum CtlType
     {
         CT_SUBSCRIBE=0;
         CT_UNSUBSCRIBE=1;
+		CT_CLEARALL=2;
     }
 
     required string         context_name=1;
