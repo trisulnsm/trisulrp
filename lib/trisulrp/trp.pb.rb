@@ -228,11 +228,13 @@ module TRP
       define :ST_ALERT, 1
       define :ST_FLOW, 2
       define :ST_TOPPER, 3
+      define :ST_ALL, 4
     end
 
     class CtlType < ::Protobuf::Enum
       define :CT_SUBSCRIBE, 0
       define :CT_UNSUBSCRIBE, 1
+      define :CT_CLEARALL, 2
     end
 
   end
