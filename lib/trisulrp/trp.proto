@@ -374,6 +374,7 @@ message Message {
 					TOOL_INFO_RESPONSE=144;
 					DDOS_REPORT_REQUEST=153;
 					DDOS_REPORT_RESPONSE=154;
+                    UPDATE_SLICE_REQUEST=155;                            
 
     }
 
@@ -450,6 +451,7 @@ message Message {
     optional ToolInfoResponse  tool_info_response=153;
 	optional DDosReportRequest  ddos_report_request=154;
 	optional DDosReportResponse  ddos_report_response=155;
+    optional UpdateSliceRequest  update_slice_request=156;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -688,6 +690,14 @@ message UpdateKeyRequest{
     repeated KeyT           keys=4;  		         /// key  : if you set both key and label, the DB label will be updated 
 	optional bool           remove_all_attributes=5; /// remove all key attributes from keys 
 	repeated string         remove_attributes=6;     /// remove these attributes only from keys 
+}
+
+/// UpdateSliceRequerst 
+/// Response = OKResponse or ErrorResponse
+message UpdateSliceRequest {
+    required int64          slice_name=1;
+	repeated string         add_tags=2;        /// remove these attributes only from keys 
+	repeated string         remove_tags=3;     /// remove these attributes only from keys 
 }
 
 /// SessionTrackerRequest  - query session trackers 
@@ -936,11 +946,22 @@ message TimeSlicesResponse  {
         optional int64          disk_size=4;
         optional string         path=5;
         optional bool           available=6;
+		repeated string         tags=7; 
     };
+
+	message PoolT
+	{
+		required string			status=1;
+		optional int64  	    total_size=2;
+		optional int64          avail_size=3;
+		optional string 		file_system=4; 
+		optional string 		mounted=5; 
+	}
 
     repeated SliceT         slices=1;
     optional TimeInterval   total_window=2;
     optional string         context_name=3;
+	repeated PoolT			pools=4; 
 }
 
 
