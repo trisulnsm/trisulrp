@@ -176,6 +176,7 @@ module TRP
       define :TOOL_INFO_RESPONSE, 144
       define :DDOS_REPORT_REQUEST, 153
       define :DDOS_REPORT_RESPONSE, 154
+      define :UPDATE_SLICE_REQUEST, 155
     end
 
   end
@@ -202,6 +203,7 @@ module TRP
   end
 
   class UpdateKeyRequest < ::Protobuf::Message; end
+  class UpdateSliceRequest < ::Protobuf::Message; end
   class SessionTrackerRequest < ::Protobuf::Message; end
   class SessionTrackerResponse < ::Protobuf::Message; end
   class QueryAlertsRequest < ::Protobuf::Message; end
@@ -245,6 +247,7 @@ module TRP
   class PcapSlicesRequest < ::Protobuf::Message; end
   class TimeSlicesResponse < ::Protobuf::Message
     class SliceT < ::Protobuf::Message; end
+    class PoolT < ::Protobuf::Message; end
 
   end
 
@@ -582,6 +585,7 @@ module TRP
     optional ::TRP::ToolInfoResponse, :tool_info_response, 153
     optional ::TRP::DDosReportRequest, :ddos_report_request, 154
     optional ::TRP::DDosReportResponse, :ddos_report_response, 155
+    optional ::TRP::UpdateSliceRequest, :update_slice_request, 156
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -776,6 +780,12 @@ module TRP
     repeated :string, :remove_attributes, 6
   end
 
+  class UpdateSliceRequest
+    required :int64, :slice_name, 1
+    repeated :string, :add_tags, 2
+    repeated :string, :remove_tags, 3
+  end
+
   class SessionTrackerRequest
     optional :string, :session_group, 2, :default => "{99A78737-4B41-4387-8F31-8077DB917336}"
     optional :int64, :tracker_id, 3
@@ -946,11 +956,21 @@ module TRP
       optional :int64, :disk_size, 4
       optional :string, :path, 5
       optional :bool, :available, 6
+      repeated :string, :tags, 7
+    end
+
+    class PoolT
+      required :string, :status, 1
+      optional :int64, :total_size, 2
+      optional :int64, :avail_size, 3
+      optional :string, :file_system, 4
+      optional :string, :mounted, 5
     end
 
     repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
     optional ::TRP::TimeInterval, :total_window, 2
     optional :string, :context_name, 3
+    repeated ::TRP::TimeSlicesResponse::PoolT, :pools, 4
   end
 
   class DeleteAlertsRequest
