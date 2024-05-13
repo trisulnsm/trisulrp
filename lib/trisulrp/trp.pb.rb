@@ -781,7 +781,7 @@ module TRP
   end
 
   class UpdateSliceRequest
-    required :int64, :slice_name, 1
+    required :int64, :id, 1
     repeated :string, :add_tags, 2
     repeated :string, :remove_tags, 3
   end
@@ -957,6 +957,7 @@ module TRP
       optional :string, :path, 5
       optional :bool, :available, 6
       repeated :string, :tags, 7
+      optional :int64, :id, 8
     end
 
     class PoolT

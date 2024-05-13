@@ -695,9 +695,9 @@ message UpdateKeyRequest{
 /// UpdateSliceRequerst 
 /// Response = OKResponse or ErrorResponse
 message UpdateSliceRequest {
-    required int64          slice_name=1;
-	repeated string         add_tags=2;        /// remove these attributes only from keys 
-	repeated string         remove_tags=3;     /// remove these attributes only from keys 
+    required int64          id=1;			   /// the number slice_id  
+	repeated string         add_tags=2;        /// tags to be added to slice
+	repeated string         remove_tags=3;     /// tags to be removed from slice 
 }
 
 /// SessionTrackerRequest  - query session trackers 
@@ -947,6 +947,7 @@ message TimeSlicesResponse  {
         optional string         path=5;
         optional bool           available=6;
 		repeated string         tags=7; 
+		optional int64			id=8;
     };
 
 	message PoolT
