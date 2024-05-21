@@ -966,12 +966,16 @@ module TRP
       optional :int64, :avail_size, 3
       optional :string, :file_system, 4
       optional :string, :mounted, 5
+      optional :bool, :offline_archive, 6, :default => false
+      optional :bool, :offline_archive_mounted, 7, :default => false
+      optional :string, :additional_info, 8
     end
 
     repeated ::TRP::TimeSlicesResponse::SliceT, :slices, 1
     optional ::TRP::TimeInterval, :total_window, 2
     optional :string, :context_name, 3
     repeated ::TRP::TimeSlicesResponse::PoolT, :pools, 4
+    optional :bool, :ha_slave_mode, 5
   end
 
   class DeleteAlertsRequest

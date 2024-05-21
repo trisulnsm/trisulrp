@@ -957,12 +957,16 @@ message TimeSlicesResponse  {
 		optional int64          avail_size=3;
 		optional string 		file_system=4; 
 		optional string 		mounted=5; 
+		optional bool 	        offline_archive=6 [default=false];
+		optional bool 	        offline_archive_mounted=7 [default=false];
+		optional string 	    additional_info=8;
 	}
 
     repeated SliceT         slices=1;
     optional TimeInterval   total_window=2;
     optional string         context_name=3;
 	repeated PoolT			pools=4; 
+	optional bool 		    ha_slave_mode=5;
 }
 
 
