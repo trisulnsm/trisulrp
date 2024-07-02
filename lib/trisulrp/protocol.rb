@@ -557,7 +557,7 @@ module TrisulRP::Protocol
       req.update_slice_request = TRP::UpdateSliceRequest.new(params)
     when TRP::Message::Command::COUNTER_ITEM_NG_REQUEST
 	  fix_TRP_Fields( TRP::CounterItemNGRequest, params)
-      req.counter_item_request = TRP::CounterItemNGRequest.new(params)
+      req.counter_item_ng_request = TRP::CounterItemNGRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
