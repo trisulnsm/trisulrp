@@ -177,6 +177,7 @@ module TRP
       define :DDOS_REPORT_REQUEST, 153
       define :DDOS_REPORT_RESPONSE, 154
       define :UPDATE_SLICE_REQUEST, 155
+      define :COUNTER_ITEM_NG_REQUEST, 156
     end
 
   end
@@ -187,6 +188,7 @@ module TRP
   class OKResponse < ::Protobuf::Message; end
   class CounterItemRequest < ::Protobuf::Message; end
   class CounterItemResponse < ::Protobuf::Message; end
+  class CounterItemNGRequest < ::Protobuf::Message; end
   class CounterGroupTopperRequest < ::Protobuf::Message; end
   class CounterGroupTopperResponse < ::Protobuf::Message; end
   class SearchKeysRequest < ::Protobuf::Message; end
@@ -586,6 +588,7 @@ module TRP
     optional ::TRP::DDosReportRequest, :ddos_report_request, 154
     optional ::TRP::DDosReportResponse, :ddos_report_response, 155
     optional ::TRP::UpdateSliceRequest, :update_slice_request, 156
+    optional ::TRP::CounterItemNGRequest, :counter_item_ng_request, 157
     optional :string, :destination_node, 200
     optional :string, :probe_id, 201
     optional :bool, :run_async, 202
@@ -636,6 +639,16 @@ module TRP
     optional ::TRP::StatsArray, :samples, 8
     optional ::TRP::StatsArray, :percentiles, 9
     optional ::TRP::StatsArray, :latests, 10
+  end
+
+  class CounterItemNGRequest
+    required :string, :counter_group, 2
+    optional :int64, :meter, 3
+    required ::TRP::KeyT, :key, 4
+    required ::TRP::TimeInterval, :time_interval, 5
+    optional :int64, :volumes_only, 6, :default => 0
+    optional :bool, :get_key_attributes, 7, :default => false
+    optional :int64, :get_percentile, 8, :default => 0
   end
 
   class CounterGroupTopperRequest
