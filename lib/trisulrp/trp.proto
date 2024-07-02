@@ -375,7 +375,7 @@ message Message {
 					DDOS_REPORT_REQUEST=153;
 					DDOS_REPORT_RESPONSE=154;
                     UPDATE_SLICE_REQUEST=155;                            
-
+                    COUNTER_ITEM_NG_REQUEST=156;
     }
 
     required Command    trp_command=1;
@@ -452,6 +452,7 @@ message Message {
 	optional DDosReportRequest  ddos_report_request=154;
 	optional DDosReportResponse  ddos_report_response=155;
     optional UpdateSliceRequest  update_slice_request=156;
+    optional CounterItemNGRequest counter_item_ng_request=157;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -523,6 +524,17 @@ message CounterItemResponse{
     optional StatsArray     latests=10;                     /// if volumes_only = 1  this contains LATEST(..)
 }
 
+/// CounterItemNGRequest : NG version works with multiple resolutions
+/// Time series history statistics for an item 
+message CounterItemNGRequest{
+    required string         counter_group=2;                /// guid of counter group 
+    optional int64          meter=3;                        /// optional meter, default will retrieve all (same cost)
+    required KeyT           key=4;                          /// key (can specify key.key, key.label, etc too 
+    required TimeInterval   time_interval=5;                /// Time interval for query
+    optional int64          volumes_only=6 [default=0];     /// if '1' ; then only retrieves totals for each meter 
+	optional bool			get_key_attributes=7 [default=false]; /// if true, response keys get key_attributes as well 
+    optional int64          get_percentile=8[default=0];    /// enter 95 here if you want 95th percentile (using streaming) 
+}
 
 /// CounterGroupTopperRequest  - retrieve toppers for a counter group (top-K)
 message CounterGroupTopperRequest{
