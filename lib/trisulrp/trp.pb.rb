@@ -639,6 +639,7 @@ module TRP
     optional ::TRP::StatsArray, :samples, 8
     optional ::TRP::StatsArray, :percentiles, 9
     optional ::TRP::StatsArray, :latests, 10
+    optional ::TRP::StatsArray, :rate_volumes, 11
   end
 
   class CounterItemNGRequest
