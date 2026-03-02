@@ -96,7 +96,7 @@ message KeyStats {
 /// Top level objects are named ObjT 
 ///   eg KeyT - Key Type, SessionT - Session Type etc.
 message KeyT {
-    optional string         key=1;                  /// key in trisul key format eg, C0.A8.01.02 for 192.168.1.2
+    optional string         key=1;                  /// key in trisul key format eg, C0.A8.01.02
     optional string         readable=2;             /// human friendly name
     optional string         label=3;                /// a user label eg, a hostname or manually assigned name 
     optional string         description=4;          /// description 
@@ -656,6 +656,8 @@ message AggregateSessionsRequest {
     optional int64          aggregate_topcount=19[default=100];   	/// number of count-star per field 
 	repeated string         group_by_fields=20; /// list of field names 
     optional KeyT           any_nf_ifindex=21;  /// matches either gen2 or gen3 
+    repeated string         custom_conversation_fields=22; /// string field names and taggroups to string
+                                                           /// source_ip dest_ip dest_port NBAR ASN USERID
 }
 
 /// AggregateSessionsResponse 
@@ -693,6 +695,7 @@ message AggregateSessionsResponse {
     repeated KeyTCount      external_ip=20;     /// external IPs
 	repeated TagGroup		tag_group=21;		/// tag groups 
     repeated KeyTCount      conversation=22;    /// conversation 
+    repeated KeyTCount      custom_conversation=23; /// custom conversation fields
 }
 
 
