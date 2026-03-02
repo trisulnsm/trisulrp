@@ -751,6 +751,7 @@ module TRP
     optional :int64, :aggregate_topcount, 19, :default => 100
     repeated :string, :group_by_fields, 20
     optional ::TRP::KeyT, :any_nf_ifindex, 21
+    repeated :string, :custom_conversation_fields, 22
   end
 
   class AggregateSessionsResponse
@@ -785,6 +786,7 @@ module TRP
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :external_ip, 20
     repeated ::TRP::AggregateSessionsResponse::TagGroup, :tag_group, 21
     repeated ::TRP::AggregateSessionsResponse::KeyTCount, :conversation, 22
+    repeated ::TRP::AggregateSessionsResponse::KeyTCount, :custom_conversation, 23
   end
 
   class UpdateKeyRequest
