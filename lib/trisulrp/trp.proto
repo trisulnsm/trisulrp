@@ -6,7 +6,7 @@
 // Based on Google Protocol Buffers
 // (c) 2012-16, Unleash Networks (http://www.unleashnetworks.com)
 // $Rev: 6946 $
-
+syntax = "proto2";
 option optimize_for = LITE_RUNTIME; 
 
 
@@ -96,7 +96,7 @@ message KeyStats {
 /// Top level objects are named ObjT 
 ///   eg KeyT - Key Type, SessionT - Session Type etc.
 message KeyT {
-    optional string         key=1;                  /// key in trisul key format eg, C0.A8.01.02
+    optional string         key=1;                  /// key in trisul key format eg, C0.A8.01.02 
     optional string         readable=2;             /// human friendly name
     optional string         label=3;                /// a user label eg, a hostname or manually assigned name 
     optional string         description=4;          /// description 
@@ -190,6 +190,9 @@ message AlertT{
     optional string         probe_id=16;            /// probe generating this alert 
     optional string         alert_status=17;        /// FIRE,CLEAR,BLOCK etc 
     optional int64          acknowledge_flag=18;    /// ACK or NOT 
+    optional string         tactic_id=19;           /// from MITRE
+    optional string         technique_id=20;
+    optional string         subtechnique_id=21;
 }
 
 
@@ -657,7 +660,7 @@ message AggregateSessionsRequest {
 	repeated string         group_by_fields=20; /// list of field names 
     optional KeyT           any_nf_ifindex=21;  /// matches either gen2 or gen3 
     repeated string         custom_conversation_fields=22; /// string field names and taggroups to string
-                                                           /// source_ip dest_ip dest_port NBAR ASN USERID
+                                                           /// source_ip dest_ip dest_port NBAR ASN USERID    
 }
 
 /// AggregateSessionsResponse 
@@ -762,6 +765,9 @@ message QueryAlertsRequest  {
     repeated KeyT           ip_pair=20;             /// array of 2 ips 
     optional string         message_regex=21;       /// searech via regex of the dispatch message 
 	optional bool			approx_count_only=22[default=false];	/// approx count per alert group 
+    optional string         tactic_id=23;
+    optional string         technique_id=24;        /// MITRE fields 
+    optional string         subtechnique_id=25;
 }
 
 /// QueryAlertsResponse - response 
