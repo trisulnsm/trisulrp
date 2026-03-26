@@ -1,26 +1,6 @@
 = trisulrp
 
-== Trisul Remote Protocol 
-
-This gem allows you to automate incident response or network forensics tasks on the Trisul Network Analytics platform.
-
-
-Key Features :
-* Analysis done remotely (at Trisul server)
-* All communications over TLS
-* Strong authentication using Client Certificates
-* Easy to use 
-* Can do everything from getting statistics, flows, and pcaps
-
-== Links
-
-* TRP Documentation and Tutorials  http://trisul.org/docs/trp/index.html
-* Getting started tutorial http://trisul.org/docs/trp/trpgemsteps.html
-* Github repo of sample scripts  https://github.com/trisulnsm/trisul-scripts/trp
-
-
-== Generating the ruby protobuf definitions 
-protoc --ruby_out=. trp.proto
+Description goes here.
 
 == Contributing to trisulrp
  
@@ -34,6 +14,6 @@ protoc --ruby_out=. trp.proto
 
 == Copyright
 
-License MIT 
-Copyright (c) 2010-2021 Unleash Networks. See LICENSE.txt for further details.
+Copyright (c) 2010 vivek. See LICENSE.txt for
+further details.
 
