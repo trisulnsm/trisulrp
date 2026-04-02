@@ -14,7 +14,7 @@ require 'rubygems'
 require 'protobuf'
 ::Protobuf.ignore_unknown_fields=true
 
-require 'trisulrp/trp.pb'
+require 'trisulrp/trp_pb'
 require 'trisulrp/guids.rb'
 require 'trisulrp/keys.rb'
 require 'trisulrp/protocol.rb'

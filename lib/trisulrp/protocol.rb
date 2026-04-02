@@ -52,7 +52,7 @@ module TrisulRP::Protocol
   # * The client does not have permissions to connect with that cert 
   # * The private key password is wrong 
   #
-  def connect(server,port,client_cert_file,client_key_file)
+  def connect1(server,port,client_cert_file,client_key_file)
     tcp_sock=TCPSocket.open(server,port)
     ctx = OpenSSL::SSL::SSLContext.new(:TLSv1)
     ctx.cert = OpenSSL::X509::Certificate.new(File.read(client_cert_file))
@@ -144,7 +144,7 @@ module TrisulRP::Protocol
     outbuf=""
 
 	# out
-   outbuf=trp_request.encode
+   outbuf=TRP::Message.encode(trp_request)
 	ctx=ZMQ::Context.new
 	sock = ctx.socket(ZMQ::REQ)
 
@@ -176,9 +176,8 @@ module TrisulRP::Protocol
 		#in 
 		dataarray=""
 		rsock.recv_string(dataarray)
-		resp =TRP::Message.new
-		resp.decode dataarray
-		if resp.trp_command.to_i == TRP::Message::Command::ERROR_RESPONSE
+		resp = TRP::Message.decode(dataarray)
+		if resp.trp_command==TRP::Message::Command.lookup(5)
 			print "TRP ErrorResponse: #{resp.error_response.error_message}\n"
 			rsock.close
 			ctx.terminate 
@@ -188,7 +187,8 @@ module TrisulRP::Protocol
 		rsock.close
 		ctx.terminate 
     unwrap_resp = unwrap_response(resp)
-    unwrap_resp.instance_variable_set("@trp_resp_command_id",resp.trp_command.to_i)
+    cmd_id = resp.trp_command.is_a?(Symbol) ? TRP::Message::Command.resolve(resp.trp_command) : resp.trp_command.to_i
+    unwrap_resp.instance_variable_set("@trp_resp_command_id", cmd_id)
 		yield unwrap_resp if block_given?
 		return unwrap_resp
 
@@ -304,12 +304,11 @@ module TrisulRP::Protocol
         resp = get_response(conn,req) 
       end 
     rescue Exception=>ex
-     raise ex
+      raise ex
     end
 
     from_tm =  Time.at(resp.total_window.from.tv_sec)
     to_tm =  Time.at(resp.total_window.to.tv_sec)
-
     return [from_tm,to_tm]
 
   end
@@ -376,25 +375,36 @@ module TrisulRP::Protocol
 		params[:time_interval] = mk_time_interval(ti)
 	end
 
+    # Ignore extra parameters that are not in the message descriptor
+    params.delete_if { |k, v| !msg.descriptor.lookup(k.to_s) }
+
   	params.each do |k,v|
-      f = msg.get_field(k)
+      f = msg.descriptor.lookup(k.to_s)
+      next unless f
       if v.is_a? String 
-        if f.is_a? Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
+        if f.type == :message and f.subtype and f.subtype.name == "TRP.KeyT"
           params[k] = TRP::KeyT.new( :label => v )
-        elsif f.is_a? Protobuf::Field::Int64Field 
+        elsif f.type == :int64 or f.type == :int32 or f.type == :uint64 or f.type == :uint32 
           params[k] = v.to_i
-        elsif f.is_a? Protobuf::Field::StringField and f.rule == :repeated  
+        elsif f.type == :string and f.label == :repeated  
           params[k] = v.split(',') 
-        elsif f.is_a? Protobuf::Field::BoolField
-          params[k] = ( v == "true")
+        elsif f.type == :bool
+          params[k] = ( v == "true" || v == "1")
         end
       elsif v.is_a? BigDecimal  or v.is_a? Float 
-        if f.is_a? Protobuf::Field::Int64Field 
+        if f.type == :int64 or f.type == :int32 or f.type == :uint64 or f.type == :uint32 
             params[k] = v.to_i
         end
-      elsif v.is_a?Array and f.is_a?Protobuf::Field::MessageField and f.type_class.to_s == "TRP::KeyT"
-        v.each_with_index do |v1,idx|
-          v[idx]= TRP::KeyT.new( :label => v1 ) if v1.is_a?String
+      elsif v.is_a?Array
+        # unfreeze any strings inside the array
+        v.each_with_index do |v1, idx|
+          v[idx] = v1.dup if v1.is_a?(String) && v1.frozen?
+        end
+
+        if f.type == :message and f.subtype and f.subtype.name == "TRP.KeyT"
+          v.each_with_index do |v1,idx|
+            v[idx]= TRP::KeyT.new( :label => v1 ) if v1.is_a?String
+          end
         end
       end
 	 end
@@ -437,17 +447,24 @@ module TrisulRP::Protocol
   #
   #
   def mk_request(cmd_id,in_params={})
-   params  =in_params.dup
-   opts = {:trp_command=> cmd_id}
-   if params.has_key?(:destination_node)
-     opts[:destination_node] = params[:destination_node]
-   end
-   if params.has_key?(:probe_id)
-     opts[:probe_id] = params[:probe_id]
-   end
-   if params.has_key?(:run_async)
-     opts[:run_async] = params[:run_async]
-   end
+    
+    # Duplicate hash and unfreeze any frozen strings to prevent google-protobuf FrozenError
+    params = {}
+    in_params.each do |k, v|
+      params[k] = (v.is_a?(String) && v.frozen?) ? v.dup : v
+    end
+
+    opts = {:trp_command=> cmd_id}
+    desc = TRP::Message.descriptor
+    if params.has_key?(:destination_node) && desc.lookup("destination_node")
+      opts[:destination_node] = params.delete(:destination_node)
+    end
+    if params.has_key?(:probe_id) && desc.lookup("probe_id")
+      opts[:probe_id] = params.delete(:probe_id)
+    end
+    if params.has_key?(:run_async) && desc.lookup("run_async")
+      opts[:run_async] = params.delete(:run_async)
+    end
     req = TRP::Message.new(opts)
     case cmd_id
     when TRP::Message::Command::HELLO_REQUEST
@@ -558,6 +575,21 @@ module TrisulRP::Protocol
     when TRP::Message::Command::COUNTER_ITEM_NG_REQUEST
 	  fix_TRP_Fields( TRP::CounterItemNGRequest, params)
       req.counter_item_ng_request = TRP::CounterItemNGRequest.new(params)
+    when TRP::Message::Command::CONTEXT_CREATE_REQUEST
+	  fix_TRP_Fields( TRP::ContextCreateRequest, params)
+      req.context_create_request = TRP::ContextCreateRequest.new(params)
+    when TRP::Message::Command::CONTEXT_DELETE_REQUEST
+	  fix_TRP_Fields( TRP::ContextDeleteRequest, params)
+      req.context_delete_request = TRP::ContextDeleteRequest.new(params)
+    when TRP::Message::Command::AGGREGATE_RESOURCES_REQUEST
+	  fix_TRP_Fields( TRP::AggregateResourcesRequest, params)
+      req.aggregate_resources_request = TRP::AggregateResourcesRequest.new(params)
+    when TRP::Message::Command::HA_CONTROL_REQUEST
+	  fix_TRP_Fields( TRP::HAControlRequest, params)
+      req.ha_control_request = TRP::HAControlRequest.new(params)
+    when TRP::Message::Command::DDOS_REPORT_REQUEST
+	  fix_TRP_Fields( TRP::DDosReportRequest, params)
+      req.ddos_report_request = TRP::DDosReportRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -600,7 +632,8 @@ module TrisulRP::Protocol
   #
   #
   def unwrap_response(resp)
-    case resp.trp_command.to_i
+    cmd_id = resp.trp_command.is_a?(Symbol) ? TRP::Message::Command.resolve(resp.trp_command) : resp.trp_command.to_i
+    case cmd_id
     when TRP::Message::Command::HELLO_RESPONSE
       resp.hello_response
     when TRP::Message::Command::COUNTER_GROUP_TOPPER_RESPONSE
@@ -663,6 +696,12 @@ module TrisulRP::Protocol
         resp.tool_info_response
     when TRP::Message::Command::UPDATE_SLICE_RESPONSE
         resp.update_slice_response
+    when TRP::Message::Command::AGGREGATE_RESOURCES_RESPONSE
+        resp.aggregate_resources_response
+    when TRP::Message::Command::HA_CONTROL_RESPONSE
+        resp.ha_control_response
+    when TRP::Message::Command::DDOS_REPORT_RESPONSE
+        resp.ddos_report_response
     else
       raise "#{resp.trp_command.to_i} Unknown TRP command ID"
     end
