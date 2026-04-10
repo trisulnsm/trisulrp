@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["vivek"]
   s.description = "This gem deals about the trisul remote protocol"
-  s.email = "vivek_rajagopal@yahoo.com"
+  s.email = "info@unleashnetworks.com"
   s.homepage = "http://github.com/vivekrajan/trisulrp"
   s.licenses = ["MIT"]
   s.summary = "trisul trp"
