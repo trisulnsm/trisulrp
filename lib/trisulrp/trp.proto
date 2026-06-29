@@ -6,7 +6,7 @@
 // Based on Google Protocol Buffers
 // (c) 2012-16, Unleash Networks (http://www.unleashnetworks.com)
 // $Rev: 6946 $
-syntax = "proto2";
+
 option optimize_for = LITE_RUNTIME; 
 
 
@@ -982,6 +982,7 @@ message TimeSlicesResponse  {
 		optional bool 	        offline_archive=6 [default=false];
 		optional bool 	        offline_archive_mounted=7 [default=false];
 		optional string 	    additional_info=8;
+		optional int64 	        configured_days=9;  /// slice count from trisulHubConfig.xml
 	}
 
     repeated SliceT         slices=1;
