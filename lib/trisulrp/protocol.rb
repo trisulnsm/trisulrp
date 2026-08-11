@@ -590,6 +590,12 @@ module TrisulRP::Protocol
     when TRP::Message::Command::DDOS_REPORT_REQUEST
 	  fix_TRP_Fields( TRP::DDosReportRequest, params)
       req.ddos_report_request = TRP::DDosReportRequest.new(params)
+    when TRP::Message::Command::IP_LOOKUP_REQUEST
+	    fix_TRP_Fields( TRP::IPLookupRequest, params)
+      req.ip_lookup_request = TRP::IPLookupRequest.new(params)
+    when TRP::Message::Command::ASN_LOOKUP_REQUEST
+	    fix_TRP_Fields( TRP::ASNLookupRequest, params)
+      req.asn_lookup_request = TRP::ASNLookupRequest.new(params)
     else
       raise "Unknown TRP command ID"
     end
@@ -702,6 +708,10 @@ module TrisulRP::Protocol
         resp.ha_control_response
     when TRP::Message::Command::DDOS_REPORT_RESPONSE
         resp.ddos_report_response
+    when TRP::Message::Command::IP_LOOKUP_RESPONSE
+        resp.ip_lookup_response
+    when TRP::Message::Command::ASN_LOOKUP_RESPONSE
+        resp.asn_lookup_response
     else
       raise "#{resp.trp_command.to_i} Unknown TRP command ID"
     end

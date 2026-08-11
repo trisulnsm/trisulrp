@@ -273,6 +273,7 @@ enum DomainNodeType
     ROUTER=3;
     WEB=4;
     MONITOR=5;
+    GEO=6;
 }
 
 enum DomainOperation {
@@ -377,8 +378,12 @@ message Message {
 					TOOL_INFO_RESPONSE=144;
 					DDOS_REPORT_REQUEST=153;
 					DDOS_REPORT_RESPONSE=154;
-                    UPDATE_SLICE_REQUEST=155;                            
+                    UPDATE_SLICE_REQUEST=155;
                     COUNTER_ITEM_NG_REQUEST=156;
+                    IP_LOOKUP_REQUEST=158;
+                    IP_LOOKUP_RESPONSE=159;
+                    ASN_LOOKUP_REQUEST=160;
+                    ASN_LOOKUP_RESPONSE=161;
     }
 
     required Command    trp_command=1;
@@ -456,6 +461,10 @@ message Message {
 	optional DDosReportResponse  ddos_report_response=155;
     optional UpdateSliceRequest  update_slice_request=156;
     optional CounterItemNGRequest counter_item_ng_request=157;
+    optional IPLookupRequest ip_lookup_request=158;
+    optional IPLookupResponse ip_lookup_response=159;
+    optional ASNLookupRequest asn_lookup_request=160;
+    optional ASNLookupResponse asn_lookup_response=161;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -1447,3 +1456,38 @@ message DDosReportResponse    {
 
 }
 
+// message Geo IP Lookup
+// uses the ftrie 
+message IPLookupRequest {
+    repeated string IPList=1;  // can be v4 or v6 list 
+    optional bool country_only=2 [default=false];
+    optional bool asn_only=3 [default=false];
+}
+
+message IPLookupResponse {
+    message IPDetails {
+        required string  ipaddress=1;  
+        optional string  country_code=2;
+        optional string  country_name=3;
+        optional string  asn_code=4;
+        optional string  asn_name=5;
+        optional string  city_code=6;
+        optional string  city_name=7;
+    }
+
+    repeated IPDetails  details=1;
+}
+
+message ASNLookupRequest {
+    repeated int64 ASNumbersList=1;
+}
+
+message ASNLookupResponse {
+    message ASNDetails {
+        required int64  asn=1;
+        optional string ascode=2;
+        optional string asname=3;
+    }
+
+    repeated ASNDetails details=1;
+}

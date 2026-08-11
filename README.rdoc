@@ -5,6 +5,10 @@
 This gem allows you to automate incident response or network forensics tasks on the Trisul Network Analytics platform.
 
 
+'''
+protoc --ruby_out=. trp.proto 
+'''
+
 Key Features :
 * Analysis done remotely (at Trisul server)
 * All communications over TLS
