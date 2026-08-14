@@ -1142,6 +1142,7 @@ message NodeConfigRequest {
     optional bool           get_all_nodes=4[default=true];
     repeated NameValue      query_config=5;
     optional IntelFeed      remove_feed=6;            
+
 }
 
 message NodeConfigResponse {
@@ -1241,6 +1242,16 @@ message ContextConfigRequest {
 
      optional  ConfigBlob     get_generic_blob=8;     /// push this .. send persist for snmp util to probe 
      optional  ConfigBlob     push_generic_blob=9;     /// push this .. send persist for snmp util to probe 
+
+    /// lua plugin override files live in <DBRoot>/config/trisulnsm_<name>.lua
+    /// e.g. name=stablekeys -> trisulnsm_stablekeys.lua
+    message LuaConfig {
+        required string     name=1;                   /// plugin key (stablekeys) or filename (trisulnsm_stablekeys.lua)
+        optional string     contents=2;               /// lua source; required for write_lua_config
+    }
+
+    optional LuaConfig      read_lua_config=10;       /// read trisulnsm_<name>.lua; response.latest_config
+    optional LuaConfig      write_lua_config=11;      /// write after lua dofile syntax check; response.latest_config
 }
 
 
@@ -1264,6 +1275,7 @@ message ContextConfigResponse {
     repeated  NameValue         config_values=10;       /// query, leave the .value field blank
     repeated  Layer             layers=11;
 	optional  ConfigBlob		generic_blob=12;	    	/// use case is : persist file as a blob 
+    optional  string            latest_config=13;       /// latest lua config file contents (read/write_lua_config)
 
 }
 
