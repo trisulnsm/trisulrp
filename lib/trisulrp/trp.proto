@@ -1081,10 +1081,10 @@ message DomainResponse {
 		optional string             peer_address=8;
     }
     message DomainService {
-        required string             name=1;
-        required string             type=2;
-        required string             host=3; 
-        required string             port=4;
+        optional string             name=1;
+        optional string             type=2;
+        optional string             host=3; 
+        optional string             port=4;
     }
 
     required DomainOperation        cmd=1;
