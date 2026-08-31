@@ -280,6 +280,7 @@ enum DomainOperation {
     GETNODES=1;
     HEARTBEAT=2;
     REGISTER=3;
+    GETSERVICES=4;
 }
 
 message NameValue {
@@ -1062,6 +1063,7 @@ message DomainRequest {
     optional    string              station_id=2;
     optional    string              params=3;
     optional    DomainNodeType      nodetype=4;
+    optional    string              peer_address=5;
 }
 
 message DomainResponse {
@@ -1076,7 +1078,13 @@ message DomainResponse {
         optional Timestamp          register_time=5; 
         optional Timestamp          heartbeat_time=6; 
 		optional bool               is_primary=7[default=true]; /// primary or backup HA mode 
-
+		optional string             peer_address=8;
+    }
+    message DomainService {
+        required string             name=1;
+        required string             type=2;
+        required string             host=3; 
+        required string             port=4;
     }
 
     required DomainOperation        cmd=1;
@@ -1084,7 +1092,10 @@ message DomainResponse {
     optional string                 req_params=3;
     optional string                 params=4;
     optional bool                   need_reconnect=5[default=false];
+    repeated DomainService          services=6;
 }
+
+
 
 /// messages to HAControl
 message HAControlRequest {
