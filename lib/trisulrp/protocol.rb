@@ -581,9 +581,6 @@ module TrisulRP::Protocol
     when TRP::Message::Command::CONTEXT_DELETE_REQUEST
 	  fix_TRP_Fields( TRP::ContextDeleteRequest, params)
       req.context_delete_request = TRP::ContextDeleteRequest.new(params)
-    when TRP::Message::Command::AGGREGATE_RESOURCES_REQUEST
-	  fix_TRP_Fields( TRP::AggregateResourcesRequest, params)
-      req.aggregate_resources_request = TRP::AggregateResourcesRequest.new(params)
     when TRP::Message::Command::HA_CONTROL_REQUEST
 	  fix_TRP_Fields( TRP::HAControlRequest, params)
       req.ha_control_request = TRP::HAControlRequest.new(params)
@@ -702,8 +699,6 @@ module TrisulRP::Protocol
         resp.tool_info_response
     when TRP::Message::Command::UPDATE_SLICE_RESPONSE
         resp.update_slice_response
-    when TRP::Message::Command::AGGREGATE_RESOURCES_RESPONSE
-        resp.aggregate_resources_response
     when TRP::Message::Command::HA_CONTROL_RESPONSE
         resp.ha_control_response
     when TRP::Message::Command::DDOS_REPORT_RESPONSE
