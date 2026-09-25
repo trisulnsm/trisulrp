@@ -385,6 +385,8 @@ message Message {
                     IP_LOOKUP_RESPONSE=159;
                     ASN_LOOKUP_REQUEST=160;
                     ASN_LOOKUP_RESPONSE=161;
+                    BGP_QUERY_REQUEST=162;
+                    BGP_QUERY_RESPONSE=163;
     }
 
     required Command    trp_command=1;
@@ -466,6 +468,8 @@ message Message {
     optional IPLookupResponse ip_lookup_response=159;
     optional ASNLookupRequest asn_lookup_request=160;
     optional ASNLookupResponse asn_lookup_response=161;
+    optional BGPQueryRequest bgp_query_request=162;
+    optional BGPQueryResponse bgp_query_response=163;
     optional string     destination_node=200;   // todo move 2nd
     optional string     probe_id=201;           // todo move 3rd 
     optional bool       run_async=202;          /// if run_async = true, then you will immediately get a AsynResponse with a token you can poll 
@@ -1513,4 +1517,59 @@ message ASNLookupResponse {
     }
 
     repeated ASNDetails details=1;
+}
+
+/// BGPQueryRequest
+///     query the BGP route receiver databases the same way trisul_bgpquery does.
+///     PREFIX     exact match of prefixes against PREFIX_PATHS_V4 / PREFIX_PATHS_V6
+///     ASN        routes whose ASPATH contains the given AS number
+///     BEST_MATCH longest-prefix match for an address (v4 or v6)
+///     SUMMARY    per-peer prefix counts and route counts by origin AS
+///     ASPATH is not a separate query: every route result carries the path.
+message BGPQueryRequest {
+    enum QueryType {
+        PREFIX=1;
+        ASN=2;
+        BEST_MATCH=3;
+        SUMMARY=4;
+    }
+    required QueryType  query_type=1;
+    repeated string     prefixes=2;          /// PREFIX and BEST_MATCH: prefixes or addresses
+    repeated int64      asns=3;              /// ASN: AS numbers to find in ASPATH
+    optional string     router=4;            /// peer router address; empty uses the first routes db
+    optional uint64     timestamp=5;         /// historical snapshot (unix seconds); 0 means latest
+    optional bool       show_sample=6 [default=false]; /// SUMMARY: include the first 20 IPv4 prefixes
+}
+
+message BGPQueryResponse {
+    message ASHop {
+        required int64  asn=1;
+        optional string ascode=2;
+        optional string asname=3;
+    }
+    message Route {
+        required string input=1;            /// value that was queried (prefix, address, or ASN)
+        required string prefix=2;           /// BGP prefix that matched
+        repeated ASHop  aspath=3;           /// AS path, origin last as stored in the route db
+    }
+    message PeerASCount {
+        required int64  asn=1;              /// first ASN on the path (peer AS)
+        required int64  prefix_count=2;
+        optional string ascode=3;
+        optional string asname=4;
+    }
+    message PeerSummary {
+        required string peer=1;
+        optional string alias=2;            /// set when the db file is a symlink to another peer
+        optional int64  ipv4_prefix_count=3;
+        optional int64  ipv6_prefix_count=4;
+        repeated Route  sample=5;
+        repeated PeerASCount by_peer_as=6;
+    }
+
+    optional string     db_file=1;          /// routes db used for PREFIX / ASN / BEST_MATCH
+    optional string     error=2;            /// set when the query could not be run
+    repeated Route      routes=3;
+    optional string     receiver_status=4;  /// SUMMARY: contents of piranha.status
+    repeated PeerSummary peers=5;
 }
